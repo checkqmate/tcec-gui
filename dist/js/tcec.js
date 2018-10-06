@@ -2318,7 +2318,7 @@ var filenames = [];
 
 for (var i = 1 ; i <= 16 ; i++)
 {
-   filenames [i] = "TCEC_Cup_-_Round_1_-_Match_" + i + "_Crosstable.json";
+   filenames [i] = "archive/TCEC_Cup_-_Round_1_-_Match_" + i + "_Crosstable.json";
 }
 
 function eventCrosstable()
