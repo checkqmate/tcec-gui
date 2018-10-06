@@ -1597,6 +1597,7 @@ function setBoard()
 
 function updateTables()
 {
+  eventCrosstable();
   updateSchedule();
   updateCrosstable();
   updateStandtable();
@@ -2312,3 +2313,228 @@ function updateBracket()
    bn.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.bracketsninja.com/api/bracket/c29eff1463a7f4881dd4cd1979530e60?bnurl=' + window.location.href;
    var s = document.getElementsByTagName('head')[0].appendChild(bn);
 }
+
+var filenames = [];
+
+for (var i = 1 ; i <= 16 ; i++)
+{
+   filenames [i] = "TCEC_Cup_-_Round_1_-_Match_" + i + "_Crosstable.json";
+}
+
+function eventCrosstable()
+{
+   for (var i = 1 ; i <= 16 ; i++)
+   {
+      if (!eventCrosstableMain(i, filenames[i]))
+      {
+         break;
+      }
+   }
+}
+   
+function eventCrosstableMain(ii, filename)
+{
+   var retValue = 0;
+   axios.get(filename)
+   .then(function (r)
+   {
+      updateCrosstableDataNew(ii, r.data);
+      retValue = 1;
+      return retValue;
+   })
+   .catch(function (error) 
+   {
+      console.log(error);
+      retValue = 0;
+      return 0;
+   });
+   return 1;
+}
+
+var totalGames = 0;
+
+function updateCrosstableDataNew(ii, data) 
+{
+   var crosstableData = data;
+
+   var abbreviations = [];
+   var standings = [];
+   var totalGamesSingle = 0;
+
+   _.each(crosstableData.Table, function(engine, key) {
+     abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
+   });
+
+   _.each(crosstableData.Order, function(engine, key) {
+     engineDetails = _.get(crosstableData.Table, engine);
+
+     wins = (engineDetails.WinsAsBlack + engineDetails.WinsAsWhite);
+     elo = Math.round(engineDetails.Elo);
+     eloDiff = engineDetails.Rating + elo;
+
+     gamesEvent = engineDetails.Games;
+     if (!totalGamesSingle)
+     {
+        totalGames = totalGames + engineDetails.Games;
+        totalGamesSingle = engineDetails.Games;
+        crosstableData.gamesCount = totalGames;
+        console.log ("Setting totalGames to " + totalGames);
+     }
+     var entry = {
+       rank: engineDetails.Rank,
+       name: engine,
+       games: engineDetails.Games,
+       points: engineDetails.Score,
+       wins: wins + '[' + engineDetails.WinsAsWhite + '/' + engineDetails.WinsAsBlack + ']',
+       crashes: engineDetails.Strikes,
+       sb: Math.round(engineDetails.Neustadtl* 100) / 100,
+       elo: engineDetails.Rating,
+       elo_diff: elo + ' [' + eloDiff + ']'
+     };
+
+     _.each(abbreviations, function (abbreviation) {                                                                                                                                                  
+       var score2 = '';                                                                                                                                                                               
+       engineName = abbreviation.name;                                                                                                                                                                
+       engineAbbreviation = abbreviation.abbr;                                                                                                                                                        
+                                                                                                                                                                                                      
+       engineCount = crosstableData.Order.length;                                                                                                                                                     
+       if (engineCount < 1) {                                                                                                                                                                         
+         engineCount = 1;                                                                                                                                                                             
+       }                                                                                                                                                                                              
+                                                                                                                                                                                                      
+       rounds = Math.floor(engineDetails.Games / engineCount) + 1;                                                                                                                                    
+                                                                                                                                                                                                      
+       if (engineDetails.Abbreviation == engineAbbreviation) {                                                                                                                                        
+         for (i = 0; i < rounds; i++) {                                                                                                                                                               
+           score2 = '';                                                                                                                                                                               
+         }                                                                                                                                                                                            
+       } else {                                                                                                                                                                                       
+         resultDetails = _.get(engineDetails, 'Results');                                                                                                                                             
+         matchDetails = _.get(resultDetails, engineName);                                                                                                                                             
+         score2 =                                                                                                                                                                                     
+            {                                                                                                                                                                                         
+               Score: matchDetails.Scores,                                                                                                                                                            
+               Text: matchDetails.Text                                                                                                                                                                
+            }                                                                                                                                                                                         
+       }                                                                                                                                                                                              
+       _.set(entry, engineAbbreviation, score2);                                                                                                                                                      
+     });                                                                                                                                                                                              
+                                                                
+     standings = _.union(standings, [entry]);
+   });
+
+   if (1 || !crossTableInitialized) {
+
+     columns = [
+       {
+         field: 'rank',
+         title: 'Rank'
+        ,sortable: true
+        ,width: '4%'
+       },
+       {
+         field: 'name',
+         title: 'Engine'
+        ,sortable: true
+        ,width: '24%'
+       },
+       {
+         field: 'games',
+         title: '# Games'
+        ,sortable: true
+        ,width: '5%'
+       },
+       {
+         field: 'points',
+         title: 'Points'
+        ,sortable: true
+        ,width: '7%'
+       },
+       {
+         field: 'wins',
+         title: 'Wins [W/B]'
+        ,width: '10%'
+       },
+       {
+         field: 'crashes',
+         title: 'Crashes'
+        ,sortable: true
+        ,width: '7%'
+       },
+       {
+         field: 'sb',
+         title: 'SB'
+        ,sortable: true
+        ,width: '7%'
+       },
+       {
+         field: 'elo',
+         title: 'Elo'
+        ,sortable: true
+        ,width: '5%'
+       },
+       {
+         field: 'elo_diff',
+         title: 'Diff [Live]'
+        ,width: '7%'
+       }
+     ];
+
+     _.each(crosstableData.Order, function(engine, key) {                                                                                                                                             
+       engineDetails = _.get(crosstableData.Table, engine);                                                                                                                                           
+       columns = _.union(columns, [{field: engineDetails.Abbreviation, title: engineDetails.Abbreviation,                                                                                             
+                                    formatter: formatterEvent, cellStyle: cellformatter}]);                                                                                                                
+     });                                                                                                                                               
+
+     var divname = '#crosstable' + ii;
+     $(divname).bootstrapTable({
+       classes: 'table table-striped table-no-bordered',
+       columns: columns
+     });
+   }
+   $(divname).bootstrapTable('load', standings);
+}
+
+function formatterEvent(value, row, index, field) {
+   if (!value.hasOwnProperty("Score")) // true
+   {
+      return value;
+   } 
+
+   var retStr = '';
+   var valuex = _.get(value, 'Score');
+   var countGames = 0;
+   var totalGames = _.get(value, 'gamesCount');
+   console.log ("totalGames: " + totalGames);
+
+   _.each(valuex, function(engine, key) 
+   {
+      var gameX = parseInt(countGames/2);
+      var gameXColor = parseInt(gameX%3);
+
+      if (engine.Result == "0.5")
+      {
+         engine.Result = '&frac12'
+         gameXColor = 2;
+      }
+      else
+      {
+         gameXColor = parseInt(engine.Result);
+      }
+      if (retStr == '')
+      {
+         retStr = '<a title="' + engine.Game + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
+      }
+      else
+      {
+         retStr += ' ' + '<a title="' + engine.Game + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
+      }
+      countGames = countGames + 1;
+      if (countGames%4 == 0)
+      {
+         retStr += '<br />';
+      }
+   });
+  return retStr;
+}
+
