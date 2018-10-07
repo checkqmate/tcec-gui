@@ -427,7 +427,7 @@ function updateChartData()
    var plyNum = 0;
 
 	_.each(loadedPgn.Moves, function(move, key) {
-		 (!move.book) {
+		 if (!move.book) {
 			moveNumber = Math.round(key / 2) + 1;
 
 			if (key % 2 != 0) {
