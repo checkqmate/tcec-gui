@@ -2390,11 +2390,11 @@ function updateCrosstableDataNew(ii, data)
         if (entry.point > engineDetails.Score)
         {
            entry.name = '<a style="color: ' + gameArrayClass[1] + '"> ' + entry.name + '</a> vs ' + 
-                        '<a style="color: ' + gameArrayClass[0] + '"> ' + engineName + '</a>';
+                        '<a style="color: ' + gameArrayClass[0] + '"> ' + engine + '</a>';
         }
         else
         {
-           entry.name =  entry.name + ' vs ' + engineName;
+           entry.name =  entry.name + ' vs ' + engine;
         }
         return 1;
      }
