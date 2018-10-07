@@ -236,10 +236,6 @@ function setTimeRemaining(color, time)
     time = 0;
   }
 
-  if (isNaN(time)) {
-    console.log ("setting null time to : " + time);
-  }
-
   if (viewingActiveMove) {
     $('.' + color + '-time-remaining').html(secFormat(time));
   }
@@ -350,7 +346,6 @@ function setPgn(pgn)
   }
    
   if (!currentGameActive) {
-    console.log ("Current game not active so stopping both clocks2");
     stopClock('white');
     stopClock('black');
   }
@@ -1123,7 +1118,6 @@ function pvBoardAutoplay()
 
 $('#pv-board-next').click(function(e) {
   if (activePvKey < activePv.length) {
-    console.log ("Setting next to :" + (activePvKey + 1));  
     setPvFromKey(activePvKey + 1);
   }
   e.preventDefault();
@@ -1184,7 +1178,6 @@ function openCross(gamen)
 {
    var gameX = lastGame - gamesEvent + gamen;
    var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=3&ga=" + gameX;
-   console.log ("opening game:" + gameX);
    window.open(link,'_blank');
 }
 
@@ -1245,6 +1238,14 @@ function formatter(value, row, index, field) {
 }
 
 function cellformatter(value, row, index, field) {
+   if (!value.hasOwnProperty("Score")) // true
+   {
+      return {classes: 'black'};
+   } 
+   return {classes: 'monofont'};
+}
+
+function cellformatterEvent(value, row, index, field) {
    if (!value.hasOwnProperty("Score")) // true
    {
       return {classes: 'black'};
@@ -2249,7 +2250,6 @@ function endButton()
 function tcecHandleKey(e) 
 {
     var keycode, oldPly, oldVar, colRow, colRowList;
-    console.log ("keycode");
     if (!e) 
     {
         e = window.event
@@ -2312,11 +2312,22 @@ var filenames = [];
 
 for (var i = 1 ; i <= 16 ; i++)
 {
-   filenames [i] = "archive/TCEC_Cup_-_Round_1_-_Match_" + i + "_Crosstable.json";
+   filenames [i] = "archive/TCEC_Cup_-_Round_1_-_Match_" + i + "_crosstable.json";
 }
 
 function eventCrosstable()
 {
+
+   setTimeout(function() 
+   { 
+      var divname = '#crosstableevent';
+      $(divname).bootstrapTable({
+        classes: 'table table-striped table-no-bordered',
+        columns: columnsEvent
+      });
+      $(divname).bootstrapTable('load', standings);
+   }, 10000);
+
    for (var i = 1 ; i <= 16 ; i++)
    {
       if (!eventCrosstableMain(i, filenames[i]))
@@ -2325,7 +2336,7 @@ function eventCrosstable()
       }
    }
 }
-   
+
 function eventCrosstableMain(ii, filename)
 {
    var retValue = 0;
@@ -2346,14 +2357,16 @@ function eventCrosstableMain(ii, filename)
 }
 
 var totalGames = 0;
+var standings = [];
 
 function updateCrosstableDataNew(ii, data) 
 {
    var crosstableData = data;
 
-   var abbreviations = [];
-   var standings = [];
    var totalGamesSingle = 0;
+   var abbreviations = [];
+   var crashes2 = 0;
+   var entry = {};
 
    _.each(crosstableData.Table, function(engine, key) {
      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
@@ -2367,23 +2380,25 @@ function updateCrosstableDataNew(ii, data)
      eloDiff = engineDetails.Rating + elo;
 
      gamesEvent = engineDetails.Games;
+     if (totalGamesSingle)
+     {
+        crashes2 = engineDetails.Strikes;
+        entry.crashes = entry.crashes + "/" + crashes2;
+        return 1;
+     }
      if (!totalGamesSingle)
      {
         totalGames = totalGames + engineDetails.Games;
         totalGamesSingle = engineDetails.Games;
         crosstableData.gamesCount = totalGames;
-        console.log ("Setting totalGames to " + totalGames);
      }
-     var entry = {
-       rank: engineDetails.Rank,
+     entry = {
+       Gamesort: ii,
+       rank: ii,
        name: engine,
        games: engineDetails.Games,
        points: engineDetails.Score,
-       wins: wins + '[' + engineDetails.WinsAsWhite + '/' + engineDetails.WinsAsBlack + ']',
        crashes: engineDetails.Strikes,
-       sb: Math.round(engineDetails.Neustadtl* 100) / 100,
-       elo: engineDetails.Rating,
-       elo_diff: elo + ' [' + eloDiff + ']'
      };
 
      _.each(abbreviations, function (abbreviation) {                                                                                                                                                  
@@ -2405,118 +2420,86 @@ function updateCrosstableDataNew(ii, data)
        } else {                                                                                                                                                                                       
          resultDetails = _.get(engineDetails, 'Results');                                                                                                                                             
          matchDetails = _.get(resultDetails, engineName);                                                                                                                                             
-         score2 =                                                                                                                                                                                     
-            {                                                                                                                                                                                         
-               Score: matchDetails.Scores,                                                                                                                                                            
-               Text: matchDetails.Text                                                                                                                                                                
-            }                                                                                                                                                                                         
+         entry.name = engine + " vs " + engineName;
+         entry.points = engineDetails.Score + " - " + (engineDetails.Games - engineDetails.Score);
+       if (matchDetails)
+       {
+          entry.score = matchDetails.Text;
+       }
        }                                                                                                                                                                                              
-       _.set(entry, engineAbbreviation, score2);                                                                                                                                                      
      });                                                                                                                                                                                              
                                                                 
      standings = _.union(standings, [entry]);
    });
 
-   if (1 || !crossTableInitialized) {
+   columnsEvent = [
+     {
+       field: 'rank',
+       title: 'Round',
+       width: '4%'
+       ,sortable: true
+       ,sorter: schedSorted
+       ,sortOrder: 'desc'
+     },
+     {
+       field: 'name',
+       title: 'Engine'
+      ,width: '24%'
+     },
+     {
+       field: 'games',
+       title: '# Games'
+      ,width: '5%'
+     },
+     {
+       field: 'points',
+       title: 'Points'
+      ,width: '7%'
+     },
+     {
+       field: 'crashes',
+       title: 'Crashes'
+      ,width: '7%'
+     },
+     {
+       field: 'score',
+       title: 'Score'
+      ,width: '7%'
+      ,formatter: 'formatterEvent'
+                                    //formatter: formatter, cellStyle: cellformatter}]);                                                                                                                
+     } 
+   ];
 
-     columns = [
-       {
-         field: 'rank',
-         title: 'Rank'
-        ,sortable: true
-        ,width: '4%'
-       },
-       {
-         field: 'name',
-         title: 'Engine'
-        ,sortable: true
-        ,width: '24%'
-       },
-       {
-         field: 'games',
-         title: '# Games'
-        ,sortable: true
-        ,width: '5%'
-       },
-       {
-         field: 'points',
-         title: 'Points'
-        ,sortable: true
-        ,width: '7%'
-       },
-       {
-         field: 'wins',
-         title: 'Wins [W/B]'
-        ,width: '10%'
-       },
-       {
-         field: 'crashes',
-         title: 'Crashes'
-        ,sortable: true
-        ,width: '7%'
-       },
-       {
-         field: 'elo',
-         title: 'Elo'
-        ,sortable: true
-        ,width: '5%'
-       }
-     ];
-
-     _.each(crosstableData.Order, function(engine, key) {                                                                                                                                             
-       engineDetails = _.get(crosstableData.Table, engine);                                                                                                                                           
-       columns = _.union(columns, [{field: engineDetails.Abbreviation, title: engineDetails.Abbreviation,                                                                                             
-                                    formatter: formatterEvent, cellStyle: cellformatter}]);                                                                                                                
-     });                                                                                                                                               
-
-     var divname = '#crosstable' + ii;
-     $(divname).bootstrapTable({
-       classes: 'table table-striped table-no-bordered',
-       columns: columns
-     });
-   }
-   $(divname).bootstrapTable('load', standings);
+   totalGamesSingle = 0;
 }
 
 function formatterEvent(value, row, index, field) {
-   if (!value.hasOwnProperty("Score")) // true
-   {
-      return value;
-   } 
-
    var retStr = '';
-   var valuex = _.get(value, 'Score');
    var countGames = 0;
-   var totalGames = _.get(value, 'gamesCount');
-   console.log ("totalGames: " + totalGames);
 
-   _.each(valuex, function(engine, key) 
+   _.each(value, function(engine, key) 
    {
       var gameX = parseInt(countGames/2);
       var gameXColor = parseInt(gameX%3);
 
-      if (engine.Result == "0.5")
+      if (engine == "=")
       {
-         engine.Result = '&frac12'
+         engine = '&frac12'
          gameXColor = 2;
       }
       else
       {
-         gameXColor = parseInt(engine.Result);
+         gameXColor = parseInt(engine);
       }
       if (retStr == '')
       {
-         retStr = '<a title="' + engine.Game + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
+         retStr = '<a title="' + key + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + key + ')">' + engine + '</a>';
       }
       else
       {
-         retStr += ' ' + '<a title="' + engine.Game + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
+         retStr += ' ' + '<a title="' + key + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + key + ')">' + engine + '</a>';
       }
       countGames = countGames + 1;
-      if (countGames%4 == 0)
-      {
-         retStr += '<br />';
-      }
    });
   return retStr;
 }
