@@ -1176,7 +1176,7 @@ function getLinkArch(gameNumber)
 
 function openCross(gamen)
 {
-   var gameX = lastGame - gamesEvent + gamen;
+   var gameX = gamen;
    var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=3&ga=" + gameX;
    window.open(link,'_blank');
 }
@@ -1385,6 +1385,8 @@ function updateCrosstableData(data)
      crossTableInitialized = true;
    }
    $('#crosstable').bootstrapTable('load', standings);
+  console.log ("Calling eventCrosstable");
+  eventCrosstable();
 }
 
 function updateCrosstable() 
@@ -1594,7 +1596,6 @@ function setBoard()
 
 function updateTables()
 {
-  eventCrosstable();
   updateCrosstable();
   updateStandtable();
   updateBracket();
@@ -2315,8 +2316,13 @@ for (var i = 1 ; i <= 16 ; i++)
    filenames [i] = "archive/TCEC_Cup_-_Round_1_-_Match_" + i + "_crosstable.json";
 }
 
+var standings = [];
+var gamesEachMatch = [];
+
 function eventCrosstable()
 {
+   standings = [];
+   gamesEachMatch = [];
 
    setTimeout(function() 
    { 
@@ -2356,9 +2362,6 @@ function eventCrosstableMain(ii, filename)
    return 1;
 }
 
-var totalGames = 0;
-var standings = [];
-
 function updateCrosstableDataNew(ii, data) 
 {
    var crosstableData = data;
@@ -2384,13 +2387,16 @@ function updateCrosstableDataNew(ii, data)
      {
         crashes2 = engineDetails.Strikes;
         entry.crashes = entry.crashes + "/" + crashes2;
+        if (entry.point > engineDetails.Score)
+        {
+           entry.name = '<a style="color: ' + gameArrayClass[1] + '"> ' + entry.name + '</a> vs ' + 
+                        '<a style="color: ' + gameArrayClass[0] + '"> ' + engineName + '</a>';
+        }
+        else
+        {
+           entry.name =  entry.name + ' vs ' + engineName;
+        }
         return 1;
-     }
-     if (!totalGamesSingle)
-     {
-        totalGames = totalGames + engineDetails.Games;
-        totalGamesSingle = engineDetails.Games;
-        crosstableData.gamesCount = totalGames;
      }
      entry = {
        Gamesort: ii,
@@ -2398,8 +2404,13 @@ function updateCrosstableDataNew(ii, data)
        name: engine,
        games: engineDetails.Games,
        points: engineDetails.Score,
-       crashes: engineDetails.Strikes,
+       crashes: engineDetails.Strikes
      };
+     if (!totalGamesSingle)
+     {
+        totalGamesSingle = engineDetails.Games;
+        gamesEachMatch[ii] = parseInt(engineDetails.Games); 
+     }
 
      _.each(abbreviations, function (abbreviation) {                                                                                                                                                  
        var score2 = '';                                                                                                                                                                               
@@ -2420,8 +2431,8 @@ function updateCrosstableDataNew(ii, data)
        } else {                                                                                                                                                                                       
          resultDetails = _.get(engineDetails, 'Results');                                                                                                                                             
          matchDetails = _.get(resultDetails, engineName);                                                                                                                                             
-         entry.name = engine + " vs " + engineName;
          entry.points = engineDetails.Score + " - " + (engineDetails.Games - engineDetails.Score);
+         entry.point = engineDetails.Score;
        if (matchDetails)
        {
           entry.score = matchDetails.Text;
@@ -2473,9 +2484,22 @@ function updateCrosstableDataNew(ii, data)
    totalGamesSingle = 0;
 }
 
+function getPrevGames(ii)
+{
+   var total = 0;
+
+   for (var i = 1 ; i < ii ; i ++)
+   {
+      total = gamesEachMatch[i] + total;
+   }
+
+   return total;
+}
+
 function formatterEvent(value, row, index, field) {
    var retStr = '';
    var countGames = 0;
+   var prevGameTota = getPrevGames(row.rank);
 
    _.each(value, function(engine, key) 
    {
@@ -2491,15 +2515,20 @@ function formatterEvent(value, row, index, field) {
       {
          gameXColor = parseInt(engine);
       }
+      var gameNum = key + prevGameTota + 1;
       if (retStr == '')
       {
-         retStr = '<a title="' + key + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + key + ')">' + engine + '</a>';
+         retStr = '<a title="' + gameNum + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + gameNum + ')">' + engine + '</a>';
       }
       else
       {
-         retStr += ' ' + '<a title="' + key + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + key + ')">' + engine + '</a>';
+         retStr += ' ' + '<a title="' + gameNum + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' +  gameNum + ')">' + engine + '</a>';
       }
       countGames = countGames + 1;
+      if (countGames%8 == 0)
+      {
+         retStr += '<br />';
+      }
    });
   return retStr;
 }
