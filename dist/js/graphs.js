@@ -427,7 +427,7 @@ function updateChartData()
    var plyNum = 0;
 
 	_.each(loadedPgn.Moves, function(move, key) {
-		if (!move.book) {
+		 (!move.book) {
 			moveNumber = Math.round(key / 2) + 1;
 
 			if (key % 2 != 0) {
@@ -449,6 +449,7 @@ function updateChartData()
          move.cwv = move.wv;
          if (!isNaN(move.wv)) 
          {
+            move.cwv = move.wv;
             if (move.wv > 6.5) 
             {
                move.cwv = 6.5;
@@ -460,13 +461,16 @@ function updateChartData()
          } 
          else 
          {
-            if (move.wv.substring(0,1) == '-') 
+            if (move.wv != undefined)
             {
-               move.cwv = -6.5;
-            } 
-            else 
-            {
-               move.cwv = 6.5;
+               if (move.wv.substring(0,1) == '-') 
+               {
+                  move.cwv = -6.5;
+               } 
+               else 
+               {
+                  move.cwv = 6.5;
+               }
             }
          }
          eval = [
