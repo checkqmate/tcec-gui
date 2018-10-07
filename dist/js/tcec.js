@@ -55,7 +55,6 @@ function updateAll()
 {
    updatePgn(1);
    setTimeout(function() { updateTables(); }, 5000);
-   setTimeout(function() { eventCrosstable(); }, 15000);
 }
 
 function updatePgnData(data, read)
@@ -1594,6 +1593,7 @@ function setBoard()
 
 function updateTables()
 {
+  eventCrosstable();
   updateCrosstable();
   updateStandtable();
   updateBracket();
