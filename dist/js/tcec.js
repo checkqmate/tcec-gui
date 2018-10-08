@@ -1682,6 +1682,7 @@ function setDark()
   $('#crosstable').addClass('table-dark');
   $('#schedule').addClass('table-dark');
   $('#standtable').addClass('table-dark');
+  $('#crosstableevent').addClass('table-dark');
   $('#infotable').addClass('table-dark');
   setDarkMode(1);
 }
@@ -1698,6 +1699,7 @@ function setLight()
   $('#info-frame').attr('src', 'info.html?body=light');
   $('#standtable').removeClass('table-dark');
   $('#infotable').removeClass('table-dark');
+  $('#crosstableevent').removeClass('table-dark');
   setDarkMode(0);
 }
 
