@@ -320,6 +320,8 @@ canvas {
 {
    font-family: monospace; 
    font-size: large;
+   text-align: left;
+    
 }
 
 .copied {

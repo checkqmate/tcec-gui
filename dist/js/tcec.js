@@ -1245,11 +1245,9 @@ function cellformatter(value, row, index, field) {
    return {classes: 'monofont'};
 }
 
-function cellformatterEvent(value, row, index, field) {
-   if (!value.hasOwnProperty("Score")) // true
-   {
-      return {classes: 'black'};
-   } 
+function cellformatterEvent(value, row, index, field) 
+{
+   console.log ("field is " + field);
    return {classes: 'monofont'};
 }
 
@@ -2325,7 +2323,6 @@ var columnsEvent = [
        width: '4%'
        ,sortable: true
        ,sorter: schedSorted
-       ,sortOrder: 'desc'
      },
      {
        field: 'name',
@@ -2336,6 +2333,9 @@ var columnsEvent = [
        field: 'games',
        title: '# Games'
       ,width: '5%'
+       ,sortable: true
+       ,sorter: schedSorted
+       ,sortOrder: 'desc'
      },
      {
        field: 'points',
@@ -2352,7 +2352,7 @@ var columnsEvent = [
        title: 'Score'
       ,width: '7%'
       ,formatter: 'formatterEvent'
-                                    //formatter: formatter, cellStyle: cellformatter}]);                                                                                                                
+      ,cellStyle: 'cellformatterEvent'
      } 
    ];
 
@@ -2364,7 +2364,9 @@ function eventCrosstable()
    var divname = '#crosstableevent';
    $(divname).bootstrapTable({
         classes: 'table table-striped table-no-bordered',
-        columns: columnsEvent
+        columns: columnsEvent,
+        sortName: 'rank',
+        sortOrder: 'desc' 
       });
    setTimeout(function() 
    { 
