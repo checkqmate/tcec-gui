@@ -20,6 +20,7 @@
     <!-- vch -->
     <link href="dist/css/custom.css?v=1000000000000000000043" rel="stylesheet">
     <link href="dist/css/bootstrap-slider.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="dist/css/jquery.bracket.min.css" />
   </head>
 
   <body>
@@ -672,14 +673,14 @@
         <li class="nav-item">                                                                                                                                                                         
           <a class="nav-link" id="pills-event-tab" data-toggle="pill" href="#pills-event" role="tab" aria-controls="pills-event" aria-selected="true">EventTable</a>
         </li>                                                                                                                                                                                         
+        <li class="nav-item">                                                                                                                                                                         
+          <a class="nav-link" id="pills-trial-tab" data-toggle="pill" href="#pills-trial" role="tab" aria-controls="pills-trial" aria-selected="true">Trialbrackets</a>
+        </li>                                                                                                                                                                                         
+      </ul>                                                                                                                                                                                           
       </ul>                                                                                                                                                                                           
       <div class="tab-content" id="pills-tabContent">                                                                                                                                                 
         <div class="tab-pane show active fade smallfont scheduleclass" id="pills-sched" role="tabpanel" aria-labelledby="pills-sched-tab"> 
             <iframe src="//bracketcloud.com/embed/131265" width="1200" height="1700" scrolling="no" frameborder="0" allowtransparency="true" title="BracketCloud Tournament" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe><br/><small><span style="color:#a3a3a3">Updates every minute - </span><a href="//bracketcloud.com/tournament/131265" style="color:#0088cc;text-align:left">View full tournament</a></small>
-<!--
-            <iframe id="bracket" src="//bracketcloud.com/embed/131265?hbg=000000&hcolor=dddddd&brkbg=000000&brkcolor=ffffff&seeds=false&brkmatch=dddddd" width="1200" height="1700" scrolling="no" frameborder="0" allowtransparency="true" title="BracketCloud Tournament" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe><br/><small><span style="color:#a3a3a3">Updates every minute - </span><a href="//bracketcloud.com/tournament/131265" style="color:#0088cc;text-align:left">View full tournament</a></small>
-!-->
-
         </div>                                                                                                                                                                                        
         <div class="tab-pane fade smallfont scrolldiv" id="pills-cross" role="tabpanel" aria-labelledby="pills-cross-tab">            
           <table id="crosstable" class="table-dark table-striped"></table>
@@ -687,6 +688,20 @@
         <div class="tab-pane fade smallfont scrolldiv" id="pills-event" role="tabpanel" aria-labelledby="pills-event-tab">
           <table id="crosstableevent" class="table-dark table-striped"></table>
         </div>
+        <div class="tab-pane active fade smallfont scheduleclass" id="pills-trial" role="tabpanel" aria-labelledby="pills-trial-tab"> 
+            <table class="table-dark table-striped table-noborder" width="1350" border=0 style="background-color:transparent">
+               <thead>
+                 <tr>
+                   <th style="width: 15%; color: green">Round 32</th>
+                   <th style="width: 25%; color: grey">OctoFinal</th>
+                   <th style="width: 17%; color: grey">QuaterFinal</th>
+                   <th style="width: 24%; color: grey">SemiFinal</th>
+                   <th style="width: 20%; color: grey">GrandFinals</th>
+                 </tr>
+               </thead>
+             </table>
+            <div id="bracket" style="display: in-line; height:1200px; width:1350px"></div>
+        </div>                                                                                                                                                                                        
       </div>   
 
       <div class="row">
@@ -884,6 +899,7 @@ OS: Ubuntu 18.04 server
     <script src="dist/js/clipboard.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script type="text/javascript" src="dist/js/jquery.bracket.min.js"></script>
 
     <script>
       $(document).ready(function () {
@@ -1060,6 +1076,79 @@ OS: Ubuntu 18.04 server
       })();
 
     </script>
+    <script type="text/javascript">                                                                                                                                                               
+         var bigData = {                                                                                                                                                                              
+           teams : [                                                                                                                                                                                  
+               ["Stockfish 270918", "Ivanhoe 999946h"], 
+               ["Gull 180521", "Texel 1.08a11"], 
+               ["Fizbo 2", "Hannibal 20180922"], 
+               ["Chiron S13.2", "Nemorino 5.05"], 
+               ["Fire 7.1", "Senpai 2.0"], 
+               ["Vajolet2 2.6.1", "Booot 6.3.1"], 
+               ["Laser 250918", "Lc0 18.11248"], 
+               ["Ethereal 11.06", "Rodent III 1.0.171"], 
+               ["Komodo 2135.10", "Tucano 7.06"], 
+               ["Xiphos 0.4.2", "Nirvana 2.4"], 
+               ["Fritz 16.10", "Deus X 1.1"], 
+               ["Ginkgo 2.12", "Bobcat 8"], 
+               ["Houdini 6.03", "chess22k 1.11"], 
+               ["ChessBrainVB 3.70", "Arasan TCECS13.2"], 
+               ["Jonny 8.1", "Pedone 1.9"], 
+               ["Andscacs 094030", "Wasp 3.3"]
+           ],                                                                                                                                                                                         
+           results : [[ /* WINNER BRACKET */                                                                                                                                                          
+             [[5,0, "arun"], [4.5,2.5], [6,4], [4.5,2.5], [5,0], [3.5,4.5], [0,0], [0,0], [0,0, "arun"], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0]],
+             [[0,0, "arun"], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0]],                                                                                                                        
+             [[0,0], [0,0], [0,0], [0,0]],                                                                                                                                                            
+             [[0,0], [0,0]],                                                                                                                                                                          
+             [[0,0]]                                                                                                                                                                                  
+           ]                                                                                                                                                                                          
+           ]                                                                                                                                                                                          
+         }                                                                                                                                                                                            
+         console.log ("bigData is " + bigData.results[0][0][0][2]);
+                                                                                                                                                                                                      
+        $(document).ready(function () {
+         function onClick(data)
+         {
+            alert(data);
+         }
+function edit_fn(container, data, doneCb) {
+}
+function render_fn(container, data, score, state) {
+  switch(state) {
+    case "empty-bye":
+      container.append("No team")
+      return;
+    case "empty-tbd":
+      container.append("Upcoming")
+      return;
+ 
+    case "entry-no-score":
+    case "entry-default-win":
+    case "entry-complete":
+      container.append('<img src="site/png/'+data.flag+'.png" /> ').append(data.name)
+      return;
+  }
+}
+         $(function () {
+         console.log ("Came to clock bracket");
+         $('#bracket').bracket({
+            init: bigData,
+            centerConnectors: true,
+            teamWidth: 150,
+            scoreWidth: 30,
+            matchMargin: 30,
+            roundMargin: 100,
+            onMatchClick: onClick
+/*
+            decorator: {edit: edit_fn,
+                        render: render_fn}
+*/
+         })                                                                                                                                                                                           
+   });                                                                                                                                                                                                
+   });                                                                                                                                                                                                
+   </script>                       
+
   </body>
 </html>
 <!-- end -->
