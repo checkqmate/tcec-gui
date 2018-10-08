@@ -2391,6 +2391,7 @@ async function eventCrosstable()
    for (var i = 1 ; i <= 16 ; i++)
    {
       tablesLoaded[i] = -1;
+      bigData.teams[i-1] = [{name: teamsx[i-1][0], flag: shortName(teamsx[i-1][0]), score: ''}, {name: teamsx[i-1][1], flag: shortName(teamsx[i-1][1]), score: ''}];
       eventCrosstableMain(i, filenames[i]);
    }
 
@@ -2419,7 +2420,8 @@ async function eventCrosstable()
    for (var i = 1 ; i <= 16 ; i ++)
    {
       // Check if we found the next round file
-      var entry = [{name: bigData.teams[i-1][0], flag: shortName(bigData.teams[i-1][0]), score: ''}, {name: bigData.teams[i-1][1], flag: shortName(bigData.teams[i-1][1]), score:''}];
+      console.log ("name is " + bigData.teams[i-1][0]);
+      var entry = bigData.teams[i-1];
       bigData.teams[i-1] = entry;
       if (tablesLoaded[i+1] != 1)
       {
@@ -2498,6 +2500,7 @@ function updateCrosstableDataNew(ii, data)
            entry.name =  entry.name + ' vs ' + engine;
         }
         bigData.results[0][0][ii-1][1] = engineDetails.Score;
+        bigData.teams[ii-1][1] = {name: engine, flag: shortName(engine), score: ''};
         return 1;
      }
      entry = {
@@ -2509,6 +2512,7 @@ function updateCrosstableDataNew(ii, data)
        crashes: engineDetails.Strikes
      };
      bigData.results[0][0][ii-1][0] = engineDetails.Score;
+     bigData.teams[ii-1][0] = {name: engine, flag: shortName(engine), score: ''};
      if (!totalGamesSingle)
      {
         totalGamesSingle = engineDetails.Games;
@@ -2599,6 +2603,23 @@ function formatterEvent(value, row, index, field) {
   return retStr;
 }
 
+var teamsx = [["Stockfish 270918", "Ivanhoe 999946h"],
+      ["Gull 180521", "Texel 1.08a11"],                                                                                                                                                                                                       
+      ["Fizbo 2", "Hannibal 20180922"],                                                                                                                                                                                                       
+      ["Chiron S13.2", "Nemorino 5.05"],                                                                                                                                                                                                      
+      ["Fire 7.1", "Senpai 2.0"],                                                                                                                                                                                                             
+      ["Vajolet2 2.6.1", "Booot 6.3.1"],                                                                                                                                                                                                      
+      ["Laser 250918", "Lc0 18.11248"],                                                                                                                                                                                                       
+      ["Ethereal 11.06", "Rodent III 1.0.171"],                                                                                                                                                                                               
+      ["Komodo 2135.10", "Tucano 7.06"],                                                                                                                                                                                                      
+      ["Xiphos 0.4.2", "Nirvana 2.4"],                                                                                                                                                                                                        
+      ["Fritz 16.10", "Deus X 1.1"],                                                                                                                                                                                                          
+      ["Ginkgo 2.12", "Bobcat 8"],                                                                                                                                                                                                            
+      ["Houdini 6.03", "chess22k 1.11"],                                                                                                                                                                                                      
+      ["ChessBrainVB 3.70", "Arasan TCECS13.2"],                                                                                                                                                                                              
+      ["Jonny 8.1", "Pedone 1.9"],                                                                                                                                                                                                            
+      ["Andscacs 094030", "Wasp 3.3"]                                                                                                                                                                                                         
+  ];
 var bigData = {                                                                                                                                                                              
   teams : [                                                                                                                                                                                  
       ["Stockfish 270918", "Ivanhoe 999946h"], 
@@ -2626,7 +2647,7 @@ var bigData = {
     [[0,0]]                                                                                                                                                                                  
   ]                                                                                                                                                                                          
   ]                                                                                                                                                                                          
-}                                                                                                                                                                                            
+}                                                                                                                                                                                        
 console.log ("bigData is " + bigData.results[0][0][6]);
 
 function drawBracket()
