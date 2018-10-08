@@ -1229,7 +1229,7 @@ function formatter(value, row, index, field) {
          retStr += ' ' + '<a title="' + engine.Game + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
       }
       countGames = countGames + 1;
-      if (countGames%4 == 0)
+      if (countGames%8 == 0)
       {
          retStr += '<br />';
       }
@@ -1247,7 +1247,6 @@ function cellformatter(value, row, index, field) {
 
 function cellformatterEvent(value, row, index, field) 
 {
-   console.log ("field is " + field);
    return {classes: 'monofont'};
 }
 
@@ -2308,6 +2307,7 @@ function updateBracket()
 }
 
 var filenames = [];
+var tablesLoaded = [];
 
 for (var i = 1 ; i <= 16 ; i++)
 {
@@ -2356,10 +2356,16 @@ var columnsEvent = [
      } 
    ];
 
-function eventCrosstable()
+function sleep(ms) 
+{
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function eventCrosstable()
 {
    standings = [];
    gamesEachMatch = [];
+   tablesLoaded = [];
 
    var divname = '#crosstableevent';
    $(divname).bootstrapTable({
@@ -2368,37 +2374,50 @@ function eventCrosstable()
         sortName: 'rank',
         sortOrder: 'desc' 
       });
-   setTimeout(function() 
-   { 
-      $(divname).bootstrapTable('load', standings);
-   }, 7000);
 
    for (var i = 1 ; i <= 16 ; i++)
    {
-      if (!eventCrosstableMain(i, filenames[i]))
+      tablesLoaded[i] = -1;
+      eventCrosstableMain(i, filenames[i]);
+   }
+
+   var loaded = 0;
+   var timeWaited = 0;
+   while (loaded == 0)
+   {
+      for (var i = 1 ; i <= 16 ; i++)
       {
-         break;
+         loaded = 1;
+         if (tablesLoaded[i] == -1)
+         {
+            loaded = 0;
+            break;
+         }
+      }
+      await sleep(100);
+      timeWaited += 100;
+      if (timeWaited > 50000)
+      {
+         console.log("Waited long time to load, bailing out");
       }
    }
+   console.log ("drawing standings with entries:" + standings.length + " and time" + timeWaited);
+   $(divname).bootstrapTable('load', standings);
 }
 
 function eventCrosstableMain(ii, filename)
 {
-   var retValue = 0;
    axios.get(filename)
    .then(function (r)
    {
       updateCrosstableDataNew(ii, r.data);
-      retValue = 1;
-      return retValue;
+      tablesLoaded[ii] = 0;
    })
    .catch(function (error) 
    {
       console.log(error);
-      retValue = 0;
-      return 0;
+      tablesLoaded[ii] = 0;
    });
-   return 1;
 }
 
 function updateCrosstableDataNew(ii, data) 
