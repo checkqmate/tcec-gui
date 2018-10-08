@@ -12,6 +12,11 @@ var chokidar = require('chokidar');
 var _ = require('lodash');
 var lastPgnTime = Date.now();
 
+var prevData = 0;
+var prevliveData = 0;
+var prevevalData = 0;
+var prevtotalCount = 0;
+
 const pid = process.pid;
 
 if (typeof process.argv[2] == 'undefined')
@@ -68,12 +73,10 @@ listener.sockets.on('connection', function(s){
       totalCount = count;
    }
    socket.emit('users', {'count': totalCount});
-   socket.broadcast.emit('users', {'count': totalCount});
    console.log ("coutn connected:" + count);
 
    socket.on('disconnect', function(){
        count--;
-       socket.broadcast.emit('users', {'count': totalCount});
    });
 
    //recieve client data
@@ -165,10 +168,6 @@ function getDeltaPgn(pgnX)
    return pgn;
 }
 
-
-var prevData = 0;
-var prevliveData = 0;
-var prevevalData = 0;
 watcher.on('change', (path, stats) => {
    console.log ("path changed:" + path + ",count is " + count);
    if (!socket)
@@ -204,6 +203,11 @@ watcher.on('change', (path, stats) => {
             lastPgnTime = Date.now(); 
          }
          prevData = data;
+         if (totalCount != prevtotalCount)
+         {
+            socket.broadcast.emit('users', {'count': totalCount});
+            prevtotalCount = totalCount;
+         }
       }
       if (path.match(/crosstable/))
       {
