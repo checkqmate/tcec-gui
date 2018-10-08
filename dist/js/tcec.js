@@ -1238,10 +1238,13 @@ function formatter(value, row, index, field) {
 }
 
 function cellformatter(value, row, index, field) {
-   if (!value.hasOwnProperty("Score")) // true
+   if (value)
    {
-      return {classes: 'black'};
-   } 
+      if (!value.hasOwnProperty("Score")) // true
+      {
+         return {classes: 'black'};
+      } 
+   }
    return {classes: 'monofont'};
 }
 
@@ -2541,6 +2544,7 @@ function updateCrosstableDataNew(ii, data)
      if (!totalGamesSingle)
      {
         totalGamesSingle = engineDetails.Games;
+        totalGamesSingle = 1;
         gamesEachMatch[ii] = parseInt(engineDetails.Games); 
      }
 
@@ -2574,7 +2578,6 @@ function updateCrosstableDataNew(ii, data)
                                                                 
      standings = _.union(standings, [entry]);
    });
-
 
    totalGamesSingle = 0;
 }
