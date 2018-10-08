@@ -2318,21 +2318,58 @@ for (var i = 1 ; i <= 16 ; i++)
 
 var standings = [];
 var gamesEachMatch = [];
+var columnsEvent = [
+     {
+       field: 'rank',
+       title: 'Round',
+       width: '4%'
+       ,sortable: true
+       ,sorter: schedSorted
+       ,sortOrder: 'desc'
+     },
+     {
+       field: 'name',
+       title: 'Engine'
+      ,width: '24%'
+     },
+     {
+       field: 'games',
+       title: '# Games'
+      ,width: '5%'
+     },
+     {
+       field: 'points',
+       title: 'Points'
+      ,width: '7%'
+     },
+     {
+       field: 'crashes',
+       title: 'Crashes'
+      ,width: '7%'
+     },
+     {
+       field: 'score',
+       title: 'Score'
+      ,width: '7%'
+      ,formatter: 'formatterEvent'
+                                    //formatter: formatter, cellStyle: cellformatter}]);                                                                                                                
+     } 
+   ];
 
 function eventCrosstable()
 {
    standings = [];
    gamesEachMatch = [];
 
-   setTimeout(function() 
-   { 
-      var divname = '#crosstableevent';
-      $(divname).bootstrapTable({
+   var divname = '#crosstableevent';
+   $(divname).bootstrapTable({
         classes: 'table table-striped table-no-bordered',
         columns: columnsEvent
       });
+   setTimeout(function() 
+   { 
       $(divname).bootstrapTable('load', standings);
-   }, 10000);
+   }, 7000);
 
    for (var i = 1 ; i <= 16 ; i++)
    {
@@ -2443,43 +2480,6 @@ function updateCrosstableDataNew(ii, data)
      standings = _.union(standings, [entry]);
    });
 
-   columnsEvent = [
-     {
-       field: 'rank',
-       title: 'Round',
-       width: '4%'
-       ,sortable: true
-       ,sorter: schedSorted
-       ,sortOrder: 'desc'
-     },
-     {
-       field: 'name',
-       title: 'Engine'
-      ,width: '24%'
-     },
-     {
-       field: 'games',
-       title: '# Games'
-      ,width: '5%'
-     },
-     {
-       field: 'points',
-       title: 'Points'
-      ,width: '7%'
-     },
-     {
-       field: 'crashes',
-       title: 'Crashes'
-      ,width: '7%'
-     },
-     {
-       field: 'score',
-       title: 'Score'
-      ,width: '7%'
-      ,formatter: 'formatterEvent'
-                                    //formatter: formatter, cellStyle: cellformatter}]);                                                                                                                
-     } 
-   ];
 
    totalGamesSingle = 0;
 }
