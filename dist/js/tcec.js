@@ -2692,19 +2692,19 @@ function drawBracket()
                if (data.lead == 0)
                {
                   appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
-                              '<div class="bracket-score"> <a> ' + data.score + '</a> </div>'
+                              '<div class="bracket-score"> <a> (' + data.score + ')</a> </div>'
                   $(container).parent().addClass('bracket-name-current');
                }
                else if (data.lead == 1)
                {
                   appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
-                              '<div class="bracket-score green"> <a> ' + data.score + '</a> </div>'
+                              '<div class="bracket-score green"> <a> (' + data.score + ')</a> </div>'
                   $(container).parent().addClass('bracket-name-green');
                }
                else
                {
                   appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
-                              '<div class="bracket-score red"> <a> ' + data.score + '</a> </div>'
+                              '<div class="bracket-score red"> <a> (' + data.score + ')</a> </div>'
                   $(container).parent().addClass('bracket-name-red');
                }
                container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append(appendStr);
