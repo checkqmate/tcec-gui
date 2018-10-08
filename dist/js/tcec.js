@@ -2363,6 +2363,17 @@ function sleep(ms)
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function shortName(name)
+{
+   var retName = '';
+
+   if (name.indexOf(' ') > 0) 
+   {                                                                                                                                                                                                              
+       retName = name.substring(0, name.indexOf(' '));
+   }
+   return retName;
+}
+
 async function eventCrosstable()
 {
    standings = [];
@@ -2405,6 +2416,36 @@ async function eventCrosstable()
    }
    console.log ("drawing standings with entries:" + standings.length + " and time" + timeWaited);
    $(divname).bootstrapTable('load', standings);
+   for (var i = 1 ; i <= 16 ; i ++)
+   {
+      // Check if we found the next round file
+      var entry = [{name: bigData.teams[i-1][0], flag: shortName(bigData.teams[i-1][0]), score: ''}, {name: bigData.teams[i-1][1], flag: shortName(bigData.teams[i-1][1]), score:''}];
+      bigData.teams[i-1] = entry;
+      if (tablesLoaded[i+1] != 1)
+      {
+         if (bigData.results[0][0][i-1][1] || bigData.results[0][0][i-1][0])
+         {
+            entry[0].score = bigData.results[0][0][i-1][0];
+            entry[1].score = bigData.results[0][0][i-1][1];
+            entry[0].lead = 0;
+            entry[1].lead = 0;
+            if (entry[0].score > entry[1].score)
+            {
+               entry[0].lead = 1;
+               entry[1].lead = -1;
+            }
+            else if (entry[0].score < entry[1].score)
+            {
+               entry[1].lead = 1;
+               entry[0].lead = -1;
+            }
+            bigData.teams[i-1] = entry;
+         }
+         bigData.results[0][0][i-1][0] = 0;
+         bigData.results[0][0][i-1][1] = 0;
+      }
+   }
+   drawBracket();
 }
 
 function eventCrosstableMain(ii, filename)
@@ -2413,7 +2454,7 @@ function eventCrosstableMain(ii, filename)
    .then(function (r)
    {
       updateCrosstableDataNew(ii, r.data);
-      tablesLoaded[ii] = 0;
+      tablesLoaded[ii] = 1;
    })
    .catch(function (error) 
    {
@@ -2456,6 +2497,7 @@ function updateCrosstableDataNew(ii, data)
         {
            entry.name =  entry.name + ' vs ' + engine;
         }
+        bigData.results[0][0][ii-1][1] = engineDetails.Score;
         return 1;
      }
      entry = {
@@ -2466,6 +2508,7 @@ function updateCrosstableDataNew(ii, data)
        points: engineDetails.Score,
        crashes: engineDetails.Strikes
      };
+     bigData.results[0][0][ii-1][0] = engineDetails.Score;
      if (!totalGamesSingle)
      {
         totalGamesSingle = engineDetails.Games;
@@ -2556,3 +2599,114 @@ function formatterEvent(value, row, index, field) {
   return retStr;
 }
 
+var bigData = {                                                                                                                                                                              
+  teams : [                                                                                                                                                                                  
+      ["Stockfish 270918", "Ivanhoe 999946h"], 
+      ["Gull 180521", "Texel 1.08a11"], 
+      ["Fizbo 2", "Hannibal 20180922"], 
+      ["Chiron S13.2", "Nemorino 5.05"], 
+      ["Fire 7.1", "Senpai 2.0"], 
+      ["Vajolet2 2.6.1", "Booot 6.3.1"], 
+      ["Laser 250918", "Lc0 18.11248"], 
+      ["Ethereal 11.06", "Rodent III 1.0.171"], 
+      ["Komodo 2135.10", "Tucano 7.06"], 
+      ["Xiphos 0.4.2", "Nirvana 2.4"], 
+      ["Fritz 16.10", "Deus X 1.1"], 
+      ["Ginkgo 2.12", "Bobcat 8"], 
+      ["Houdini 6.03", "chess22k 1.11"], 
+      ["ChessBrainVB 3.70", "Arasan TCECS13.2"], 
+      ["Jonny 8.1", "Pedone 1.9"], 
+      ["Andscacs 094030", "Wasp 3.3"]
+  ],                                                                                                                                                                                         
+  results : [[ /* WINNER BRACKET */                                                                                                                                                          
+    [[0,0, "empty-bye"], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0, "arun"], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0]],
+    [[0,0, "arun"], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0]],                                                                                                                        
+    [[0,0], [0,0], [0,0], [0,0]],                                                                                                                                                            
+    [[0,0], [0,0]],                                                                                                                                                                          
+    [[0,0]]                                                                                                                                                                                  
+  ]                                                                                                                                                                                          
+  ]                                                                                                                                                                                          
+}                                                                                                                                                                                            
+console.log ("bigData is " + bigData.results[0][0][6]);
+
+function drawBracket()
+{
+   function onClick(data)
+   {
+      //alert(data);
+   }
+   /* Edit function is called when team label is clicked */
+   function edit_fn(container, data, doneCb) {
+     var input = $('<input type="text">')
+     input.val(data ? data.flag + ':' + data.name : '')
+     container.html(input)
+     input.focus()
+     input.blur(function() {
+       var inputValue = input.val()
+       if (inputValue.length === 0) {
+         doneCb(null); // Drop the team and replace with BYE
+       } else {
+         var flagAndName = inputValue.split(':') // Expects correct input
+         doneCb({flag: flagAndName[0], name: flagAndName[1]})
+       }
+     })
+   }
+
+   function render_fn(container, data, score, state) {
+        console.log ("state is " + state);
+        switch(state) {
+          case "empty-bye":
+            container.append("No team")
+            return;
+          case "empty-tbd":
+            container.append("Upcoming")
+            return;
+       
+          case "entry-no-score":
+          case "entry-default-win":
+          case "entry-complete":
+            if (data.score != '')
+            {
+               var appendStr = '';
+               if (data.lead == 0)
+               {
+                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
+                              '<div class="bracket-score"> <a> ' + data.score + '</a> </div>'
+                  $(container).parent().addClass('bracket-name-current');
+               }
+               else if (data.lead == 1)
+               {
+                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
+                              '<div class="bracket-score green"> <a> ' + data.score + '</a> </div>'
+                  $(container).parent().addClass('bracket-name-green');
+               }
+               else
+               {
+                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
+                              '<div class="bracket-score red"> <a> ' + data.score + '</a> </div>'
+                  $(container).parent().addClass('bracket-name-red');
+               }
+               container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append(appendStr);
+            }
+            else
+            {
+               container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append('<div class="bracket-name"> <a> ' + data.name + '</a> </div>')
+            }
+            return;
+        }
+   }
+   $(function () {
+      console.log ("Came to clock bracket");
+      $('#bracket').bracket({
+         init: bigData,
+         centerConnectors: true,
+         teamWidth: 200,
+         scoreWidth: 30,
+         matchMargin: 25,
+         roundMargin: 30,
+         onMatchClick: onClick
+         ,decorator: {edit: edit_fn,
+                  render: render_fn}
+   });                                                                                                                                                                                          
+   });                                                                                                                                                                                          
+}

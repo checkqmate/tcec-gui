@@ -81,6 +81,12 @@ body {
 	width: 28px;
 }
 
+.bracket-material {
+	height: 18px;
+	width: 36px;
+   float:left;
+}
+
 #engine-history 
 {
    max-height: 170px !important;
@@ -101,7 +107,6 @@ body {
 #event-overview th,
 #engine-eval th,
 #live-eval th,
-#crosstableevent th,
 #schedule th 
 {
     background-color: #191919;
@@ -344,4 +349,39 @@ canvas {
 {
    overflow-y:scroll;
    -webkit-overflow-scrolling: touch;
+}
+
+.bracket-name-red
+{
+   border: 2px solid red;
+}
+.bracket-name-green
+{
+   border: 2px solid green;
+}
+.bracket-name-current
+{
+   border: 2px solid #007bff;
+}
+
+.bracket-name
+{
+   float:left;
+   margin-left: 5px;
+}
+
+.bracket-score
+{
+   float:right;
+   margin-right: 2px;
+}
+
+.red
+{
+  color:red
+}
+
+.green
+{
+   color: '#39FF14'
 }
