@@ -2420,7 +2420,6 @@ async function eventCrosstable()
    for (var i = 1 ; i <= 16 ; i ++)
    {
       // Check if we found the next round file
-      console.log ("name is " + bigData.teams[i-1][0]);
       var entry = bigData.teams[i-1];
       bigData.teams[i-1] = entry;
       if (tablesLoaded[i+1] != 1)
@@ -2674,7 +2673,6 @@ function drawBracket()
    }
 
    function render_fn(container, data, score, state) {
-        console.log ("state is " + state);
         switch(state) {
           case "empty-bye":
             container.append("No team")
