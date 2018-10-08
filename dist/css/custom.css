@@ -353,15 +353,15 @@ canvas {
 
 .bracket-name-red
 {
-   border: 2px solid red;
+   border: 3px solid red;
 }
 .bracket-name-green
 {
-   border: 2px solid green;
+   border: 3px solid green;
 }
 .bracket-name-current
 {
-   border: 2px solid #007bff;
+   border: 3px solid #007bff;
 }
 
 .bracket-name
