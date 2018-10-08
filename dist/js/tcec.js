@@ -2374,6 +2374,14 @@ function shortName(name)
    return retName;
 }
 
+function getCurrDate (currdate)
+{
+   var timezoneDiff = moment().utcOffset() * 60 * 1000;
+   momentDate = moment(currdate, 'HH:mm:ss on YYYY.MM.DD');
+   momentDate.add(timezoneDiff);
+   return momentDate.format('MMM DD YYYY, HH:mm');
+}
+
 async function eventCrosstable()
 {
    standings = [];
@@ -2391,7 +2399,7 @@ async function eventCrosstable()
    for (var i = 1 ; i <= 16 ; i++)
    {
       tablesLoaded[i] = -1;
-      bigData.teams[i-1] = [{name: teamsx[i-1][0], flag: shortName(teamsx[i-1][0]), score: ''}, {name: teamsx[i-1][1], flag: shortName(teamsx[i-1][1]), score: ''}];
+      bigData.teams[i-1] = [{name: teamsx[i-1][0], flag: shortName(teamsx[i-1][0]), score: '', rank: '1', date: ''}, {name: teamsx[i-1][1], flag: shortName(teamsx[i-1][1]), score: '', rank: '2', date: ''}];
       eventCrosstableMain(i, filenames[i]);
    }
 
@@ -2415,13 +2423,30 @@ async function eventCrosstable()
          console.log("Waited long time to load, bailing out");
       }
    }
+
+   bigData.teams[0][0].date = [getCurrDate('12:30:00 on 2018.10.05'), ''];
+   bigData.teams[1][0].date = [getCurrDate('18:00:00 on 2018.10.05'), ''];
+   bigData.teams[2][0].date = [getCurrDate('12:30:00 on 2018.10.06'), ''];
+   bigData.teams[3][0].date = [getCurrDate('18:00:00 on 2018.10.06'), ''];
+   bigData.teams[4][0].date = [getCurrDate('12:30:00 on 2018.10.07'), ''];
+   bigData.teams[5][0].date = [getCurrDate('18:00:00 on 2018.10.07'), ''];
+   bigData.teams[6][0].date = [getCurrDate('12:30:00 on 2018.10.08'), ''];
+   bigData.teams[7][0].date = [getCurrDate('18:00:00 on 2018.10.08'), ''];
+   bigData.teams[8][0].date = [getCurrDate('12:30:00 on 2018.10.09'), ''];
+   bigData.teams[9][0].date = [getCurrDate('18:00:00 on 2018.10.09'), ''];
+   bigData.teams[10][0].date = [getCurrDate('12:30:00 on 2018.10.10'), ''];
+   bigData.teams[11][0].date = [getCurrDate('18:00:00 on 2018.10.10'), ''];
+   bigData.teams[12][0].date = [getCurrDate('12:30:00 on 2018.10.11'), ''];
+   bigData.teams[13][0].date = [getCurrDate('18:00:00 on 2018.10.11'), ''];
+   bigData.teams[14][0].date = [getCurrDate('12:30:00 on 2018.10.12'), ''];
+   bigData.teams[15][0].date = [getCurrDate('18:00:00 on 2018.10.12'), ''];
+
    console.log ("drawing standings with entries:" + standings.length + " and time" + timeWaited);
    $(divname).bootstrapTable('load', standings);
    for (var i = 1 ; i <= 16 ; i ++)
    {
       // Check if we found the next round file
       var entry = bigData.teams[i-1];
-      bigData.teams[i-1] = entry;
       if (tablesLoaded[i+1] != 1)
       {
          if (bigData.results[0][0][i-1][1] || bigData.results[0][0][i-1][0])
@@ -2430,6 +2455,7 @@ async function eventCrosstable()
             entry[1].score = bigData.results[0][0][i-1][1];
             entry[0].lead = 0;
             entry[1].lead = 0;
+            entry[0].date = entry[0].date;
             if (entry[0].score > entry[1].score)
             {
                entry[0].lead = 1;
@@ -2499,7 +2525,7 @@ function updateCrosstableDataNew(ii, data)
            entry.name =  entry.name + ' vs ' + engine;
         }
         bigData.results[0][0][ii-1][1] = engineDetails.Score;
-        bigData.teams[ii-1][1] = {name: engine, flag: shortName(engine), score: ''};
+        bigData.teams[ii-1][1] = {name: engine, flag: shortName(engine), score: '', rank: 2};
         return 1;
      }
      entry = {
@@ -2511,7 +2537,7 @@ function updateCrosstableDataNew(ii, data)
        crashes: engineDetails.Strikes
      };
      bigData.results[0][0][ii-1][0] = engineDetails.Score;
-     bigData.teams[ii-1][0] = {name: engine, flag: shortName(engine), score: ''};
+     bigData.teams[ii-1][0] = {name: engine, flag: shortName(engine), score: '', rank: 1};
      if (!totalGamesSingle)
      {
         totalGamesSingle = engineDetails.Games;
@@ -2647,8 +2673,6 @@ var bigData = {
   ]                                                                                                                                                                                          
   ]                                                                                                                                                                                          
 }                                                                                                                                                                                        
-console.log ("bigData is " + bigData.results[0][0][6]);
-
 function drawBracket()
 {
    function onClick(data)
@@ -2705,10 +2729,36 @@ function drawBracket()
                               '<div class="bracket-score red"> <a> (' + data.score + ')</a> </div>'
                   $(container).parent().addClass('bracket-name-red');
                }
+               if (data.rank == 11)
+               {
+                  if (data.date[1] != '')
+                  {
+                     $('<div class="labelbracket"> <a> ' + data.date[1] + '</a> </div>').insertBefore(container);
+                     data.rank = 21;
+                  }
+               }
+               else if (data.rank == 1)
+               {
+                  $('<div class="labelbracket"> <a> ' + data.date[0] + '</a> </div>').insertBefore(container);
+                  data.rank = 11;
+               }
                container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append(appendStr);
             }
             else
             {
+               if (data.rank == 11)
+               {
+                  if (data.date[1] != '')
+                  {
+                     $('<div class="labelbracket"> <a> ' + data.date[1] + '</a> </div>').insertBefore(container);
+                     data.rank = 21;
+                  }
+               }
+               else if (data.rank == 1)
+               {
+                  $('<div class="labelbracket"> <a> ' + data.date[0] + '</a> </div>').insertBefore(container);
+                  data.rank = 11;
+               }
                container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append('<div class="bracket-name"> <a> ' + data.name + '</a> </div>')
             }
             return;
@@ -2721,7 +2771,7 @@ function drawBracket()
          centerConnectors: true,
          teamWidth: 200,
          scoreWidth: 30,
-         matchMargin: 25,
+         matchMargin: 45,
          roundMargin: 30,
          onMatchClick: onClick
          ,decorator: {edit: edit_fn,
