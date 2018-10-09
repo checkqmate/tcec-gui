@@ -2468,7 +2468,7 @@ function getDateRound()
 
 async function eventCrosstable()
 {
-   standings = [];
+   var standings = [];
    gamesEachMatch = [];
    tablesLoaded = [];
 
@@ -2509,6 +2509,7 @@ async function eventCrosstable()
    }
 
    $(divname).bootstrapTable('load', standings);
+   await sleep(500);
    drawBracket();
 }
 
@@ -2778,6 +2779,7 @@ var roundNo = 2;
 
 function drawBracket()
 {
+   console.log ("Came to drawBracket");
    roundNo = 2;
    getDateRound();
    function onClick(data)
