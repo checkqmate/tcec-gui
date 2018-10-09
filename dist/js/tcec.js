@@ -1645,7 +1645,7 @@ function updateTables()
    }
    try 
    {
-      //updateLiveEval();
+      updateLiveEval();
    }
    catch(err)
    {
@@ -1653,7 +1653,7 @@ function updateTables()
    }
    try 
    {
-      //updateLiveChart();
+      updateLiveChart();
    }
    catch(err)
    {
