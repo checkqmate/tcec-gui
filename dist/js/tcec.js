@@ -2523,7 +2523,6 @@ async function eventCrosstable()
          console.log("Waited long time to load, bailing out");
       }
    }
-   await sleep(1000);
    console.log("time taken: " + timeWaited);
    for (var i = 0 ; i < totalEvents; i++)
    {
@@ -2534,6 +2533,7 @@ async function eventCrosstable()
    }
 
    $(divname).bootstrapTable('load', standings);
+   await sleep(3000);
    drawBracket();
 }
 
@@ -2838,7 +2838,6 @@ function drawBracket()
             container.append("No team")
             return;
           case "empty-tbd":
-            container.append("TBD")
             if (roundNo%2 == 1)
             {
                var befStr = '<div class="labelbracket"> <a> R#' + (localRound + 1) + '</a> ';
@@ -2846,13 +2845,17 @@ function drawBracket()
                {
                   befStr = befStr + '<a> (' + roundDate[localRound] + ')</a> </div>';
                }
+               else
+               {
+                  befStr = befStr + '</div>';
+               }
                $(befStr).insertBefore(container); 
             }
             if (localRound == 31)
             {
                $(container).parent().hide();
-               return;
             } 
+            container.append("TBD")
             return;
        
           case "entry-no-score":
@@ -2886,6 +2889,10 @@ function drawBracket()
                   {
                      befStr = befStr + '<a> (' + roundDate[localRound] + ')</a> </div>';
                   }
+                  else
+                  {
+                     befStr = befStr + '</div>';
+                  }
                   $(befStr).insertBefore(container); 
                }
                container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append(appendStr);
@@ -2913,13 +2920,12 @@ function drawBracket()
    }
    $(function () {
       $('#bracket').bracket({
-         init: bigData,
          centerConnectors: true,
          teamWidth: 200,
          scoreWidth: 30,
          matchMargin: 45,
          roundMargin: 30,
-         onMatchClick: onClick
+         init: bigData
          ,decorator: {edit: edit_fn,
                   render: render_fn}
    });                                                                                                                                                                                          
