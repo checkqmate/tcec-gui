@@ -1262,7 +1262,7 @@ function updateCrosstableData(data)
    var crosstableData = data;
 
    var abbreviations = [];
-   var standings = [];
+   var standingsCross = [];
 
    _.each(crosstableData.Table, function(engine, key) {
      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
@@ -1316,7 +1316,7 @@ function updateCrosstableData(data)
        _.set(entry, engineAbbreviation, score2);                                                                                                                                                      
      });                                                                                                                                                                                              
                                                                 
-     standings = _.union(standings, [entry]);
+     standingsCross = _.union(standingsCross, [entry]);
    });
 
    if (!crossTableInitialized) {
@@ -1388,7 +1388,7 @@ function updateCrosstableData(data)
      });
      crossTableInitialized = true;
    }
-   $('#crosstable').bootstrapTable('load', standings);
+   $('#crosstable').bootstrapTable('load', standingsCross);
 }
 
 function updateCrosstable() 
@@ -1617,7 +1617,6 @@ function updateTablesData(data)
    try 
    {
       eventCrosstable();
-      updateBracket();
    }
    catch(err)
    {
@@ -1630,7 +1629,7 @@ function updateTables()
    console.log ("Came to updateTables");
    try 
    {
-      setTimeout(function() { updateCrosstable(); }, 500);
+      setTimeout(function() { updateCrosstable(); }, 100);
    }
    catch(err)
    {
@@ -1638,7 +1637,7 @@ function updateTables()
    }
    try 
    {
-      setTimeout(function() { updateStandtable(); }, 1000);
+      setTimeout(function() { updateStandtable(); }, 300);
    }
    catch(err)
    {
@@ -1646,17 +1645,30 @@ function updateTables()
    }
    try 
    {
-      setTimeout(function() { 
-         eventCrosstable();
-         updateBracket();
-         }, 1500);
+      setTimeout(function() { updateLiveEval(); }, 600);
+   }
+   catch(err)
+   {
+      console.log ("Unable to update updateLiveEval");
+   }
+   try 
+   {
+      setTimeout(function() { updateLiveChart(); }, 1000);
    }
    catch(err)
    {
       console.log ("Unable to update brackets");
    }
-   setTimeout(function() { updateLiveEval(); }, 2000);
-   setTimeout(function() { updateLiveChart(); }, 2500);
+   try 
+   {
+      setTimeout(function() { 
+         eventCrosstable();
+         }, 2000);
+   }
+   catch(err)
+   {
+      console.log ("Unable to update brackets");
+   }
    console.log ("Exiting updateTables");
 }
 
@@ -2002,7 +2014,7 @@ function updateStandtableData(data)
    var standtableData = data;
 
    var abbreviations = [];
-   var standings = [];
+   var standingsStand = [];
 
    _.each(standtableData.Table, function(engine, key) {
      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
@@ -2049,7 +2061,7 @@ function updateStandtableData(data)
        _.set(entry, engineAbbreviation, score2);
      });
 
-     standings = _.union(standings, [entry]);
+     standingsStand = _.union(standingsStand, [entry]);
    });
 
    if (!standTableInitialized) {
@@ -2086,7 +2098,7 @@ function updateStandtableData(data)
      });
      standTableInitialized = true;
    }
-   $('#standtable').bootstrapTable('load', standings);
+   $('#standtable').bootstrapTable('load', standingsStand);
 }
 
 function updateStandtable() 
@@ -2365,11 +2377,6 @@ function schedSorted(a,b)
    return 0;
 }
 
-function updateBracket()
-{
-   $('#bracket').attr('src', $('#bracket').attr('src'));
-}
-
 var filenames = [];
 var tablesLoaded = [];
 
@@ -2466,13 +2473,15 @@ function getDateRound()
    }
 }
 
+var totalEvents = 16;
+
 async function eventCrosstable()
 {
-   var standings = [];
-   gamesEachMatch = [];
-   tablesLoaded = [];
-
    var divname = '#crosstableevent';
+   var startVar = 1;
+
+   gamesEachMatch = [];
+
    $(divname).bootstrapTable({
         classes: 'table table-striped table-no-bordered',
         columns: columnsEvent,
@@ -2480,7 +2489,16 @@ async function eventCrosstable()
         sortOrder: 'desc' 
       });
 
-   for (var i = 1 ; i <= 16 ; i++)
+   if (standings.lastLoaded != undefined)
+   {
+      startVar = standings.lastLoaded;
+      standings[startVar] = {};
+      tablesLoaded[startVar] = -1;
+   }
+
+   console.log ("Reading from file " + startVar);
+
+   for (var i = startVar ; i <= totalEvents; i++)
    {
       tablesLoaded[i] = -1;
       bigData.teams[i-1] = [{name: teamsx[i-1][0], flag: shortName(teamsx[i-1][0]), score: -1, rank: '1', date: '', lead: 0}, {name: teamsx[i-1][1], flag: shortName(teamsx[i-1][1]), score: -1, rank: '2', date: '', lead: 0}];
@@ -2491,7 +2509,7 @@ async function eventCrosstable()
    var timeWaited = 0;
    while (loaded == 0)
    {
-      for (var i = 1 ; i <= 16 ; i++)
+      for (var i = 1 ; i <= totalEvents; i++)
       {
          loaded = 1;
          if (tablesLoaded[i] == -1)
@@ -2505,6 +2523,13 @@ async function eventCrosstable()
       if (timeWaited > 50000)
       {
          console.log("Waited long time to load, bailing out");
+      }
+   }
+   for (var i = 0 ; i < totalEvents; i++)
+   {
+      if (tablesLoaded[i] == 1)
+      {
+         standings.lastLoaded = i;
       }
    }
 
