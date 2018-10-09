@@ -408,4 +408,6 @@ canvas {
 .darkback
 {
    background-color: black;
+   width: 1300px;
+   margin-left:80px;
 }
