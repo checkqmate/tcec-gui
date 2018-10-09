@@ -2471,9 +2471,25 @@ function eventCrosstableMain(ii, filename)
 function checkMatchDone(firstEntry, currEntry)
 {
    var isSame = 1;
+   var totalGames = 8;
 
    /* Check if 2nd rank can still catch up */
-   if ((8 - currEntry.Games) + currEntry.Score >= firstEntry.point)
+   if (currEntry.Games <= 8)
+   {
+      totalGames = 8;
+   }
+   else
+   {
+      if (currEntry.Games%2 == 0)
+      {
+         totalGames = currEntry.Games;
+      }
+      else
+      {
+         totalGames = currEntry.Games + 1;
+      }
+   }
+   if ((totalGames - currEntry.Games) + currEntry.Score >= firstEntry.point)
    {
       isSame = 0;
    }
@@ -2482,6 +2498,7 @@ function checkMatchDone(firstEntry, currEntry)
    {
       isSame = 1;
    }
+   console.log ("checkMatchDone: currEntry : " + currEntry.Abbreviation + " result:" + isSame + ", totalgames" + totalGames);
    return isSame;
 }
 
