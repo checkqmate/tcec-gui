@@ -1663,7 +1663,7 @@ function updateTables()
    {
       setTimeout(function() { 
          eventCrosstable();
-         }, 2000);
+         }, 1000);
    }
    catch(err)
    {
@@ -2534,7 +2534,7 @@ async function eventCrosstable()
    }
 
    $(divname).bootstrapTable('load', standings);
-   await sleep(500);
+   await sleep(1000);
    drawBracket();
 }
 
@@ -2812,7 +2812,7 @@ function drawBracket()
       //alert(data);
    }
    /* Edit function is called when team label is clicked */
-   function edit_fn(container, data, doneCb) {
+   function edit_fn1(container, data, doneCb) {
      var input = $('<input type="text">')
      input.val(data ? data.flag + ':' + data.name : '')
      container.html(input)
@@ -2827,14 +2827,12 @@ function drawBracket()
        }
      })
    }
+   function edit_fn(container, data, doneCb) {
+      return;
+   }
 
    function render_fn(container, data, score, state) {
         var localRound = parseInt(roundNo/2) - 1;
-        if (localRound == 31)
-        {
-           $(container).parent().hide();
-           return;
-        } 
         roundNo ++;  
         switch(state) {
           case "empty-bye":
@@ -2851,6 +2849,11 @@ function drawBracket()
                }
                $(befStr).insertBefore(container); 
             }
+            if (localRound == 31)
+            {
+               $(container).parent().hide();
+               return;
+            } 
             return;
        
           case "entry-no-score":
@@ -2901,6 +2904,11 @@ function drawBracket()
                }
                container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append('<div class="bracket-name"> <a> ' + data.name + '</a> </div>')
             }
+            if (localRound == 31)
+            {
+               $(container).parent().hide();
+               return;
+            } 
             return;
         }
    }
