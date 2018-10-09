@@ -2743,6 +2743,11 @@ function drawBracket()
 
    function render_fn(container, data, score, state) {
         var localRound = parseInt(roundNo/2) - 1;
+        if (localRound == 31)
+        {
+           $(container).parent().hide();
+           return;
+        } 
         roundNo ++;  
         switch(state) {
           case "empty-bye":
