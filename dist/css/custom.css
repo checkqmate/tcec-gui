@@ -391,6 +391,7 @@ canvas {
 
 .labelbracket
 {
+   height:20px;
    background-color: grey;
    color: white;
    font-size:small;

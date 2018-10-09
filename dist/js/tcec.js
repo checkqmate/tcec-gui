@@ -2523,7 +2523,7 @@ async function eventCrosstable()
          console.log("Waited long time to load, bailing out");
       }
    }
-   await sleep(2000);
+   await sleep(1000);
    console.log("time taken: " + timeWaited);
    for (var i = 0 ; i < totalEvents; i++)
    {
