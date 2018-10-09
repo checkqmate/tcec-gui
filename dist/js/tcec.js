@@ -54,7 +54,7 @@ var onMoveEndPv = function() {
 function updateAll()
 {
    updatePgn(1);
-   setTimeout(function() { updateTables(); }, 5000);
+   setTimeout(function() { updateTables(); }, 2000);
 }
 
 function updatePgnData(data, read)
@@ -103,7 +103,7 @@ function updatePgn(resettime)
    })
    .catch(function (error) {
      // handle error
-      console.log(error);
+      //console.log(error);
    });
 }
 
@@ -1389,12 +1389,11 @@ function updateCrosstableData(data)
      crossTableInitialized = true;
    }
    $('#crosstable').bootstrapTable('load', standings);
-  console.log ("Calling eventCrosstable");
 }
 
 function updateCrosstable() 
 {
-   axios.get('crosstable.json')
+   axios.get('crosstable.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
       updateCrosstableData(response.data);
@@ -1402,7 +1401,7 @@ function updateCrosstable()
    .catch(function (error) 
    {
       // handle error
-      console.log(error);
+      //console.log(error);
    });
 }
 
@@ -1452,7 +1451,7 @@ function updateScheduleData(data)
 
 function updateSchedule() 
 {
-    axios.get('schedule.json')
+   axios.get('schedule.json?no-cache' + (new Date()).getTime())
     .then(function (response) {
       updateScheduleData(response.data);
     })
@@ -1597,12 +1596,62 @@ function setBoard()
    localStorage.setItem('tcec-piece-theme', ptheme);
 }
 
+function updateTablesData(data)
+{
+   try 
+   {
+      updateCrosstableData(data);
+   }
+   catch(err)
+   {
+      console.log ("Unable to update crosstable from data");
+   }
+   try 
+   {
+      updateStandtableData(data);
+   }
+   catch(err)
+   {
+      console.log ("Unable to update standtable from data");
+   }
+   try 
+   {
+      eventCrosstable();
+      updateBracket();
+   }
+   catch(err)
+   {
+      console.log ("Unable to update brackets from data");
+   }
+}
+
 function updateTables()
 {
-  updateCrosstable();
-  updateStandtable();
-  eventCrosstable();
-  updateBracket();
+   try 
+   {
+      updateCrosstable();
+   }
+   catch(err)
+   {
+      console.log ("Unable to update crosstable");
+   }
+   try 
+   {
+      updateStandtable();
+   }
+   catch(err)
+   {
+      console.log ("Unable to update standtable");
+   }
+   try 
+   {
+      eventCrosstable();
+      updateBracket();
+   }
+   catch(err)
+   {
+      console.log ("Unable to update brackets");
+   }
 }
 
 function setTwitchBackgroundInit(backg)
@@ -1906,7 +1955,7 @@ function updateLiveEvalData(data)
 }
 
 function updateLiveEval() {
-   axios.get('data.json')
+   axios.get('data.json?no-cache' + (new Date()).getTime())
    .then(function (response) 
    {
       updateLiveEvalData(response.data);
@@ -1932,7 +1981,7 @@ function updateLiveChartData(data)
 
 function updateLiveChart() 
 {
-   axios.get('liveeval.json')
+   axios.get('liveeval.json?no-cache' + (new Date()).getTime())
    .then(function (response) {
       updateLiveChartData(response.data);
    })
@@ -2036,7 +2085,7 @@ function updateStandtableData(data)
 
 function updateStandtable() 
 {
-   axios.get('crosstable.json')
+   axios.get('crosstable.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
       updateStandtableData(response.data);
@@ -2459,6 +2508,7 @@ async function eventCrosstable()
 
 function eventCrosstableMain(ii, filename)
 {
+   filename = filename + '?no-cache' + (new Date()).getTime();
    axios.get(filename)
    .then(function (r)
    {
@@ -2467,7 +2517,7 @@ function eventCrosstableMain(ii, filename)
    })
    .catch(function (error) 
    {
-      console.log(error);
+      //console.log(error);
       tablesLoaded[ii] = 0;
    });
 }

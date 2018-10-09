@@ -682,7 +682,7 @@
         <div class="tab-pane show active fade smallfont scheduleclass" id="pills-sched" role="tabpanel" aria-labelledby="pills-sched-tab"> 
             <iframe src="//bracketcloud.com/embed/131265" width="1200" height="1700" scrolling="no" frameborder="0" allowtransparency="true" title="BracketCloud Tournament" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe><br/><small><span style="color:#a3a3a3">Updates every minute - </span><a href="//bracketcloud.com/tournament/131265" style="color:#0088cc;text-align:left">View full tournament</a></small>
         </div>                                                                                                                                                                                        
-        <div class="tab-pane active fade smallfont scheduleclass darkback" id="pills-trial" role="tabpanel" aria-labelledby="pills-trial-tab"> 
+        <div class="tab-pane fade smallfont scheduleclass darkback" id="pills-trial" role="tabpanel" aria-labelledby="pills-trial-tab"> 
               <table class="table-dark table-noborder" width="1290" border=0 style="font-size:medium;background-color:transparent">
                  <tr>
                    <td style="width: 15%; color: green">Round of 32</th>
@@ -1042,9 +1042,7 @@ OS: Ubuntu 18.04 server
       var socket = io.connect('http://tcec.chessdom.com:8888');
      
       socket.on('crosstable', function(data){
-         updateCrosstableData(data);
-         updateStandtableData(data);
-         eventCrosstable();
+         updateTablesData(data);
          });
       socket.on('liveeval', function(data){
          updateLiveEvalData(data);
