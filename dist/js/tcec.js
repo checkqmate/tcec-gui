@@ -2532,8 +2532,11 @@ async function eventCrosstable()
       }
    }
 
+   await sleep(1000);
+   console.log ("drawing standings");
    $(divname).bootstrapTable('load', standings);
-   await sleep(3000);
+   await sleep(2000);
+   console.log ("drawing bracket");
    drawBracket();
 }
 
