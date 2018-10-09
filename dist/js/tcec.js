@@ -2385,6 +2385,8 @@ function getCurrDate (currdate)
    return momentDate.format('MMM DD YYYY, HH:mm');
 }
 
+var roundDate = [];
+
 async function eventCrosstable()
 {
    standings = [];
@@ -2402,7 +2404,7 @@ async function eventCrosstable()
    for (var i = 1 ; i <= 16 ; i++)
    {
       tablesLoaded[i] = -1;
-      bigData.teams[i-1] = [{name: teamsx[i-1][0], flag: shortName(teamsx[i-1][0]), score: '', rank: '1', date: ''}, {name: teamsx[i-1][1], flag: shortName(teamsx[i-1][1]), score: '', rank: '2', date: ''}];
+      bigData.teams[i-1] = [{name: teamsx[i-1][0], flag: shortName(teamsx[i-1][0]), score: -1, rank: '1', date: '', lead: 0}, {name: teamsx[i-1][1], flag: shortName(teamsx[i-1][1]), score: -1, rank: '2', date: '', lead: 0}];
       eventCrosstableMain(i, filenames[i]);
    }
 
@@ -2427,53 +2429,30 @@ async function eventCrosstable()
       }
    }
 
-   bigData.teams[0][0].date = [getCurrDate('12:30:00 on 2018.10.05'), ''];
-   bigData.teams[1][0].date = [getCurrDate('18:00:00 on 2018.10.05'), ''];
-   bigData.teams[2][0].date = [getCurrDate('12:30:00 on 2018.10.06'), ''];
-   bigData.teams[3][0].date = [getCurrDate('18:00:00 on 2018.10.06'), ''];
-   bigData.teams[4][0].date = [getCurrDate('12:30:00 on 2018.10.07'), ''];
-   bigData.teams[5][0].date = [getCurrDate('18:00:00 on 2018.10.07'), ''];
-   bigData.teams[6][0].date = [getCurrDate('12:30:00 on 2018.10.08'), ''];
-   bigData.teams[7][0].date = [getCurrDate('18:00:00 on 2018.10.08'), ''];
-   bigData.teams[8][0].date = [getCurrDate('12:30:00 on 2018.10.09'), ''];
-   bigData.teams[9][0].date = [getCurrDate('18:00:00 on 2018.10.09'), ''];
-   bigData.teams[10][0].date = [getCurrDate('12:30:00 on 2018.10.10'), ''];
-   bigData.teams[11][0].date = [getCurrDate('18:00:00 on 2018.10.10'), ''];
-   bigData.teams[12][0].date = [getCurrDate('12:30:00 on 2018.10.11'), ''];
-   bigData.teams[13][0].date = [getCurrDate('18:00:00 on 2018.10.11'), ''];
-   bigData.teams[14][0].date = [getCurrDate('12:30:00 on 2018.10.12'), ''];
-   bigData.teams[15][0].date = [getCurrDate('18:00:00 on 2018.10.12'), ''];
+   roundDate[0] = getCurrDate('12:30:00 on 2018.10.05');
+   roundDate[1] = getCurrDate('18:00:00 on 2018.10.05');
+   roundDate[2] = getCurrDate('12:30:00 on 2018.10.06');
+   roundDate[3] = getCurrDate('12:30:00 on 2018.10.06');
+   roundDate[4] = getCurrDate('12:30:00 on 2018.10.07');
+   roundDate[5] = getCurrDate('12:30:00 on 2018.10.07');
+   roundDate[6] = getCurrDate('12:30:00 on 2018.10.08');
+   roundDate[7] = getCurrDate('12:30:00 on 2018.10.08');
+   roundDate[8] = getCurrDate('12:30:00 on 2018.10.09');
+   roundDate[9] = getCurrDate('12:30:00 on 2018.10.09');
+   roundDate[10] = getCurrDate('12:30:00 on 2018.10.10');
+   roundDate[11] = getCurrDate('12:30:00 on 2018.10.10');
+   roundDate[12] = getCurrDate('12:30:00 on 2018.10.11');
+   roundDate[13] = getCurrDate('12:30:00 on 2018.10.11');
+   roundDate[14] = getCurrDate('12:30:00 on 2018.10.12');
+   roundDate[15] = getCurrDate('12:30:00 on 2018.10.12');
 
-   console.log ("drawing standings with entries:" + standings.length + " and time" + timeWaited);
    $(divname).bootstrapTable('load', standings);
    for (var i = 1 ; i <= 16 ; i ++)
    {
       // Check if we found the next round file
       var entry = bigData.teams[i-1];
-      if (tablesLoaded[i+1] != 1)
-      {
-         if (bigData.results[0][0][i-1][1] || bigData.results[0][0][i-1][0])
-         {
-            entry[0].score = bigData.results[0][0][i-1][0];
-            entry[1].score = bigData.results[0][0][i-1][1];
-            entry[0].lead = 0;
-            entry[1].lead = 0;
-            entry[0].date = entry[0].date;
-            if (entry[0].score > entry[1].score)
-            {
-               entry[0].lead = 1;
-               entry[1].lead = -1;
-            }
-            else if (entry[0].score < entry[1].score)
-            {
-               entry[1].lead = 1;
-               entry[0].lead = -1;
-            }
-            bigData.teams[i-1] = entry;
-         }
-         bigData.results[0][0][i-1][0] = 0;
-         bigData.results[0][0][i-1][1] = 0;
-      }
+      //bigData.results[0][0][i-1][0] = 0;
+      //bigData.results[0][0][i-1][1] = 0;
    }
    drawBracket();
 }
@@ -2491,6 +2470,23 @@ function eventCrosstableMain(ii, filename)
       console.log(error);
       tablesLoaded[ii] = 0;
    });
+}
+
+function checkMatchDone(firstEntry, currEntry)
+{
+   var isSame = 1;
+
+   /* Check if 2nd rank can still catch up */
+   if ((8 - currEntry.Games) + currEntry.Score >= firstEntry.point)
+   {
+      isSame = 0;
+   }
+
+   if (currEntry.Strikes > 3)
+   {
+      isSame = 1;
+   }
+   return isSame;
 }
 
 function updateCrosstableDataNew(ii, data) 
@@ -2514,10 +2510,15 @@ function updateCrosstableDataNew(ii, data)
      eloDiff = engineDetails.Rating + elo;
 
      gamesEvent = engineDetails.Games;
+     var rank = 1;
      if (totalGamesSingle)
      {
         crashes2 = engineDetails.Strikes;
         entry.crashes = entry.crashes + "/" + crashes2;
+
+        var isMatchLost = checkMatchDone(entry, engineDetails); 
+        var lead = 0;
+
         if (entry.point > engineDetails.Score)
         {
            entry.name = '<a style="color: ' + gameArrayClass[1] + '"> ' + entry.name + '</a> vs ' + 
@@ -2527,8 +2528,30 @@ function updateCrosstableDataNew(ii, data)
         {
            entry.name =  entry.name + ' vs ' + engine;
         }
-        bigData.results[0][0][ii-1][1] = engineDetails.Score;
-        bigData.teams[ii-1][1] = {name: engine, flag: shortName(engine), score: '', rank: 2};
+
+        bigData.teams[ii-1][1] = {name: engine, flag: shortName(engine), score: '', rank: 2, lead: lead};
+
+        if (isMatchLost)
+        {
+           lead = -1;
+           bigData.teams[ii-1][0].lead = 1;
+           bigData.results[0][0][ii-1][1] = engineDetails.Score;
+           bigData.results[0][0][ii-1][0] = entry.point;
+           bigData.teams[ii-1][1].score = -1;
+           bigData.teams[ii-1][0].score = -1;
+        }
+        else
+        {
+           bigData.results[0][0][ii-1][1] = 0;
+           bigData.results[0][0][ii-1][0] = 0;
+           bigData.teams[ii-1][1].score = engineDetails.Score;
+           bigData.teams[ii-1][0].score = entry.point;
+           if (entry.point > engineDetails.Score)
+           {
+              bigData.teams[ii-1][0].lead = 1;
+              bigData.teams[ii-1][1].lead = -1;
+           }
+        }
         return 1;
      }
      entry = {
@@ -2540,7 +2563,7 @@ function updateCrosstableDataNew(ii, data)
        crashes: engineDetails.Strikes
      };
      bigData.results[0][0][ii-1][0] = engineDetails.Score;
-     bigData.teams[ii-1][0] = {name: engine, flag: shortName(engine), score: '', rank: 1};
+     bigData.teams[ii-1][0] = {name: engine, flag: shortName(engine), score: '', rank: 1, lead:0};
      if (!totalGamesSingle)
      {
         totalGamesSingle = engineDetails.Games;
@@ -2632,22 +2655,23 @@ function formatterEvent(value, row, index, field) {
 }
 
 var teamsx = [["Stockfish 270918", "Ivanhoe 999946h"],
-      ["Gull 180521", "Texel 1.08a11"],                                                                                                                                                                                                       
-      ["Fizbo 2", "Hannibal 20180922"],                                                                                                                                                                                                       
-      ["Chiron S13.2", "Nemorino 5.05"],                                                                                                                                                                                                      
-      ["Fire 7.1", "Senpai 2.0"],                                                                                                                                                                                                             
-      ["Vajolet2 2.6.1", "Booot 6.3.1"],                                                                                                                                                                                                      
-      ["Laser 250918", "Lc0 18.11248"],                                                                                                                                                                                                       
-      ["Ethereal 11.06", "Rodent III 1.0.171"],                                                                                                                                                                                               
-      ["Komodo 2135.10", "Tucano 7.06"],                                                                                                                                                                                                      
-      ["Xiphos 0.4.2", "Nirvana 2.4"],                                                                                                                                                                                                        
-      ["Fritz 16.10", "DeusX 1.1"],                                                                                                                                                                                                          
-      ["Ginkgo 2.12", "Bobcat 8"],                                                                                                                                                                                                            
-      ["Houdini 6.03", "Chess22k 1.11"],                                                                                                                                                                                                      
-      ["ChessBrainVB 3.70", "Arasan TCECS13.2"],                                                                                                                                                                                              
-      ["Jonny 8.1", "Pedone 1.9"],                                                                                                                                                                                                            
-      ["Andscacs 094030", "Wasp 3.3"]                                                                                                                                                                                                         
+      ["Gull 180521", "Texel 1.08a11"],
+      ["Fizbo 2", "Hannibal 20180922"],
+      ["Chiron S13.2", "Nemorino 5.05"],
+      ["Fire 7.1", "Senpai 2.0"],
+      ["Vajolet2 2.6.1", "Booot 6.3.1"],
+      ["Laser 250918", "Lc0 18.11248"],
+      ["Ethereal 11.06", "Rodent III 1.0.171"],
+      ["Komodo 2135.10", "Tucano 7.06"],
+      ["Xiphos 0.4.2", "Nirvana 2.4"],
+      ["Fritz 16.10", "DeusX 1.1"],
+      ["Ginkgo 2.12", "Bobcat 8"],
+      ["Houdini 6.03", "Chess22k 1.11"],
+      ["ChessBrainVB 3.70", "Arasan TCECS13.2"],
+      ["Jonny 8.1", "Pedone 1.9"],
+      ["Andscacs 094030", "Wasp 3.3"]
   ];
+
 var bigData = {                                                                                                                                                                              
   teams : [                                                                                                                                                                                  
       ["Stockfish 270918", "Ivanhoe 999946h"], 
@@ -2676,6 +2700,9 @@ var bigData = {
   ]                                                                                                                                                                                          
   ]                                                                                                                                                                                          
 }                                                                                                                                                                                        
+
+var roundNo = 2;
+
 function drawBracket()
 {
    function onClick(data)
@@ -2700,18 +2727,29 @@ function drawBracket()
    }
 
    function render_fn(container, data, score, state) {
+        var localRound = parseInt(roundNo/2) - 1;
+        roundNo ++;  
         switch(state) {
           case "empty-bye":
             container.append("No team")
             return;
           case "empty-tbd":
             container.append("Upcoming")
+            if (roundNo%2 == 1)
+            {
+               var befStr = '<div class="labelbracket"> <a> R#' + (localRound + 1) + '</a> ';
+               if (roundDate[localRound] != undefined)
+               {
+                  befStr = befStr + '<a> (' + roundDate[localRound] + ')</a> </div>';
+               }
+               $(befStr).insertBefore(container); 
+            }
             return;
        
           case "entry-no-score":
           case "entry-default-win":
           case "entry-complete":
-            if (data.score != '')
+            if (data.score >= 0)
             {
                var appendStr = '';
                if (data.lead == 0)
@@ -2732,35 +2770,27 @@ function drawBracket()
                               '<div class="bracket-score red"> <a> (' + data.score + ')</a> </div>'
                   $(container).parent().addClass('bracket-name-red');
                }
-               if (data.rank == 11)
+               if (roundNo%2 == 1)
                {
-                  if (data.date[1] != '')
+                  var befStr = '<div class="labelbracket"> <a> R#' + (localRound + 1) + '</a> ';
+                  if (roundDate[localRound] != undefined)
                   {
-                     $('<div class="labelbracket"> <a> ' + data.date[1] + '</a> </div>').insertBefore(container);
-                     data.rank = 21;
+                     befStr = befStr + '<a> (' + roundDate[localRound] + ')</a> </div>';
                   }
-               }
-               else if (data.rank == 1)
-               {
-                  $('<div class="labelbracket"> <a> ' + data.date[0] + '</a> </div>').insertBefore(container);
-                  data.rank = 11;
+                  $(befStr).insertBefore(container); 
                }
                container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append(appendStr);
             }
             else
             {
-               if (data.rank == 11)
+               if (roundNo%2 == 1)
                {
-                  if (data.date[1] != '')
+                  var befStr = '<div class="labelbracket"> <a> R#' + (localRound + 1) + '</a> ';
+                  if (roundDate[localRound] != undefined)
                   {
-                     $('<div class="labelbracket"> <a> ' + data.date[1] + '</a> </div>').insertBefore(container);
-                     data.rank = 21;
+                     befStr = befStr + '<a> (' + roundDate[localRound] + ')</a> </div>';
                   }
-               }
-               else if (data.rank == 1)
-               {
-                  $('<div class="labelbracket"> <a> ' + data.date[0] + '</a> </div>').insertBefore(container);
-                  data.rank = 11;
+                  $(befStr).insertBefore(container); 
                }
                container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append('<div class="bracket-name"> <a> ' + data.name + '</a> </div>')
             }
@@ -2768,7 +2798,6 @@ function drawBracket()
         }
    }
    $(function () {
-      console.log ("Came to clock bracket");
       $('#bracket').bracket({
          init: bigData,
          centerConnectors: true,

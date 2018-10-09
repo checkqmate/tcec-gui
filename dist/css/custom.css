@@ -394,3 +394,12 @@ canvas {
    color: grey;
 }
 
+.labelleft
+{
+   float:left;
+}
+
+.labelright
+{
+   float:right;
+}
