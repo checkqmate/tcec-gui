@@ -1629,7 +1629,7 @@ function updateTables()
    console.log ("Came to updateTables");
    try 
    {
-      setTimeout(function() { updateCrosstable(); }, 100);
+      updateCrosstable();
    }
    catch(err)
    {
@@ -1637,7 +1637,7 @@ function updateTables()
    }
    try 
    {
-      setTimeout(function() { updateStandtable(); }, 300);
+      updateStandtable();
    }
    catch(err)
    {
@@ -1645,7 +1645,7 @@ function updateTables()
    }
    try 
    {
-      setTimeout(function() { updateLiveEval(); }, 600);
+      updateLiveEval();
    }
    catch(err)
    {
@@ -1653,7 +1653,7 @@ function updateTables()
    }
    try 
    {
-      setTimeout(function() { updateLiveChart(); }, 1000);
+      updateLiveChart();
    }
    catch(err)
    {
@@ -1661,9 +1661,7 @@ function updateTables()
    }
    try 
    {
-      setTimeout(function() { 
-         eventCrosstable();
-         }, 1000);
+      eventCrosstable();
    }
    catch(err)
    {
@@ -2479,6 +2477,7 @@ async function eventCrosstable()
 {
    var divname = '#crosstableevent';
    var startVar = 1;
+   await sleep(2000);
 
    gamesEachMatch = [];
 
@@ -2534,7 +2533,6 @@ async function eventCrosstable()
    }
 
    $(divname).bootstrapTable('load', standings);
-   await sleep(1000);
    drawBracket();
 }
 
