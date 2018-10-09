@@ -1197,6 +1197,10 @@ function setDarkMode(value)
 }
 
 function formatter(value, row, index, field) {
+   if (value == undefined)
+   {
+      return value;
+   }
    if (!value.hasOwnProperty("Score")) // true
    {
       return value;
@@ -1386,7 +1390,6 @@ function updateCrosstableData(data)
    }
    $('#crosstable').bootstrapTable('load', standings);
   console.log ("Calling eventCrosstable");
-  eventCrosstable();
 }
 
 function updateCrosstable() 
@@ -1596,9 +1599,10 @@ function setBoard()
 
 function updateTables()
 {
+  eventCrosstable();
+  updateBracket();
   updateCrosstable();
   updateStandtable();
-  updateBracket();
 }
 
 function setTwitchBackgroundInit(backg)
