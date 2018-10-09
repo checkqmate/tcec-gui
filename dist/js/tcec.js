@@ -1645,7 +1645,7 @@ function updateTables()
    }
    try 
    {
-      updateLiveEval();
+      //updateLiveEval();
    }
    catch(err)
    {
@@ -1653,7 +1653,7 @@ function updateTables()
    }
    try 
    {
-      updateLiveChart();
+      //updateLiveChart();
    }
    catch(err)
    {
@@ -2477,7 +2477,6 @@ async function eventCrosstable()
 {
    var divname = '#crosstableevent';
    var startVar = 1;
-   await sleep(2000);
 
    gamesEachMatch = [];
 
@@ -2524,6 +2523,8 @@ async function eventCrosstable()
          console.log("Waited long time to load, bailing out");
       }
    }
+   await sleep(2000);
+   console.log("time taken: " + timeWaited);
    for (var i = 0 ; i < totalEvents; i++)
    {
       if (tablesLoaded[i] == 1)
@@ -2538,7 +2539,7 @@ async function eventCrosstable()
 
 function eventCrosstableMain(ii, filename)
 {
-   filename = filename + '?no-cache' + (new Date()).getTime();
+   //filename = filename + '?no-cache' + (new Date()).getTime();
    axios.get(filename)
    .then(function (r)
    {
