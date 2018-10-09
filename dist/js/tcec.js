@@ -1599,10 +1599,10 @@ function setBoard()
 
 function updateTables()
 {
-  eventCrosstable();
-  updateBracket();
   updateCrosstable();
   updateStandtable();
+  eventCrosstable();
+  updateBracket();
 }
 
 function setTwitchBackgroundInit(backg)
