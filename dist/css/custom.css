@@ -391,7 +391,8 @@ canvas {
 .labelbracket
 {
    background-color: black;
-   color: grey;
+   color: whitesmoke;
+   font-size:small;
 }
 
 .labelleft
@@ -402,4 +403,9 @@ canvas {
 .labelright
 {
    float:right;
+}
+
+.darkback
+{
+   background-color: black;
 }

@@ -2377,15 +2377,35 @@ function shortName(name)
    return retName;
 }
 
-function getCurrDate (currdate)
+function getCurrDate (currdate, mins)
 {
-   var timezoneDiff = moment().utcOffset() * 60 * 1000;
+   var timezoneDiff = moment().utcOffset() * 60 * 1000 + mins * 60 * 1000;
    momentDate = moment(currdate, 'HH:mm:ss on YYYY.MM.DD');
    momentDate.add(timezoneDiff);
    return momentDate.format('MMM DD YYYY, HH:mm');
 }
 
 var roundDate = [];
+
+function getDateRound()
+{
+   roundDate = [];
+   var startDateR1 = '12:30:00 on 2018.10.05';
+   var startDateR2 = '18:00:00 on 2018.10.05';
+
+   for (var x = 0 ; x < 16; x++)
+   {
+      var y = x + 1;
+      if (y%2 == 1)
+      {
+         roundDate[x] = getCurrDate(startDateR1, 1440 * (parseInt(y/2)));
+      }
+      else
+      {
+         roundDate[x] = getCurrDate(startDateR2, 1440 * (parseInt((y-1)/2)));
+      }
+   }
+}
 
 async function eventCrosstable()
 {
@@ -2429,31 +2449,7 @@ async function eventCrosstable()
       }
    }
 
-   roundDate[0] = getCurrDate('12:30:00 on 2018.10.05');
-   roundDate[1] = getCurrDate('18:00:00 on 2018.10.05');
-   roundDate[2] = getCurrDate('12:30:00 on 2018.10.06');
-   roundDate[3] = getCurrDate('12:30:00 on 2018.10.06');
-   roundDate[4] = getCurrDate('12:30:00 on 2018.10.07');
-   roundDate[5] = getCurrDate('12:30:00 on 2018.10.07');
-   roundDate[6] = getCurrDate('12:30:00 on 2018.10.08');
-   roundDate[7] = getCurrDate('12:30:00 on 2018.10.08');
-   roundDate[8] = getCurrDate('12:30:00 on 2018.10.09');
-   roundDate[9] = getCurrDate('12:30:00 on 2018.10.09');
-   roundDate[10] = getCurrDate('12:30:00 on 2018.10.10');
-   roundDate[11] = getCurrDate('12:30:00 on 2018.10.10');
-   roundDate[12] = getCurrDate('12:30:00 on 2018.10.11');
-   roundDate[13] = getCurrDate('12:30:00 on 2018.10.11');
-   roundDate[14] = getCurrDate('12:30:00 on 2018.10.12');
-   roundDate[15] = getCurrDate('12:30:00 on 2018.10.12');
-
    $(divname).bootstrapTable('load', standings);
-   for (var i = 1 ; i <= 16 ; i ++)
-   {
-      // Check if we found the next round file
-      var entry = bigData.teams[i-1];
-      //bigData.results[0][0][i-1][0] = 0;
-      //bigData.results[0][0][i-1][1] = 0;
-   }
    drawBracket();
 }
 
@@ -2706,6 +2702,7 @@ var roundNo = 2;
 function drawBracket()
 {
    roundNo = 2;
+   getDateRound();
    function onClick(data)
    {
       //alert(data);
@@ -2735,7 +2732,7 @@ function drawBracket()
             container.append("No team")
             return;
           case "empty-tbd":
-            container.append("Upcoming")
+            container.append("TBD")
             if (roundNo%2 == 1)
             {
                var befStr = '<div class="labelbracket"> <a> R#' + (localRound + 1) + '</a> ';
