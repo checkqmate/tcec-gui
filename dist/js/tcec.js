@@ -2705,6 +2705,7 @@ var roundNo = 2;
 
 function drawBracket()
 {
+   roundNo = 2;
    function onClick(data)
    {
       //alert(data);
