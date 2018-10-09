@@ -2840,7 +2840,7 @@ function drawBracket()
           case "empty-tbd":
             if (roundNo%2 == 1)
             {
-               var befStr = '<div class="labelbracket"> <a> R#' + (localRound + 1) + '</a> ';
+               var befStr = '<div class="labelbracket"> <a> #' + (localRound + 1) + '</a> ';
                if (roundDate[localRound] != undefined)
                {
                   befStr = befStr + '<a> (' + roundDate[localRound] + ')</a> </div>';
