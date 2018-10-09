@@ -54,7 +54,7 @@ var onMoveEndPv = function() {
 function updateAll()
 {
    updatePgn(1);
-   setTimeout(function() { updateTables(); }, 2000);
+   updateTables();
 }
 
 function updatePgnData(data, read)
@@ -1627,9 +1627,10 @@ function updateTablesData(data)
 
 function updateTables()
 {
+   console.log ("Came to updateTables");
    try 
    {
-      updateCrosstable();
+      setTimeout(function() { updateCrosstable(); }, 500);
    }
    catch(err)
    {
@@ -1637,7 +1638,7 @@ function updateTables()
    }
    try 
    {
-      updateStandtable();
+      setTimeout(function() { updateStandtable(); }, 1000);
    }
    catch(err)
    {
@@ -1645,13 +1646,18 @@ function updateTables()
    }
    try 
    {
-      eventCrosstable();
-      updateBracket();
+      setTimeout(function() { 
+         eventCrosstable();
+         updateBracket();
+         }, 1500);
    }
    catch(err)
    {
       console.log ("Unable to update brackets");
    }
+   setTimeout(function() { updateLiveEval(); }, 2000);
+   setTimeout(function() { updateLiveChart(); }, 2500);
+   console.log ("Exiting updateTables");
 }
 
 function setTwitchBackgroundInit(backg)
