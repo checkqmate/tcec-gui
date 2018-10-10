@@ -1596,6 +1596,12 @@ function setBoard()
    localStorage.setItem('tcec-piece-theme', ptheme);
 }
 
+function eventCrosstableWrap()
+{
+   eventCrosstable();
+   console.log ("Calling drawBracket");
+}
+
 function updateTablesData(data)
 {
    try 
@@ -1616,7 +1622,6 @@ function updateTablesData(data)
    }
    try 
    {
-      eventCrosstable();
    }
    catch(err)
    {
@@ -1661,7 +1666,7 @@ function updateTables()
    }
    try 
    {
-      eventCrosstable();
+      eventCrosstableWrap();
    }
    catch(err)
    {
@@ -2430,7 +2435,27 @@ function sleep(ms)
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function shortName(name)
+function getSeededName(name)
+{
+   var engineName = '';
+   _.each(teamsx, function(engine, key) {
+      if (engine[0][0] == name)
+      {
+         console.log ("engine is " + name + " seed is " + engine[0][1]);
+         engineName = "S#" + engine[0][1] + " " + engine[0][0];
+         return false;
+      }
+      else if (engine[1][0] == name)
+      {
+         console.log ("engine is " + name + " seed is " + engine[0][1]);
+         engineName = "S#" + engine[1][1] + " " + engine[1][0];
+         return false;
+      }
+   });
+   return engineName;
+}
+
+function getShortName(name)
 {
    var retName = '';
 
@@ -2449,13 +2474,9 @@ function getCurrDate (currdate, mins)
    return momentDate.format('MMM DD YYYY, HH:mm');
 }
 
-var roundDate = [];
-
 function getDateRound()
 {
    roundDate = [];
-   var startDateR1 = '12:30:00 on 2018.10.05';
-   var startDateR2 = '18:00:00 on 2018.10.05';
 
    for (var x = 0 ; x < 16; x++)
    {
@@ -2499,7 +2520,10 @@ async function eventCrosstable()
    for (var i = startVar ; i <= totalEvents; i++)
    {
       tablesLoaded[i] = -1;
-      bigData.teams[i-1] = [{name: teamsx[i-1][0], flag: shortName(teamsx[i-1][0]), score: -1, rank: '1', date: '', lead: 0}, {name: teamsx[i-1][1], flag: shortName(teamsx[i-1][1]), score: -1, rank: '2', date: '', lead: 0}];
+      bigData.teams[i-1] = [{name: getSeededName(teamsx[i-1][0][0]), flag: getShortName(teamsx[i-1][0][0]), 
+                             score: -1, rank: '1', date: '', lead: 0}, 
+                            {name: getSeededName(teamsx[i-1][1][0]), flag: getShortName(teamsx[i-1][1][0]), 
+                             score: -1, rank: '2', date: '', lead: 0}];
       eventCrosstableMain(i, filenames[i]);
    }
 
@@ -2532,10 +2556,8 @@ async function eventCrosstable()
       }
    }
 
-   await sleep(1000);
    console.log ("drawing standings");
    $(divname).bootstrapTable('load', standings);
-   await sleep(2000);
    console.log ("drawing bracket");
    drawBracket();
 }
@@ -2630,7 +2652,7 @@ function updateCrosstableDataNew(ii, data)
            entry.name =  entry.name + ' vs ' + engine;
         }
 
-        bigData.teams[ii-1][1] = {name: engine, flag: shortName(engine), score: '', rank: 2, lead: lead};
+        bigData.teams[ii-1][1] = {name: getSeededName(engine), flag: getShortName(engine), score: '', rank: 2, lead: lead};
 
         if (isMatchLost)
         {
@@ -2664,7 +2686,7 @@ function updateCrosstableDataNew(ii, data)
        crashes: engineDetails.Strikes
      };
      bigData.results[0][0][ii-1][0] = engineDetails.Score;
-     bigData.teams[ii-1][0] = {name: engine, flag: shortName(engine), score: '', rank: 1, lead:0};
+     bigData.teams[ii-1][0] = {name: getSeededName(engine), flag: getShortName(engine), score: '', rank: 1, lead:0};
      if (!totalGamesSingle)
      {
         totalGamesSingle = engineDetails.Games;
@@ -2755,55 +2777,6 @@ function formatterEvent(value, row, index, field) {
   return retStr;
 }
 
-var teamsx = [["Stockfish 270918", "Ivanhoe 999946h"],
-      ["Gull 180521", "Texel 1.08a11"],
-      ["Fizbo 2", "Hannibal 20180922"],
-      ["Chiron S13.2", "Nemorino 5.05"],
-      ["Fire 7.1", "Senpai 2.0"],
-      ["Vajolet2 2.6.1", "Booot 6.3.1"],
-      ["Laser 250918", "Lc0 18.11248"],
-      ["Ethereal 11.06", "Rodent III 1.0.171"],
-      ["Komodo 2135.10", "Tucano 7.06"],
-      ["Xiphos 0.4.2", "Nirvana 2.4"],
-      ["Fritz 16.10", "DeusX 1.1"],
-      ["Ginkgo 2.12", "Bobcat 8"],
-      ["Houdini 6.03", "Chess22k 1.11"],
-      ["ChessBrainVB 3.70", "Arasan TCECS13.2"],
-      ["Jonny 8.1", "Pedone 1.9"],
-      ["Andscacs 094030", "Wasp 3.3"]
-  ];
-
-var bigData = {                                                                                                                                                                              
-  teams : [                                                                                                                                                                                  
-      ["Stockfish 270918", "Ivanhoe 999946h"], 
-      ["Gull 180521", "Texel 1.08a11"], 
-      ["Fizbo 2", "Hannibal 20180922"], 
-      ["Chiron S13.2", "Nemorino 5.05"], 
-      ["Fire 7.1", "Senpai 2.0"], 
-      ["Vajolet2 2.6.1", "Booot 6.3.1"], 
-      ["Laser 250918", "Lc0 18.11248"], 
-      ["Ethereal 11.06", "Rodent III 1.0.171"], 
-      ["Komodo 2135.10", "Tucano 7.06"], 
-      ["Xiphos 0.4.2", "Nirvana 2.4"], 
-      ["Fritz 16.10", "DeusX 1.1"], 
-      ["Ginkgo 2.12", "Bobcat 8"], 
-      ["Houdini 6.03", "Chess22k 1.11"], 
-      ["ChessBrainVB 3.70", "Arasan TCECS13.2"], 
-      ["Jonny 8.1", "Pedone 1.9"], 
-      ["Andscacs 094030", "Wasp 3.3"]
-  ],                                                                                                                                                                                         
-  results : [[ /* WINNER BRACKET */                                                                                                                                                          
-    [[0,0, "empty-bye"], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0, "arun"], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0]],
-    [[0,0, "arun"], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0]],                                                                                                                        
-    [[0,0], [0,0], [0,0], [0,0]],                                                                                                                                                            
-    [[0,0], [0,0]],                                                                                                                                                                          
-    [[0,0]]                                                                                                                                                                                  
-  ]                                                                                                                                                                                          
-  ]                                                                                                                                                                                          
-}                                                                                                                                                                                        
-
-var roundNo = 2;
-
 function drawBracket()
 {
    console.log ("Came to drawBracket");
@@ -2843,10 +2816,10 @@ function drawBracket()
           case "empty-tbd":
             if (roundNo%2 == 1)
             {
-               var befStr = '<div class="labelbracket"> <a> #' + (localRound + 1) + '</a> ';
+               var befStr = '<div class="labelbracket"> <a style="float:left"> #' + (localRound + 1) + '</a> ';
                if (roundDate[localRound] != undefined)
                {
-                  befStr = befStr + '<a> (' + roundDate[localRound] + ')</a> </div>';
+                  befStr = befStr + '<a style="float:right"> (' + roundDate[localRound] + ')</a> </div>';
                }
                else
                {
@@ -2882,12 +2855,12 @@ function drawBracket()
                else
                {
                   appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
-                              '<div class="bracket-score red"> <a> (' + data.score + ')</a> </div>'
+                              '<div class="bracket-score red"> <a>' + data.score + '</a> </div>'
                   $(container).parent().addClass('bracket-name-red');
                }
                if (roundNo%2 == 1)
                {
-                  var befStr = '<div class="labelbracket"> <a> #' + (localRound + 1) + '</a> ';
+                  var befStr = '<div class="labelbracket"> <a style="float:left"> #' + (localRound + 1) + '</a> ';
                   if (roundDate[localRound] != undefined)
                   {
                      befStr = befStr + '<a> (' + roundDate[localRound] + ')</a> </div>';
@@ -2904,10 +2877,10 @@ function drawBracket()
             {
                if (roundNo%2 == 1)
                {
-                  var befStr = '<div class="labelbracket"> <a> #' + (localRound + 1) + '</a> ';
+                  var befStr = '<div class="labelbracket"> <a style="float:left"> #' + (localRound + 1) + '</a> ';
                   if (roundDate[localRound] != undefined)
                   {
-                     befStr = befStr + '<a> (' + roundDate[localRound] + ')</a> </div>';
+                     befStr = befStr + '<a style="float:right">' + roundDate[localRound] + '</a> </div>';
                   }
                   $(befStr).insertBefore(container); 
                }
@@ -2924,10 +2897,10 @@ function drawBracket()
    $(function () {
       $('#bracket').bracket({
          centerConnectors: true,
-         teamWidth: 200,
-         scoreWidth: 30,
+         teamWidth: 220,
+         scoreWidth: 25,
          matchMargin: 45,
-         roundMargin: 30,
+         roundMargin: 18,
          init: bigData
          ,decorator: {edit: edit_fn,
                   render: render_fn}

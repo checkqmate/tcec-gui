@@ -369,6 +369,8 @@ canvas {
 {
    float:left;
    margin-left: 5px;
+   font-size:medium;
+	font-family: monospace;
 }
 
 .bracket-score
@@ -394,7 +396,8 @@ canvas {
    height:20px;
    background-color: grey;
    color: white;
-   font-size:small;
+   font-size:medium;
+	font-family: monospace;
 }
 
 .labelleft
