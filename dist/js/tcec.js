@@ -2441,13 +2441,11 @@ function getSeededName(name)
    _.each(teamsx, function(engine, key) {
       if (engine[0][0] == name)
       {
-         console.log ("engine is " + name + " seed is " + engine[0][1]);
          engineName = "S#" + engine[0][1] + " " + engine[0][0];
          return false;
       }
       else if (engine[1][0] == name)
       {
-         console.log ("engine is " + name + " seed is " + engine[0][1]);
          engineName = "S#" + engine[1][1] + " " + engine[1][0];
          return false;
       }
