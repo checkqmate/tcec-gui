@@ -2441,19 +2441,21 @@ function getSeededName(name)
    _.each(teamsx, function(engine, key) {
       if (engine[0][0] == name)
       {
-         engineName = "S#" + engine[0][1] + " " + engine[0][0];
-         if (engineName.length > 19)
+         //engineName = "S#" + engine[0][1] + " " + engine[0][0];
+         engineName = engine[0][0];
+         if (engineName.length > 24)
          {
-            engineName = engineName.substring(0,17) + "..";
+            engineName = engineName.substring(0,22) + "..";
          }
          return false;
       }
       else if (engine[1][0] == name)
       {
-         engineName = "S#" + engine[1][1] + " " + engine[1][0];
-         if (engineName.length > 19)
+         //engineName = "S#" + engine[1][1] + " " + engine[1][0];
+         engineName = engine[1][1];
+         if (engineName.length > 24)
          {
-            engineName = engineName.substring(0,17) + "..";
+            engineName = engineName.substring(0,22) + "..";
          }
          return false;
       }
