@@ -414,3 +414,16 @@ canvas {
 {
    width: 1300px;
 }
+
+.dateright
+{
+   float:right;
+   margin-right:5px;
+}
+
+.roundleft
+{
+   float:left;
+   margin-left:5px;
+}
+

@@ -2442,11 +2442,19 @@ function getSeededName(name)
       if (engine[0][0] == name)
       {
          engineName = "S#" + engine[0][1] + " " + engine[0][0];
+         if (engineName.length > 21)
+         {
+            engineName = engineName.substring(0,19) + "..";
+         }
          return false;
       }
       else if (engine[1][0] == name)
       {
          engineName = "S#" + engine[1][1] + " " + engine[1][0];
+         if (engineName.length > 21)
+         {
+            engineName = engineName.substring(0,19) + "..";
+         }
          return false;
       }
    });
@@ -2814,10 +2822,10 @@ function drawBracket()
           case "empty-tbd":
             if (roundNo%2 == 1)
             {
-               var befStr = '<div class="labelbracket"> <a style="float:left"> #' + (localRound + 1) + '</a> ';
+               var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
                if (roundDate[localRound] != undefined)
                {
-                  befStr = befStr + '<a style="float:right"> (' + roundDate[localRound] + ')</a> </div>';
+                  befStr = befStr + '<a class="dateright"> (' + roundDate[localRound] + ')</a> </div>';
                }
                else
                {
@@ -2858,7 +2866,7 @@ function drawBracket()
                }
                if (roundNo%2 == 1)
                {
-                  var befStr = '<div class="labelbracket"> <a style="float:left"> #' + (localRound + 1) + '</a> ';
+                  var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
                   if (roundDate[localRound] != undefined)
                   {
                      befStr = befStr + '<a> (' + roundDate[localRound] + ')</a> </div>';
@@ -2875,10 +2883,10 @@ function drawBracket()
             {
                if (roundNo%2 == 1)
                {
-                  var befStr = '<div class="labelbracket"> <a style="float:left"> #' + (localRound + 1) + '</a> ';
+                  var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
                   if (roundDate[localRound] != undefined)
                   {
-                     befStr = befStr + '<a style="float:right">' + roundDate[localRound] + '</a> </div>';
+                     befStr = befStr + '<a class="dateright">' + roundDate[localRound] + '</a> </div>';
                   }
                   $(befStr).insertBefore(container); 
                }
