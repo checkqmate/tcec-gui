@@ -2519,7 +2519,9 @@ async function eventCrosstable()
    if (standings.lastLoaded != undefined)
    {
       startVar = standings.lastLoaded;
-      standings[startVar] = {};
+      console.log ("lenght of standings is " + standings.length);
+      standings.splice(0, 1);
+      console.log ("lenght of standings is " + standings.length);
       tablesLoaded[startVar] = -1;
    }
 
@@ -2863,7 +2865,7 @@ function drawBracket()
                else
                {
                   appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
-                              '<div class="bracket-score red"> <a>' + data.score + '</a> </div>'
+                              '<div class="bracket-score red"> <a> (' + data.score + ')</a> </div>'
                   $(container).parent().addClass('bracket-name-red');
                }
                if (roundNo%2 == 1)
