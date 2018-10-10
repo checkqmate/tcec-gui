@@ -16,6 +16,7 @@ var prevData = 0;
 var prevliveData = 0;
 var prevevalData = 0;
 var prevtotalCount = 0;
+var prevmanData = 0;
 
 const pid = process.pid;
 
@@ -60,6 +61,7 @@ watcher.add(liveeval);
 watcher.add('live.json');
 watcher.add('schedule.json');
 watcher.add('liveeval.json');
+watcher.add('json/manual.json');
 
 var count = 0;
 var socket = 0;
@@ -187,6 +189,11 @@ watcher.on('change', (path, stats) => {
       {
          broadCastData(socket, 'livechart', path, data, prevevalData);
          prevevalData = data;
+      }
+      if (path.match(/manual.json/))
+      {
+         broadCastData(socket, 'manual', path, data, prevmanData);
+         prevmanData = data;
       }
       if (path.match(/live.json/))
       {
