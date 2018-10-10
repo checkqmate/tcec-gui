@@ -2399,24 +2399,9 @@ var columnsEvent = [
        ,sorter: schedSorted
      },
      {
-       field: 'winner',
-       title: 'Engine (W)'
-      ,width: '14%'
-     },
-     {
-       field: 'winnerpoints',
-       title: ''
-      ,width: '5%'
-     },
-     {
-       field: 'loserpoints',
-       title: ''
-      ,width: '5%'
-     },
-     {
-       field: 'loser',
-       title: 'Engine (L)'
-      ,width: '14%'
+       field: 'name',
+       title: 'Engine'
+      ,width: '24%'
      },
      {
        field: 'games',
@@ -2427,6 +2412,11 @@ var columnsEvent = [
        ,sortOrder: 'desc'
      },
      {
+       field: 'points',
+       title: 'Points'
+      ,width: '7%'
+     },
+     {
        field: 'crashes',
        title: 'Crashes'
       ,width: '7%'
@@ -2434,7 +2424,7 @@ var columnsEvent = [
      {
        field: 'score',
        title: 'Score'
-      ,width: '14%'
+      ,width: '7%'
       ,formatter: 'formatterEvent'
       ,cellStyle: 'cellformatterEvent'
      } 
@@ -2662,13 +2652,12 @@ function updateCrosstableDataNew(ii, data)
 
         if (entry.point > engineDetails.Score)
         {
-           entry.loser = '<a style="color: ' + gameArrayClass[0] + '"> ' + engine + '</a>';
-           entry.winner = '<a style="color: ' + gameArrayClass[1] + '"> ' + entry.name + '</a>'; 
+           entry.name = '<a style="color: ' + gameArrayClass[1] + '"> ' + entry.name + '</a> vs ' + 
+                        '<a style="color: ' + gameArrayClass[0] + '"> ' + engine + '</a>';
         }
         else
         {
-           entry.loser = gameArrayClass[0];
-           entry.winner = gameArrayClass[1];
+           entry.name =  entry.name + ' vs ' + engine;
         }
 
         bigData.teams[ii-1][1] = {name: getSeededName(engine), flag: getShortName(engine), score: '', rank: 2, lead: lead};
@@ -2733,8 +2722,6 @@ function updateCrosstableDataNew(ii, data)
          resultDetails = _.get(engineDetails, 'Results');                                                                                                                                             
          matchDetails = _.get(resultDetails, engineName);                                                                                                                                             
          entry.points = engineDetails.Score + " - " + (engineDetails.Games - engineDetails.Score);
-         entry.winnerpoints = engineDetails.Score;
-         entry.loserpoints = (engineDetails.Games - engineDetails.Score);  
          entry.point = engineDetails.Score;
        if (matchDetails)
        {
