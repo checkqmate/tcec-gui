@@ -2452,7 +2452,7 @@ function getSeededName(name)
       else if (engine[1][0] == name)
       {
          //engineName = "S#" + engine[1][1] + " " + engine[1][0];
-         engineName = engine[1][1];
+         engineName = engine[1][0];
          if (engineName.length > 24)
          {
             engineName = engineName.substring(0,22) + "..";
