@@ -2442,18 +2442,18 @@ function getSeededName(name)
       if (engine[0][0] == name)
       {
          engineName = "S#" + engine[0][1] + " " + engine[0][0];
-         if (engineName.length > 21)
+         if (engineName.length > 19)
          {
-            engineName = engineName.substring(0,19) + "..";
+            engineName = engineName.substring(0,17) + "..";
          }
          return false;
       }
       else if (engine[1][0] == name)
       {
          engineName = "S#" + engine[1][1] + " " + engine[1][0];
-         if (engineName.length > 21)
+         if (engineName.length > 19)
          {
-            engineName = engineName.substring(0,19) + "..";
+            engineName = engineName.substring(0,17) + "..";
          }
          return false;
       }
@@ -2466,13 +2466,13 @@ function getShortName(name)
    var retName = '';
 
    if (name.indexOf(' ') > 0) 
-   {                                                                                                                                                                                                              
+   {
        retName = name.substring(0, name.indexOf(' '));
    }
    return retName;
 }
 
-function getCurrDate (currdate, mins)
+function getCurrDate(currdate, mins)
 {
    var timezoneDiff = moment().utcOffset() * 60 * 1000 + mins * 60 * 1000;
    momentDate = moment(currdate, 'HH:mm:ss on YYYY.MM.DD');
