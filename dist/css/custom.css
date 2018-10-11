@@ -84,6 +84,7 @@ body {
 .bracket-material {
 	height: 18px;
 	width: 36px;
+   clear:left;
    float:left;
 }
 
@@ -352,6 +353,10 @@ canvas {
    -webkit-overflow-scrolling: touch;
 }
 
+.bracket-name-orange
+{
+   border: 3px solid orange;
+}
 .bracket-name-red
 {
    border: 3px solid red;
@@ -371,12 +376,16 @@ canvas {
    margin-left: 5px;
    font-size:medium;
 	font-family: monospace;
+	height: 18px;
+	width: 36px;
 }
 
 .bracket-score
 {
    float:right;
    margin-right: 1px;
+	height: 18px;
+	width: 36px;
    /* border: 1px solid grey;
    box-sizing: border-box; */
 }
@@ -398,16 +407,17 @@ canvas {
    color: white;
    font-size:medium;
 	font-family: monospace;
+   clear:left;
 }
 
 .labelleft
 {
-   float:left;
+   clear:left;
 }
 
 .labelright
 {
-   float:right;
+   clear:right;
 }
 
 .darkback
@@ -427,3 +437,7 @@ canvas {
    margin-left:5px;
 }
 
+.orange
+{
+   color: orange;
+}

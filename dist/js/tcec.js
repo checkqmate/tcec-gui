@@ -41,6 +41,13 @@ var prevPgnData = 0;
 var playSound = 1;
 var lastGame = 0;
 
+var debug = 0;
+
+var totalEvents = 24;
+var manualGamesdecided = 0;
+var mandataGlobal = null;
+var eventCrossTableInitial = 0;
+
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
     .addClass('highlight-white');
@@ -49,6 +56,19 @@ var onMoveEnd = function() {
 var onMoveEndPv = function() {
   pvBoardEl.find('.square-' + pvSquareToHighlight)
     .addClass('highlight-white');
+}
+
+function printmylog(message, debugl)
+{
+   if (debugl == undefined)
+   {
+      debugl = 1;
+   }
+
+   if (debugl <= debug)
+   {
+      console.log (message);
+   }
 }
 
 function updateAll()
@@ -103,7 +123,7 @@ function updatePgn(resettime)
    })
    .catch(function (error) {
      // handle error
-      //console.log(error);
+      printmylog(error);
    });
 }
 
@@ -258,7 +278,7 @@ function setUsers(data)
    }
    catch(err)
    {
-      console.log ("Unable to update usercount");
+      printmylog ("Unable to update usercount");
    }
 }
 
@@ -567,7 +587,7 @@ function setPgn(pgn)
   $("#engine-history").scrollTop($("#engine-history")[0].scrollHeight);
   if (pgn.gameChanged)
   {
-     console.log ("Came to setpgn need to reread dataa at end");
+     printmylog ("Came to setpgn need to reread dataa at end");
   }
 }
 
@@ -1401,7 +1421,7 @@ function updateCrosstable()
    .catch(function (error) 
    {
       // handle error
-      //console.log(error);
+      printmylog(error);
    });
 }
 
@@ -1457,7 +1477,7 @@ function updateSchedule()
     })
     .catch(function (error) {
       // handle error
-      console.log(error);
+      printmylog(error);
     });
 }
 
@@ -1495,12 +1515,12 @@ function setBoardInit()
    $('input[value='+btheme+'b]').prop('checked', true);
 
    var onDragStart = function(source, piece, position, orientation) {
-     //console.log ("game.turn() is " + game.turn());
-     //console.log ("game.turn() is " + game.fen());
+     printmylog ("game.turn() is " + game.turn());
+     printmylog ("game.turn() is " + game.fen());
      if (game.game_over() === true ||
          (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
          (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-       //console.log ("returning false");
+       printmylog ("returning false");
        return false;
      }
    };
@@ -1598,19 +1618,36 @@ function setBoard()
 
 function eventCrosstableWrap()
 {
-   eventCrosstable();
-   console.log ("Calling drawBracket");
+   console.log ("eventCrossTableInitial: " + eventCrossTableInitial);
+   if (eventCrossTableInitial)
+   {
+      return -1;
+   }
+   eventCrossTableInitial = 1;
+   axios.get('json/manual.json?no-cache' + (new Date()).getTime())
+   .then(function (response) 
+   {
+      eventCrosstable(response.data);
+      response.data.readallfiles = 0;
+      eventCrossTableInitial = 0;
+   })
+   .catch(function (error) {
+      // handle error
+      printmylog(error);
+      eventCrossTableInitial = 0;
+   });
 }
 
 function updateTablesData(data)
 {
+   console.log("Came to updateTablesdata");
    try 
    {
       updateCrosstableData(data);
    }
    catch(err)
    {
-      console.log ("Unable to update crosstable from data");
+      console.log("Unable to update crosstable from data");
    }
    try 
    {
@@ -1618,27 +1655,29 @@ function updateTablesData(data)
    }
    catch(err)
    {
-      console.log ("Unable to update standtable from data");
+      console.log("Unable to update standtable from data");
    }
    try 
    {
+      setTimeout(function() { eventCrosstableWrap(); }, 1000);
    }
    catch(err)
    {
-      console.log ("Unable to update brackets from data");
+      console.log("Unable to update brackets from data");
    }
+   console.log("Exiting updateTablesData");
 }
 
 function updateTables()
 {
-   console.log ("Came to updateTables");
+   console.log("Came to updateTables");
    try 
    {
       updateCrosstable();
    }
    catch(err)
    {
-      console.log ("Unable to update crosstable");
+      console.log("Unable to update crosstable");
    }
    try 
    {
@@ -1646,7 +1685,7 @@ function updateTables()
    }
    catch(err)
    {
-      console.log ("Unable to update standtable");
+      console.log("Unable to update standtable");
    }
    try 
    {
@@ -1654,7 +1693,7 @@ function updateTables()
    }
    catch(err)
    {
-      console.log ("Unable to update updateLiveEval");
+      console.log("Unable to update updateLiveEval");
    }
    try 
    {
@@ -1662,17 +1701,17 @@ function updateTables()
    }
    catch(err)
    {
-      console.log ("Unable to update brackets");
+      console.log("Unable to update brackets");
    }
    try 
    {
-      eventCrosstableWrap();
+      setTimeout(function() { eventCrosstableWrap(); }, 1000);
    }
    catch(err)
    {
-      console.log ("Unable to update brackets");
+      console.log("Unable to update brackets");
    }
-   console.log ("Exiting updateTables");
+   console.log("Exiting updateTables");
 }
 
 function setTwitchBackgroundInit(backg)
@@ -1909,7 +1948,7 @@ function updateLiveEvalData(data)
             moveResponse = chess.move(move);
 
             if (!moveResponse || typeof moveResponse == 'undefined') {
-                 //console.log("undefine move" + move);
+                 printmylog("undefine move" + move);
             } else {
               newPv = {
                 'from': moveResponse.from,
@@ -1958,7 +1997,7 @@ function updateLiveEvalData(data)
                }
             else
             {
-               console.log ("pvlocation not defined");
+               printmylog ("pvlocation not defined");
             }
             moveCount++;
           } else {
@@ -1983,7 +2022,7 @@ function updateLiveEval() {
    })
    .catch(function (error) {
       // handle error
-      console.log(error);
+      printmylog(error);
    });
 }
 
@@ -2008,7 +2047,7 @@ function updateLiveChart()
    })
    .catch(function (error) {
       // handle error
-      console.log(error);
+      printmylog(error);
    });
 }
 
@@ -2114,13 +2153,13 @@ function updateStandtable()
    .catch(function (error) 
    {
       // handle error
-      console.log(error);
+      printmylog(error);
    });
 }
 
 function setLastMoveTime(data)
 {
-   console.log ("Setting last move time:" + data);
+   printmylog ("Setting last move time:" + data);
 }
 
 function checkTwitch(checkbox)
@@ -2383,6 +2422,11 @@ function schedSorted(a,b)
 var filenames = [];
 var tablesLoaded = [];
 
+for (var i = 17; i <= 24; i++)
+{
+   filenames [i] = "archive/TCEC_Cup_-_Round_2_-_Match_" + i + "_crosstable.json";
+}
+
 for (var i = 1 ; i <= 16 ; i++)
 {
    filenames [i] = "archive/TCEC_Cup_-_Round_1_-_Match_" + i + "_crosstable.json";
@@ -2486,7 +2530,7 @@ function getDateRound()
 {
    roundDate = [];
 
-   for (var x = 0 ; x < 16; x++)
+   for (var x = 0 ; x < 24; x++)
    {
       var y = x + 1;
       if (y%2 == 1)
@@ -2500,12 +2544,27 @@ function getDateRound()
    }
 }
 
-var totalEvents = 16;
-
-async function eventCrosstable()
+async function eventCrosstable(mandata)
 {
    var divname = '#crosstableevent';
    var startVar = 1;
+
+   printmylog ("Ca,e tp eventCrosstable");
+
+   if (mandata != undefined)
+   {
+      mandataGlobal = mandata;
+      if (mandata.readallfiles == 1)
+      {
+         printmylog ("We have games decided:" + mandata.manual.decided);
+         manualGamesdecided = 1;
+      }
+      if (mandata.manual.decided) 
+      {
+         printmylog ("We have games decided:" + mandata.manual.decided);
+         manualGamesdecided = 1;
+      }
+   }
 
    gamesEachMatch = [];
 
@@ -2516,24 +2575,50 @@ async function eventCrosstable()
         sortOrder: 'desc' 
       });
 
-   if (standings.lastLoaded != undefined)
+   if (manualGamesdecided)
    {
-      startVar = standings.lastLoaded;
-      console.log ("lenght of standings is " + standings.length);
-      standings.splice(0, 1);
-      console.log ("lenght of standings is " + standings.length);
-      tablesLoaded[startVar] = -1;
+      standings.lastLoaded = 1;
    }
 
-   console.log ("Reading from file " + startVar);
+   if (standings.lastLoaded != undefined)
+   {
+      var standingsnew = standings.reverse();
+      startVar = standings.lastLoaded;
+      printmylog ("lenght of standings is " + standingsnew.length);
+      //standings.splice(0, 1);
+      var slength = standingsnew.length;
+      for (var i = slength ; i >= startVar ; i --)
+      {
+         standingsnew.splice(i-1, 1);
+         tablesLoaded[i] = -1;
+      }
+      printmylog ("lenght of standings is " + standingsnew.length);
+      standings=standingsnew.reverse();
+   }
 
-   for (var i = startVar ; i <= totalEvents; i++)
+   printmylog ("Reading from file " + startVar, 0);
+
+   for (var i = 0; i <= 34 ; i++)
+   {
+      if (roundResults[i] == undefined)
+      {
+         roundResults[i] = [{lead:-1, score: -1, manual: 0}, {lead:-1, score: -1, manual: 0}];
+      }
+   }
+
+   for (var i = startVar ; i <= 16; i++)
    {
       tablesLoaded[i] = -1;
+      roundResults[i-1] = [{lead:-1, score: -1}, {lead:-1, score: -1}];
       bigData.teams[i-1] = [{name: getSeededName(teamsx[i-1][0][0]), flag: getShortName(teamsx[i-1][0][0]), 
                              score: -1, rank: '1', date: '', lead: 0}, 
                             {name: getSeededName(teamsx[i-1][1][0]), flag: getShortName(teamsx[i-1][1][0]), 
                              score: -1, rank: '2', date: '', lead: 0}];
+   }
+
+   for (var i = startVar ; i <= 24; i++)
+   {
+      tablesLoaded[i] = -1;
       eventCrosstableMain(i, filenames[i]);
    }
 
@@ -2554,10 +2639,10 @@ async function eventCrosstable()
       timeWaited += 100;
       if (timeWaited > 50000)
       {
-         console.log("Waited long time to load, bailing out");
+         printmylog("Waited long time to load, bailing out");
       }
    }
-   console.log("time taken: " + timeWaited);
+   printmylog("time taken: " + timeWaited);
    for (var i = 0 ; i < totalEvents; i++)
    {
       if (tablesLoaded[i] == 1)
@@ -2566,34 +2651,76 @@ async function eventCrosstable()
       }
    }
 
-   console.log ("drawing standings");
+   printmylog ("drawing standings");
    $(divname).bootstrapTable('load', standings);
-   console.log ("drawing bracket");
-   drawBracket();
+   printmylog ("drawing bracket");
+   setTimeout(function() { drawBracket(); }, 2000);
 }
 
 function eventCrosstableMain(ii, filename)
 {
    //filename = filename + '?no-cache' + (new Date()).getTime();
+   printmylog ("trying to read file " + filename);
    axios.get(filename)
    .then(function (r)
    {
       updateCrosstableDataNew(ii, r.data);
       tablesLoaded[ii] = 1;
+      printmylog ("after trying to read file " + filename);
    })
    .catch(function (error) 
    {
-      //console.log(error);
+      printmylog(error);
+      printmylog ("failed trying to read file " + filename + ", error: " + error);
       tablesLoaded[ii] = 0;
    });
 }
 
-function checkMatchDone(firstEntry, currEntry)
+function checkMatchDone(firstEntry, currEntry, matchNum)
 {
-   var isSame = 1;
+   var isMatchLost = 1;
    var totalGames = 8;
+   var manualDecide = 0;
 
    /* Check if 2nd rank can still catch up */
+   if (mandataGlobal != null)
+   {
+      if (mandataGlobal.manual.decided)
+      {
+         _.each(mandataGlobal.matches, function(matchdum, key) {
+            printmylog ("match is " + matchdum.match + ", matchNum :" + matchdum.finished);
+            if (matchNum == matchdum.match)
+            {
+               if (matchdum.finished == 0)
+               {
+                  isMatchLost = 0;
+                  manualDecide = 1;
+                  return false;
+               }
+               else if (matchdum.finished > 0)
+               {
+                  manualDecide = 1;
+                  printmylog ("matchdum.winner: " + matchdum.winner + ",firstEntry.name:" + firstEntry.name + ",currEntry.name:" + currEntry.name);
+                  if (matchdum.winner == firstEntry.name)
+                  {
+                     isMatchLost = 1;
+                  }
+                  else if (matchdum.winner == currEntry.name)
+                  {
+                     isMatchLost = -1;
+                  }
+                  return false;
+               }
+            }
+         });
+      }
+   }
+   if (manualDecide)
+   {
+      currEntry.manualDecide = 1;
+      return isMatchLost;
+   }
+   currEntry.manualDecide = 0;
    if (currEntry.Games <= 8)
    {
       totalGames = 8;
@@ -2611,15 +2738,15 @@ function checkMatchDone(firstEntry, currEntry)
    }
    if ((totalGames - currEntry.Games) + currEntry.Score >= firstEntry.point)
    {
-      isSame = 0;
+      isMatchLost = 0;
    }
 
    if (currEntry.Strikes > 3)
    {
-      isSame = 1;
+      isMatchLost = 1;
    }
-   console.log ("checkMatchDone: currEntry : " + currEntry.Abbreviation + " result:" + isSame + ", totalgames" + totalGames);
-   return isSame;
+   printmylog ("checkMatchDone: currEntry : " + currEntry.Abbreviation + " result:" + isMatchLost + ", totalgames" + totalGames + " ,matchNum:" + matchNum);
+   return isMatchLost;
 }
 
 function updateCrosstableDataNew(ii, data) 
@@ -2630,6 +2757,12 @@ function updateCrosstableDataNew(ii, data)
    var abbreviations = [];
    var crashes2 = 0;
    var entry = {};
+   var round = 0;
+   var roundM = ii;
+
+   round = parseInt(ii/16);
+   roundM = ii - round * 16;
+   printmylog ("round is " + round + ", roundM is : " + roundM);
 
    _.each(crosstableData.Table, function(engine, key) {
      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
@@ -2647,42 +2780,71 @@ function updateCrosstableDataNew(ii, data)
      if (totalGamesSingle)
      {
         crashes2 = engineDetails.Strikes;
+        engineDetails.name = engine;
         entry.crashes = entry.crashes + "/" + crashes2;
 
-        var isMatchLost = checkMatchDone(entry, engineDetails); 
+        var isMatchLost = checkMatchDone(entry, engineDetails, ii); 
+        printmylog ("For match " + ii + ", result is " + isMatchLost);
         var lead = 0;
 
-        if (entry.point > engineDetails.Score)
+        if (ii < 17)
+        {
+            bigData.teams[ii-1][1] = {name: getSeededName(engine), flag: getShortName(engine), score: -1, rank: '2', date: '', lead: 0};
+        } 
+
+        if (isMatchLost == 1)
         {
            entry.name = '<a style="color: ' + gameArrayClass[1] + '"> ' + entry.name + '</a> vs ' + 
                         '<a style="color: ' + gameArrayClass[0] + '"> ' + engine + '</a>';
+        }
+        else if (isMatchLost == -1)
+        {
+           entry.name = '<a style="color: ' + gameArrayClass[0] + '"> ' + engine + '</a> vs ' + 
+                        '<a style="color: ' + gameArrayClass[1] + '"> ' + entry.name + '</a>';
         }
         else
         {
            entry.name =  entry.name + ' vs ' + engine;
         }
 
-        bigData.teams[ii-1][1] = {name: getSeededName(engine), flag: getShortName(engine), score: '', rank: 2, lead: lead};
-
-        if (isMatchLost)
+        if (engineDetails.manualDecide)
         {
-           lead = -1;
-           bigData.teams[ii-1][0].lead = 1;
-           bigData.results[0][0][ii-1][1] = engineDetails.Score;
-           bigData.results[0][0][ii-1][0] = entry.point;
-           bigData.teams[ii-1][1].score = -1;
-           bigData.teams[ii-1][0].score = -1;
+           roundResults[ii-1][0].manual = 1;
+           roundResults[ii-1][1].manual = 1;
+        }
+
+        if (isMatchLost == 1)
+        {
+           bigData.results[0][round][roundM-1][1] = engineDetails.Score;
+           bigData.results[0][round][roundM-1][0] = entry.point;
+           roundResults[ii-1][0].lead = 1;
+           roundResults[ii-1][1].lead = 0;
+           roundResults[ii-1][1].score = -1;
+           roundResults[ii-1][0].score = -1;
+        }
+        else if (isMatchLost == -1)
+        {
+           bigData.results[0][round][roundM-1][1] = 1;
+           bigData.results[0][round][roundM-1][0] = 0;
+
+           roundResults[ii-1][1].score = engineDetails.Score;
+           roundResults[ii-1][0].score = entry.point;
+
+           roundResults[ii-1][1].lead = 1;
+           roundResults[ii-1][0].lead = 0;
+           
         }
         else
         {
-           bigData.results[0][0][ii-1][1] = 0;
-           bigData.results[0][0][ii-1][0] = 0;
-           bigData.teams[ii-1][1].score = engineDetails.Score;
-           bigData.teams[ii-1][0].score = entry.point;
+           bigData.results[0][round][roundM-1][1] = 0;
+           bigData.results[0][round][roundM-1][0] = 0;
+
+           roundResults[ii-1][1].score = engineDetails.Score;
+           roundResults[ii-1][0].score = entry.point;
            if (entry.point > engineDetails.Score)
            {
-              bigData.teams[ii-1][0].lead = 1;
-              bigData.teams[ii-1][1].lead = -1;
+              roundResults[ii-1][0].lead = 1;
+              roundResults[ii-1][1].lead = 0;
            }
         }
         return 1;
@@ -2695,8 +2857,14 @@ function updateCrosstableDataNew(ii, data)
        points: engineDetails.Score,
        crashes: engineDetails.Strikes
      };
-     bigData.results[0][0][ii-1][0] = engineDetails.Score;
-     bigData.teams[ii-1][0] = {name: getSeededName(engine), flag: getShortName(engine), score: '', rank: 1, lead:0};
+
+     if (ii < 17)
+     {
+        bigData.teams[ii-1] = [{name: "", flag: "", score: -1, rank: '1', date: '', lead: 0},
+                               {name: "", flag: "", score: -1, rank: '2', date: '', lead: 0}]; 
+        bigData.teams[ii-1][0] = {name: getSeededName(engine), flag: getShortName(engine), score: '', rank: 1, lead:0};
+     }
+
      if (!totalGamesSingle)
      {
         totalGamesSingle = engineDetails.Games;
@@ -2710,8 +2878,10 @@ function updateCrosstableDataNew(ii, data)
        engineAbbreviation = abbreviation.abbr;                                                                                                                                                        
                                                                                                                                                                                                       
        engineCount = crosstableData.Order.length;                                                                                                                                                     
-       if (engineCount < 1) {                                                                                                                                                                         
-         engineCount = 1;                                                                                                                                                                             
+
+       if (engineCount < 1) 
+       {                                                                                                                                                                         
+          engineCount = 1;
        }                                                                                                                                                                                              
                                                                                                                                                                                                       
        rounds = Math.floor(engineDetails.Games / engineCount) + 1;                                                                                                                                    
@@ -2789,7 +2959,7 @@ function formatterEvent(value, row, index, field) {
 
 function drawBracket()
 {
-   console.log ("Came to drawBracket");
+   printmylog ("Came to drawBracket");
    roundNo = 2;
    getDateRound();
    function onClick(data)
@@ -2818,6 +2988,8 @@ function drawBracket()
 
    function render_fn(container, data, score, state) {
         var localRound = parseInt(roundNo/2) - 1;
+        var isFirst = roundNo%2; 
+        printmylog ("Came to round: " + roundNo + " data.name is: ");
         roundNo ++;  
         switch(state) {
           case "empty-bye":
@@ -2847,33 +3019,43 @@ function drawBracket()
           case "entry-no-score":
           case "entry-default-win":
           case "entry-complete":
-            if (data.score >= 0)
+            printmylog ("localRound is " + (localRound) + ", isfirst: " + isFirst + ", data : " + JSON.stringify(roundResults));
+            var scoreL = roundResults[localRound][isFirst].score;
+            if (scoreL >= 0)
             {
                var appendStr = '';
-               if (data.lead == 0)
+               var lead = roundResults[localRound][isFirst].lead;
+               var manual = roundResults[localRound][isFirst].manual;
+               if (manual == 1)
                {
                   appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
-                              '<div class="bracket-score"> <a> (' + data.score + ')</a> </div>'
-                  $(container).parent().addClass('bracket-name-current');
+                              '<div class="bracket-score orange"> <a> (' + scoreL + ')</a> </div>'
+                  $(container).parent().addClass('bracket-name-orange');
                }
-               else if (data.lead == 1)
+               else if (lead == 0)
                {
                   appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
-                              '<div class="bracket-score green"> <a> (' + data.score + ')</a> </div>'
+                              '<div class="bracket-score red"> <a> (' + scoreL + ')</a> </div>'
+                  $(container).parent().addClass('bracket-name-red');
+               }
+               else if (lead == 1)
+               {
+                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
+                              '<div class="bracket-score green"> <a> (' + scoreL + ')</a> </div>'
                   $(container).parent().addClass('bracket-name-green');
                }
                else
                {
                   appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
-                              '<div class="bracket-score red"> <a> (' + data.score + ')</a> </div>'
-                  $(container).parent().addClass('bracket-name-red');
+                              '<div class="bracket-score"> <a> (' + scoreL + ')</a> </div>'
+                  $(container).parent().addClass('bracket-name-current');
                }
                if (roundNo%2 == 1)
                {
                   var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
                   if (roundDate[localRound] != undefined)
                   {
-                     befStr = befStr + '<a> (' + roundDate[localRound] + ')</a> </div>';
+                     befStr = befStr + '<a> ' + roundDate[localRound] + '</a> </div>';
                   }
                   else
                   {
@@ -2890,7 +3072,12 @@ function drawBracket()
                   var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
                   if (roundDate[localRound] != undefined)
                   {
-                     befStr = befStr + '<a class="dateright">' + roundDate[localRound] + '</a> </div>';
+                     //befStr = befStr + '<a class="dateright"> ' + roundDate[localRound] + '</a> </div>';
+                     befStr = befStr + '<a> ' + roundDate[localRound] + '</a> </div>';
+                  }
+                  else
+                  {
+                     befStr = befStr + '</div>';
                   }
                   $(befStr).insertBefore(container); 
                }
@@ -2904,6 +3091,7 @@ function drawBracket()
             return;
         }
    }
+   printmylog ("Data is " + JSON.stringify(bigData));
    $(function () {
       $('#bracket').bracket({
          centerConnectors: true,

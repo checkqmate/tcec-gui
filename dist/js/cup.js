@@ -33,3 +33,5 @@ var bigData = {
   ]                                                                                                                                                                                          
   ]                                                                                                                                                                                          
 }                                                                                                                                                                                        
+
+var roundResults = []

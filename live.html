@@ -1012,7 +1012,6 @@ OS: Ubuntu 18.04 server
           { 
              setTwitch();
           }, 12000);
-          drawBracket();
           window.setTimeout(function() 
                             { 
                                updateTables();
@@ -1066,6 +1065,19 @@ OS: Ubuntu 18.04 server
       socket.on('users', function(data){
         setUsers(data);
         });
+      socket.on('manual', function(data){
+        data.readallfiles = 1;   
+        var eventCross = eventCrosstable(data);
+        if (eventCross == -1)
+        {
+            eventCrossTableInitial = 0;
+            console.log ("eventCross already was initialized, so forcing it");
+            window.setTimeout(function() 
+                            { 
+                               eventCrosstable(data);
+                            }, 5000);
+        }
+      });
 
     </script>
     <audio id="move_sound">
