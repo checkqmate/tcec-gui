@@ -3083,11 +3083,6 @@ function drawBracket()
                }
                container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append('<div class="bracket-name"> <a> ' + data.name + '</a> </div>')
             }
-            if (localRound == 31)
-            {
-               $(container).parent().hide();
-               return;
-            } 
             return;
         }
    }
@@ -3099,9 +3094,10 @@ function drawBracket()
          scoreWidth: 25,
          matchMargin: 45,
          roundMargin: 18,
-         init: bigData
-         ,decorator: {edit: edit_fn,
-                  render: render_fn}
+         init: bigData,
+         skipConsolationRound: true,
+         decorator: {edit: edit_fn,
+                     render: render_fn}
    });                                                                                                                                                                                          
    });                                                                                                                                                                                          
 }
