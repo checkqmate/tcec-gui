@@ -617,6 +617,17 @@ function setInfoFromCurrentHeaders()
   }
   $('.white-engine-name').html(name);
   $('.white-engine-name-full').html(header);
+  if (engineScore.length > 0)
+  {
+     if (engineScore[0].name == header)
+     {
+        $('.white-engine-score').html(engineScore[0].score);
+     }
+     if (engineScore[1].name == header)
+     {
+        $('.white-engine-score').html(engineScore[1].score);
+     }
+  }
   var imgsrc = 'img/engines/' + name + '.jpg';
   $('#white-engine').attr('src', imgsrc);
   $('#white-engine').attr('alt', header);
@@ -631,6 +642,17 @@ function setInfoFromCurrentHeaders()
   var imgsrc = 'img/engines/' + name + '.jpg';
   $('#black-engine').attr('src', imgsrc);
   $('#black-engine').attr('alt', header);
+  if (engineScore.length > 0)
+  {
+     if (engineScore[0].name == header)
+     {
+        $('.black-engine-score').html(engineScore[0].score);
+     }
+     if (engineScore[1].name == header)
+     {
+        $('.black-engine-score').html(engineScore[1].score);
+     }
+  }
   $('#black-engine-chessprogramming').attr('href', 'https://www.chessprogramming.org/' + name);
 }
 
@@ -1279,6 +1301,7 @@ function cellformatterEvent(value, row, index, field)
 }
 
 var gameNox = 0;
+var engineScore = [];
 
 function updateCrosstableData(data)
 {
@@ -1286,6 +1309,7 @@ function updateCrosstableData(data)
 
    var abbreviations = [];
    var standingsCross = [];
+   engineScore = [];
 
    _.each(crosstableData.Table, function(engine, key) {
      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
@@ -1305,6 +1329,7 @@ function updateCrosstableData(data)
         gameNox = 8;
      }
 
+     var scoreEntry = {"name": engine, "score": engineDetails.Score};
      var entry = {
        rank: engineDetails.Rank,
        name: engine,
@@ -1346,6 +1371,7 @@ function updateCrosstableData(data)
      });
 
      standingsCross = _.union(standingsCross, [entry]);
+     engineScore = _.union(engineScore, [scoreEntry]);
    });
 
    if (!crossTableInitialized) {
@@ -1420,6 +1446,7 @@ function updateCrosstableData(data)
    $('#crosstable').bootstrapTable('load', standingsCross);
    gameNox = gameNox + "/8";
    $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Round', value: gameNox});
+   setInfoFromCurrentHeaders();
 }
 
 function updateCrosstable()
