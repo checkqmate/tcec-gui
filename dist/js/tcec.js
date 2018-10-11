@@ -109,7 +109,7 @@ function updatePgn(resettime)
    }
 
    axios.get('live.json?no-cache' + (new Date()).getTime())
-   .then(function (response) 
+   .then(function (response)
    {
       if (timeDiffRead == 0)
       {
@@ -193,7 +193,7 @@ function startClock(color, currentMove, previousMove) {
 function stopClock(color) {
   if (color == 'white') {
     clearInterval(whiteClockInterval);
-    $('.white-to-move').hide();    
+    $('.white-to-move').hide();
   } else {
     clearInterval(blackClockInterval);
     $('.black-to-move').hide();
@@ -268,11 +268,11 @@ function setTimeUsed(color, time) {
 }
 
 var userCount = 0;
-function setUsers(data) 
+function setUsers(data)
 {
    userCount = data.count;
    lastGame = data.gamesdone;
-   try 
+   try
    {
       $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: userCount});
    }
@@ -341,13 +341,13 @@ function setPgn(pgn)
    }
    else
    {
-      if (typeof pgn.Moves != 'undefined') 
+      if (typeof pgn.Moves != 'undefined')
       {
          prevPgnData = pgn;
       }
    }
 
-   if (typeof pgn.Moves != 'undefined') 
+   if (typeof pgn.Moves != 'undefined')
    {
       currentPlyCount = pgn.Moves.length;
    }
@@ -359,12 +359,12 @@ function setPgn(pgn)
        currentPosition = pgn.Moves[pgn.Moves.length-1].fen;
        moveFrom = pgn.Moves[pgn.Moves.length-1].from;
        moveTo = pgn.Moves[pgn.Moves.length-1].to;
-   
+
        currentGameActive = (pgn.Headers.Termination == 'unterminated');
        whiteToPlay = (currentPlyCount % 2 == 0);
      }
   }
-   
+
   if (!currentGameActive) {
     stopClock('white');
     stopClock('black');
@@ -384,7 +384,7 @@ function setPgn(pgn)
 
   if (timeDiffRead > 0)
   {
-     timeDiff = 0; 
+     timeDiff = 0;
   }
 
   loadedPlies = currentPlyCount;
@@ -455,18 +455,18 @@ function setPgn(pgn)
 
   defaultStartTime = (base * 60 * 1000);
 
-  if (currentGameActive) 
+  if (currentGameActive)
   {
-     if (whiteToPlay) 
+     if (whiteToPlay)
      {
         startClock('white', clockCurrentMove, clockPreviousMove);
-     } 
-     else 
+     }
+     else
      {
         startClock('black', clockCurrentMove, clockPreviousMove);
      }
   }
-  else 
+  else
   {
      stopClock('white');
      stopClock('black');
@@ -570,7 +570,7 @@ function setPgn(pgn)
     if (move.book == true)
     {
        linkClass += " green";
-       bookmove = ply;  
+       bookmove = ply;
     }
 
     var moveNotation = move.m;
@@ -647,14 +647,14 @@ function getTBHits(tbhits)
       if (tbhits < 1000)
       {
          tbHits = tbhits;
-      } 
+      }
       else if (tbhits < 1000000)
       {
          tbHits = Math.round(tbhits / 1000) + 'K';
-      } 
-      else 
+      }
+      else
       {
-         tbHits = Math.round(tbhits / 1000000) + 'M'; 
+         tbHits = Math.round(tbhits / 1000000) + 'M';
       }
    }
    return tbHits;
@@ -669,7 +669,7 @@ function getEvalFromPly(ply)
     side = 'Black';
   }
 
-  if (ply < 0) 
+  if (ply < 0)
   {
      return {
        'side': side,
@@ -682,7 +682,7 @@ function getEvalFromPly(ply)
        'tbhits': "n/a",
        'timeleft': "n/a"
      };
-  } 
+  }
 
   //arun
   if (ply < bookmove || (typeof selectedMove == 'undefined') || (typeof (selectedMove.pv) == 'undefined'))
@@ -698,7 +698,7 @@ function getEvalFromPly(ply)
        'tbhits': "book",
        'timeleft': "book"
      };
-  } 
+  }
 
   if (typeof selectedMove == 'undefined') {
     return '';
@@ -724,7 +724,7 @@ function getEvalFromPly(ply)
 
   var evalRet = '';
 
-  if (!isNaN(selectedMove.wv))  
+  if (!isNaN(selectedMove.wv))
   {
      evalRet = parseFloat(selectedMove.wv).toFixed(2);
   }
@@ -749,7 +749,7 @@ function getEvalFromPly(ply)
 function updateMoveValues(whiteToPlay, whiteEval, blackEval)
 {
    /* Ben: Not sure why we need to update only if we are not viewing active move */
-   if (!viewingActiveMove) 
+   if (!viewingActiveMove)
    {
       $('.white-time-used').html(whiteEval.mtime);
       $('.black-time-used').html(blackEval.mtime);
@@ -820,11 +820,11 @@ function updateEnginePv(color, whiteToPlay, moves)
       if (color == "white" && effectiveKey % 2 == 0 ) {
         $('#' + color + '-engine-pv').append(pvMove + '. ');
       }
-      
+
       if (color == "black" && effectiveKey % 2 != 0 ) {
         $('#' + color + '-engine-pv').append(pvMove + '. ');
       }
-      
+
       if (color == "black" && key == 0 ) {
         $('#' + color + '-engine-pv').append(pvMove + '. ');
         $('#' + color + '-engine-pv').append(' .. ');
@@ -974,7 +974,7 @@ $(document).on('click', '#board-reverse', function(e) {
   return false;
 });
 
-function handlePlyChange(handleclick) 
+function handlePlyChange(handleclick)
 {
    if (typeof handleclick == 'undefined')
    {
@@ -1034,7 +1034,7 @@ $(document).on('click', '.set-pv-board', function(e) {
 
   setPvFromKey(moveKey);
 
-  e.preventDefault(); 
+  e.preventDefault();
 
   return false;
 });
@@ -1173,7 +1173,7 @@ function setPieces(piece, value, whiteToPlay) {
     target = 'white-material';
     color = 'w';
   }
-  
+
   value = Math.abs(value);
 
   $('#white-material span.' + piece).html('');
@@ -1185,7 +1185,7 @@ function setPieces(piece, value, whiteToPlay) {
   }
 }
 
-function getLinkArch(gameNumber) 
+function getLinkArch(gameNumber)
 {
    var retLink;
 
@@ -1224,13 +1224,13 @@ function formatter(value, row, index, field) {
    if (!value.hasOwnProperty("Score")) // true
    {
       return value;
-   } 
+   }
 
    var retStr = '';
    var valuex = _.get(value, 'Score');
    var countGames = 0;
 
-   _.each(valuex, function(engine, key) 
+   _.each(valuex, function(engine, key)
    {
       var gameX = parseInt(countGames/2);
       var gameXColor = parseInt(gameX%3);
@@ -1267,17 +1267,17 @@ function cellformatter(value, row, index, field) {
       if (!value.hasOwnProperty("Score")) // true
       {
          return {classes: 'black'};
-      } 
+      }
    }
    return {classes: 'monofont'};
 }
 
-function cellformatterEvent(value, row, index, field) 
+function cellformatterEvent(value, row, index, field)
 {
    return {classes: 'monofont'};
 }
 
-function updateCrosstableData(data) 
+function updateCrosstableData(data)
 {
    var crosstableData = data;
 
@@ -1308,34 +1308,34 @@ function updateCrosstableData(data)
        elo_diff: elo + ' [' + eloDiff + ']'
      };
 
-     _.each(abbreviations, function (abbreviation) {                                                                                                                                                  
-       var score2 = '';                                                                                                                                                                               
-       engineName = abbreviation.name;                                                                                                                                                                
-       engineAbbreviation = abbreviation.abbr;                                                                                                                                                        
-                                                                                                                                                                                                      
-       engineCount = crosstableData.Order.length;                                                                                                                                                     
-       if (engineCount < 1) {                                                                                                                                                                         
-         engineCount = 1;                                                                                                                                                                             
-       }                                                                                                                                                                                              
-                                                                                                                                                                                                      
-       rounds = Math.floor(engineDetails.Games / engineCount) + 1;                                                                                                                                    
-                                                                                                                                                                                                      
-       if (engineDetails.Abbreviation == engineAbbreviation) {                                                                                                                                        
-         for (i = 0; i < rounds; i++) {                                                                                                                                                               
-           score2 = '';                                                                                                                                                                               
-         }                                                                                                                                                                                            
-       } else {                                                                                                                                                                                       
-         resultDetails = _.get(engineDetails, 'Results');                                                                                                                                             
-         matchDetails = _.get(resultDetails, engineName);                                                                                                                                             
-         score2 =                                                                                                                                                                                     
-            {                                                                                                                                                                                         
-               Score: matchDetails.Scores,                                                                                                                                                            
-               Text: matchDetails.Text                                                                                                                                                                
-            }                                                                                                                                                                                         
-       }                                                                                                                                                                                              
-       _.set(entry, engineAbbreviation, score2);                                                                                                                                                      
-     });                                                                                                                                                                                              
-                                                                
+     _.each(abbreviations, function (abbreviation) {
+       var score2 = '';
+       engineName = abbreviation.name;
+       engineAbbreviation = abbreviation.abbr;
+
+       engineCount = crosstableData.Order.length;
+       if (engineCount < 1) {
+         engineCount = 1;
+       }
+
+       rounds = Math.floor(engineDetails.Games / engineCount) + 1;
+
+       if (engineDetails.Abbreviation == engineAbbreviation) {
+         for (i = 0; i < rounds; i++) {
+           score2 = '';
+         }
+       } else {
+         resultDetails = _.get(engineDetails, 'Results');
+         matchDetails = _.get(resultDetails, engineName);
+         score2 =
+            {
+               Score: matchDetails.Scores,
+               Text: matchDetails.Text
+            }
+       }
+       _.set(entry, engineAbbreviation, score2);
+     });
+
      standingsCross = _.union(standingsCross, [entry]);
    });
 
@@ -1396,11 +1396,11 @@ function updateCrosstableData(data)
        }
      ];
 
-     _.each(crosstableData.Order, function(engine, key) {                                                                                                                                             
-       engineDetails = _.get(crosstableData.Table, engine);                                                                                                                                           
-       columns = _.union(columns, [{field: engineDetails.Abbreviation, title: engineDetails.Abbreviation,                                                                                             
-                                    formatter: formatter, cellStyle: cellformatter}]);                                                                                                                
-     });                                                                                                                                               
+     _.each(crosstableData.Order, function(engine, key) {
+       engineDetails = _.get(crosstableData.Table, engine);
+       columns = _.union(columns, [{field: engineDetails.Abbreviation, title: engineDetails.Abbreviation,
+                                    formatter: formatter, cellStyle: cellformatter}]);
+     });
 
      $('#crosstable').bootstrapTable({
        classes: 'table table-striped table-no-bordered',
@@ -1411,21 +1411,21 @@ function updateCrosstableData(data)
    $('#crosstable').bootstrapTable('load', standingsCross);
 }
 
-function updateCrosstable() 
+function updateCrosstable()
 {
    axios.get('crosstable.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
       updateCrosstableData(response.data);
    })
-   .catch(function (error) 
+   .catch(function (error)
    {
       // handle error
       printmylog(error);
    });
 }
 
-function updateScheduleData(data) 
+function updateScheduleData(data)
 {
    var prevDate = 0;
    var momentDate = 0;
@@ -1433,7 +1433,7 @@ function updateScheduleData(data)
    var gameDiff = 0;
    var timezoneDiff = moment().utcOffset() * 60 * 1000 - 3600 * 1000;
 
-   _.each(data, function(engine, key) 
+   _.each(data, function(engine, key)
    {
       engine.Gamesort = engine.Game;
       if (engine.Start)
@@ -1469,7 +1469,7 @@ function updateScheduleData(data)
    $('#schedule').bootstrapTable('selectPage', pageNum);
 }
 
-function updateSchedule() 
+function updateSchedule()
 {
    axios.get('schedule.json?no-cache' + (new Date()).getTime())
     .then(function (response) {
@@ -1482,7 +1482,7 @@ function updateSchedule()
 }
 
 function pad(pad, str) {
-  if (typeof str === 'undefined') 
+  if (typeof str === 'undefined')
     return pad;
   return (pad + str).slice(-pad.length);
 }
@@ -1524,7 +1524,7 @@ function setBoardInit()
        return false;
      }
    };
-  
+
    var onDragMove = function(newLocation, oldLocation, source,
                              piece, position, orientation) {
     var move = game.move({
@@ -1541,7 +1541,7 @@ function setBoardInit()
      if (activePvKey == 0)
      {
          activePv[0] = {};
-         activePv[0].fen = fen; 
+         activePv[0].fen = fen;
      }
      var moveFrom = oldLocation;
      var moveTo = newLocation;
@@ -1575,7 +1575,7 @@ function setBoardInit()
       appearSpeed: 1,
       draggable: true,
       onDragStart: onDragStart,
-      onDrop: onDragMove,   
+      onDrop: onDragMove,
       boardTheme: window[btheme + "_board_theme"]
    });
    localStorage.setItem('tcec-board-theme', btheme);
@@ -1625,7 +1625,7 @@ function eventCrosstableWrap()
    }
    eventCrossTableInitial = 1;
    axios.get('json/manual.json?no-cache' + (new Date()).getTime())
-   .then(function (response) 
+   .then(function (response)
    {
       eventCrosstable(response.data);
       response.data.readallfiles = 0;
@@ -1641,7 +1641,7 @@ function eventCrosstableWrap()
 function updateTablesData(data)
 {
    console.log("Came to updateTablesdata");
-   try 
+   try
    {
       updateCrosstableData(data);
    }
@@ -1649,7 +1649,7 @@ function updateTablesData(data)
    {
       console.log("Unable to update crosstable from data");
    }
-   try 
+   try
    {
       updateStandtableData(data);
    }
@@ -1657,7 +1657,7 @@ function updateTablesData(data)
    {
       console.log("Unable to update standtable from data");
    }
-   try 
+   try
    {
       setTimeout(function() { eventCrosstableWrap(); }, 10000);
    }
@@ -1671,7 +1671,7 @@ function updateTablesData(data)
 function updateTables()
 {
    console.log("Came to updateTables");
-   try 
+   try
    {
       updateCrosstable();
    }
@@ -1679,7 +1679,7 @@ function updateTables()
    {
       console.log("Unable to update crosstable");
    }
-   try 
+   try
    {
       updateStandtable();
    }
@@ -1687,7 +1687,7 @@ function updateTables()
    {
       console.log("Unable to update standtable");
    }
-   try 
+   try
    {
       updateLiveEval();
    }
@@ -1695,7 +1695,7 @@ function updateTables()
    {
       console.log("Unable to update updateLiveEval");
    }
-   try 
+   try
    {
       updateLiveChart();
    }
@@ -1703,7 +1703,7 @@ function updateTables()
    {
       console.log("Unable to update brackets");
    }
-   try 
+   try
    {
       eventCrosstableWrap();
    }
@@ -1823,11 +1823,11 @@ function setDefaultThemes()
 {
    var darkMode = localStorage.getItem('tcec-dark-mode');
 
-   if (darkMode == 20) 
+   if (darkMode == 20)
    {
       setDark();
-   } 
-   else 
+   }
+   else
    {
       setLight();
    }
@@ -1842,7 +1842,7 @@ function drawBoards()
    {
       btheme = boardTheme;
       ptheme = pieceTheme;
-   } 
+   }
    setBoard();
 }
 
@@ -1908,7 +1908,7 @@ function updateLiveEvalInit()
       });
 }
 
-function updateLiveEvalData(data) 
+function updateLiveEvalData(data)
 {
    var engineData = [];
    livePvs = [];
@@ -2016,7 +2016,7 @@ function updateLiveEvalData(data)
 
 function updateLiveEval() {
    axios.get('data.json?no-cache' + (new Date()).getTime())
-   .then(function (response) 
+   .then(function (response)
    {
       updateLiveEvalData(response.data);
    })
@@ -2028,9 +2028,9 @@ function updateLiveEval() {
 
 var liveEngineEval = [];
 
-function updateLiveChartData(data) 
+function updateLiveChartData(data)
 {
-   if (typeof data.moves != 'undefined') 
+   if (typeof data.moves != 'undefined')
    {
       liveEngineEval = data.moves;
       updateChartData();
@@ -2039,7 +2039,7 @@ function updateLiveChartData(data)
    }
 }
 
-function updateLiveChart() 
+function updateLiveChart()
 {
    axios.get('liveeval.json?no-cache' + (new Date()).getTime())
    .then(function (response) {
@@ -2051,7 +2051,7 @@ function updateLiveChart()
    });
 }
 
-function updateStandtableData(data) 
+function updateStandtableData(data)
 {
    var standtableData = data;
 
@@ -2094,7 +2094,7 @@ function updateStandtableData(data)
        } else {
          resultDetails = _.get(engineDetails, 'Results');
          matchDetails = _.get(resultDetails, engineName);
-         score2 = 
+         score2 =
             {
                Score: matchDetails.Scores,
                Text: matchDetails.Text
@@ -2130,7 +2130,7 @@ function updateStandtableData(data)
      ];
      _.each(standtableData.Order, function(engine, key) {
        engineDetails = _.get(standtableData.Table, engine);
-       columns = _.union(columns, [{field: engineDetails.Abbreviation, title: engineDetails.Abbreviation, 
+       columns = _.union(columns, [{field: engineDetails.Abbreviation, title: engineDetails.Abbreviation,
                                     formatter: formatter, cellStyle: cellformatter}]);
      });
 
@@ -2143,14 +2143,14 @@ function updateStandtableData(data)
    $('#standtable').bootstrapTable('load', standingsStand);
 }
 
-function updateStandtable() 
+function updateStandtable()
 {
    axios.get('crosstable.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
       updateStandtableData(response.data);
    })
-   .catch(function (error) 
+   .catch(function (error)
    {
       // handle error
       printmylog(error);
@@ -2179,7 +2179,7 @@ function checkTwitch(checkbox)
 
 function setTwitch()
 {
-   var getVideoCheck = localStorage.getItem('tcec-twitch-video');        
+   var getVideoCheck = localStorage.getItem('tcec-twitch-video');
    if (getVideoCheck == undefined || getVideoCheck == 0)
    {
       $('iframe#twitchvid').attr('src', 'https://player.twitch.tv/?channel=TCEC_Chess_TV');
@@ -2209,7 +2209,7 @@ function checkSound(checkbox)
 
 function setSound()
 {
-   var getSound = localStorage.getItem('tcec-sound-video');        
+   var getSound = localStorage.getItem('tcec-sound-video');
    if (getSound == undefined || getSound == 0)
    {
       playSound = 1;
@@ -2271,7 +2271,7 @@ var columnsEng = [
 }
 ];
 
-function updateEngineInfo(divx, divimg, data) 
+function updateEngineInfo(divx, divimg, data)
 {
    $(divx).bootstrapTable('load', data);
    addToolTip(divx, divimg);
@@ -2363,10 +2363,10 @@ function endButton()
   onLastMove();
 }
 
-function tcecHandleKey(e) 
+function tcecHandleKey(e)
 {
     var keycode, oldPly, oldVar, colRow, colRowList;
-    if (!e) 
+    if (!e)
     {
         e = window.event
     }
@@ -2376,7 +2376,7 @@ function tcecHandleKey(e)
     }
 
     switch (keycode)
-    {  
+    {
         case 37:
         case 74:
             backButton();
@@ -2399,13 +2399,13 @@ function tcecHandleKey(e)
     return stopEvProp(e)
 }
 
-function simpleAddEvent(obj, evt, cbk) 
+function simpleAddEvent(obj, evt, cbk)
 {
-   if (obj.addEventListener) 
+   if (obj.addEventListener)
    {
       obj.addEventListener(evt, cbk, !1)
-   } 
-   else if (obj.attachEvent) 
+   }
+   else if (obj.attachEvent)
    {
       obj.attachEvent("on" + evt, cbk)
    }
@@ -2471,10 +2471,10 @@ var columnsEvent = [
       ,width: '7%'
       ,formatter: 'formatterEvent'
       ,cellStyle: 'cellformatterEvent'
-     } 
+     }
    ];
 
-function sleep(ms) 
+function sleep(ms)
 {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -2511,7 +2511,7 @@ function getShortName(name)
 {
    var retName = '';
 
-   if (name.indexOf(' ') > 0) 
+   if (name.indexOf(' ') > 0)
    {
        retName = name.substring(0, name.indexOf(' '));
    }
@@ -2559,7 +2559,7 @@ async function eventCrosstable(mandata)
          printmylog ("We have games decided:" + mandata.manual.decided);
          manualGamesdecided = 1;
       }
-      if (mandata.manual.decided) 
+      if (mandata.manual.decided)
       {
          printmylog ("We have games decided:" + mandata.manual.decided);
          manualGamesdecided = 1;
@@ -2572,7 +2572,7 @@ async function eventCrosstable(mandata)
         classes: 'table table-striped table-no-bordered',
         columns: columnsEvent,
         sortName: 'rank',
-        sortOrder: 'desc' 
+        sortOrder: 'desc'
       });
 
    if (manualGamesdecided)
@@ -2610,9 +2610,9 @@ async function eventCrosstable(mandata)
    {
       tablesLoaded[i] = -1;
       roundResults[i-1] = [{lead:-1, score: -1}, {lead:-1, score: -1}];
-      bigData.teams[i-1] = [{name: getSeededName(teamsx[i-1][0][0]), flag: getShortName(teamsx[i-1][0][0]), 
-                             score: -1, rank: '1', date: '', lead: 0}, 
-                            {name: getSeededName(teamsx[i-1][1][0]), flag: getShortName(teamsx[i-1][1][0]), 
+      bigData.teams[i-1] = [{name: getSeededName(teamsx[i-1][0][0]), flag: getShortName(teamsx[i-1][0][0]),
+                             score: -1, rank: '1', date: '', lead: 0},
+                            {name: getSeededName(teamsx[i-1][1][0]), flag: getShortName(teamsx[i-1][1][0]),
                              score: -1, rank: '2', date: '', lead: 0}];
    }
 
@@ -2668,7 +2668,7 @@ function eventCrosstableMain(ii, filename)
       tablesLoaded[ii] = 1;
       printmylog ("after trying to read file " + filename);
    })
-   .catch(function (error) 
+   .catch(function (error)
    {
       printmylog(error);
       printmylog ("failed trying to read file " + filename + ", error: " + error);
@@ -2749,7 +2749,7 @@ function checkMatchDone(firstEntry, currEntry, matchNum)
    return isMatchLost;
 }
 
-function updateCrosstableDataNew(ii, data) 
+function updateCrosstableDataNew(ii, data)
 {
    var crosstableData = data;
 
@@ -2783,23 +2783,23 @@ function updateCrosstableDataNew(ii, data)
         engineDetails.name = engine;
         entry.crashes = entry.crashes + "/" + crashes2;
 
-        var isMatchLost = checkMatchDone(entry, engineDetails, ii); 
+        var isMatchLost = checkMatchDone(entry, engineDetails, ii);
         printmylog ("For match " + ii + ", result is " + isMatchLost);
         var lead = 0;
 
         if (ii < 17)
         {
             bigData.teams[ii-1][1] = {name: getSeededName(engine), flag: getShortName(engine), score: -1, rank: '2', date: '', lead: 0};
-        } 
+        }
 
         if (isMatchLost == 1)
         {
-           entry.name = '<a style="color: ' + gameArrayClass[1] + '"> ' + entry.name + '</a> vs ' + 
+           entry.name = '<a style="color: ' + gameArrayClass[1] + '"> ' + entry.name + '</a> vs ' +
                         '<a style="color: ' + gameArrayClass[0] + '"> ' + engine + '</a>';
         }
         else if (isMatchLost == -1)
         {
-           entry.name = '<a style="color: ' + gameArrayClass[0] + '"> ' + engine + '</a> vs ' + 
+           entry.name = '<a style="color: ' + gameArrayClass[0] + '"> ' + engine + '</a> vs ' +
                         '<a style="color: ' + gameArrayClass[1] + '"> ' + entry.name + '</a>';
         }
         else
@@ -2832,7 +2832,7 @@ function updateCrosstableDataNew(ii, data)
 
            roundResults[ii-1][1].lead = 1;
            roundResults[ii-1][0].lead = 0;
-           
+
         }
         else
         {
@@ -2861,7 +2861,7 @@ function updateCrosstableDataNew(ii, data)
      if (ii < 17)
      {
         bigData.teams[ii-1] = [{name: "", flag: "", score: -1, rank: '1', date: '', lead: 0},
-                               {name: "", flag: "", score: -1, rank: '2', date: '', lead: 0}]; 
+                               {name: "", flag: "", score: -1, rank: '2', date: '', lead: 0}];
         bigData.teams[ii-1][0] = {name: getSeededName(engine), flag: getShortName(engine), score: '', rank: 1, lead:0};
      }
 
@@ -2869,39 +2869,39 @@ function updateCrosstableDataNew(ii, data)
      {
         totalGamesSingle = engineDetails.Games;
         totalGamesSingle = 1;
-        gamesEachMatch[ii] = parseInt(engineDetails.Games); 
+        gamesEachMatch[ii] = parseInt(engineDetails.Games);
      }
 
-     _.each(abbreviations, function (abbreviation) {                                                                                                                                                  
-       var score2 = '';                                                                                                                                                                               
-       engineName = abbreviation.name;                                                                                                                                                                
-       engineAbbreviation = abbreviation.abbr;                                                                                                                                                        
-                                                                                                                                                                                                      
-       engineCount = crosstableData.Order.length;                                                                                                                                                     
+     _.each(abbreviations, function (abbreviation) {
+       var score2 = '';
+       engineName = abbreviation.name;
+       engineAbbreviation = abbreviation.abbr;
 
-       if (engineCount < 1) 
-       {                                                                                                                                                                         
+       engineCount = crosstableData.Order.length;
+
+       if (engineCount < 1)
+       {
           engineCount = 1;
-       }                                                                                                                                                                                              
-                                                                                                                                                                                                      
-       rounds = Math.floor(engineDetails.Games / engineCount) + 1;                                                                                                                                    
-                                                                                                                                                                                                      
-       if (engineDetails.Abbreviation == engineAbbreviation) {                                                                                                                                        
-         for (i = 0; i < rounds; i++) {                                                                                                                                                               
-           score2 = '';                                                                                                                                                                               
-         }                                                                                                                                                                                            
-       } else {                                                                                                                                                                                       
-         resultDetails = _.get(engineDetails, 'Results');                                                                                                                                             
-         matchDetails = _.get(resultDetails, engineName);                                                                                                                                             
+       }
+
+       rounds = Math.floor(engineDetails.Games / engineCount) + 1;
+
+       if (engineDetails.Abbreviation == engineAbbreviation) {
+         for (i = 0; i < rounds; i++) {
+           score2 = '';
+         }
+       } else {
+         resultDetails = _.get(engineDetails, 'Results');
+         matchDetails = _.get(resultDetails, engineName);
          entry.points = engineDetails.Score + " - " + (engineDetails.Games - engineDetails.Score);
          entry.point = engineDetails.Score;
        if (matchDetails)
        {
           entry.score = matchDetails.Text;
        }
-       }                                                                                                                                                                                              
-     });                                                                                                                                                                                              
-                                                                
+       }
+     });
+
      standings = _.union(standings, [entry]);
    });
 
@@ -2925,7 +2925,7 @@ function formatterEvent(value, row, index, field) {
    var countGames = 0;
    var prevGameTota = getPrevGames(row.rank);
 
-   _.each(value, function(engine, key) 
+   _.each(value, function(engine, key)
    {
       var gameX = parseInt(countGames/2);
       var gameXColor = parseInt(gameX%3);
@@ -2988,9 +2988,9 @@ function drawBracket()
 
    function render_fn(container, data, score, state) {
         var localRound = parseInt(roundNo/2) - 1;
-        var isFirst = roundNo%2; 
+        var isFirst = roundNo%2;
         printmylog ("Came to round: " + roundNo + " data.name is: ");
-        roundNo ++;  
+        roundNo ++;
         switch(state) {
           case "empty-bye":
             container.append("No team")
@@ -3007,15 +3007,11 @@ function drawBracket()
                {
                   befStr = befStr + '</div>';
                }
-               $(befStr).insertBefore(container); 
+               $(befStr).insertBefore(container);
             }
-            if (localRound == 31)
-            {
-               $(container).parent().hide();
-            } 
             container.append("TBD")
             return;
-       
+
           case "entry-no-score":
           case "entry-default-win":
           case "entry-complete":
@@ -3028,25 +3024,25 @@ function drawBracket()
                var manual = roundResults[localRound][isFirst].manual;
                if (manual == 1)
                {
-                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
+                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
                               '<div class="bracket-score orange"> <a> (' + scoreL + ')</a> </div>'
                   $(container).parent().addClass('bracket-name-orange');
                }
                else if (lead == 0)
                {
-                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
+                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
                               '<div class="bracket-score red"> <a> (' + scoreL + ')</a> </div>'
                   $(container).parent().addClass('bracket-name-red');
                }
                else if (lead == 1)
                {
-                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
+                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
                               '<div class="bracket-score green"> <a> (' + scoreL + ')</a> </div>'
                   $(container).parent().addClass('bracket-name-green');
                }
                else
                {
-                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' + 
+                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
                               '<div class="bracket-score"> <a> (' + scoreL + ')</a> </div>'
                   $(container).parent().addClass('bracket-name-current');
                }
@@ -3061,7 +3057,7 @@ function drawBracket()
                   {
                      befStr = befStr + '</div>';
                   }
-                  $(befStr).insertBefore(container); 
+                  $(befStr).insertBefore(container);
                }
                container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append(appendStr);
             }
@@ -3079,7 +3075,7 @@ function drawBracket()
                   {
                      befStr = befStr + '</div>';
                   }
-                  $(befStr).insertBefore(container); 
+                  $(befStr).insertBefore(container);
                }
                container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append('<div class="bracket-name"> <a> ' + data.name + '</a> </div>')
             }
@@ -3098,6 +3094,6 @@ function drawBracket()
          skipConsolationRound: true,
          decorator: {edit: edit_fn,
                      render: render_fn}
-   });                                                                                                                                                                                          
-   });                                                                                                                                                                                          
+   });
+   });
 }
