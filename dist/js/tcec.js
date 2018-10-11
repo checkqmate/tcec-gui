@@ -1283,6 +1283,7 @@ function updateCrosstableData(data)
 
    var abbreviations = [];
    var standingsCross = [];
+   var gameNox = 0;
 
    _.each(crosstableData.Table, function(engine, key) {
      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
@@ -1296,6 +1297,12 @@ function updateCrosstableData(data)
      eloDiff = engineDetails.Rating + elo;
 
      gamesEvent = engineDetails.Games;
+     gameNox = engineDetails.Games + 1;
+     if (gameNox > 8)
+     {
+        gameNox = 8;
+     }
+
      var entry = {
        rank: engineDetails.Rank,
        name: engine,
@@ -1409,6 +1416,8 @@ function updateCrosstableData(data)
      crossTableInitialized = true;
    }
    $('#crosstable').bootstrapTable('load', standingsCross);
+   gameNox = gameNox + "/8";
+   $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Round', value: gameNox});
 }
 
 function updateCrosstable()
