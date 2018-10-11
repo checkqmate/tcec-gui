@@ -1659,7 +1659,7 @@ function updateTablesData(data)
    }
    try 
    {
-      setTimeout(function() { eventCrosstableWrap(); }, 1000);
+      setTimeout(function() { eventCrosstableWrap(); }, 10000);
    }
    catch(err)
    {
