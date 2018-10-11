@@ -544,6 +544,7 @@ function setPgn(pgn)
     }
   }
 
+  pgn.Headers.Round = gameNox;
   $('#event-overview').bootstrapTable('load', [pgn.Headers]);
   $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: userCount});
   $('#event-name').html(pgn.Headers.Event);
@@ -1277,13 +1278,14 @@ function cellformatterEvent(value, row, index, field)
    return {classes: 'monofont'};
 }
 
+var gameNox = 0;
+
 function updateCrosstableData(data)
 {
    var crosstableData = data;
 
    var abbreviations = [];
    var standingsCross = [];
-   var gameNox = 0;
 
    _.each(crosstableData.Table, function(engine, key) {
      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
