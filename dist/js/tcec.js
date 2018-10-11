@@ -1705,7 +1705,7 @@ function updateTables()
    }
    try 
    {
-      setTimeout(function() { eventCrosstableWrap(); }, 1000);
+      eventCrosstableWrap();
    }
    catch(err)
    {
@@ -2654,7 +2654,7 @@ async function eventCrosstable(mandata)
    printmylog ("drawing standings");
    $(divname).bootstrapTable('load', standings);
    printmylog ("drawing bracket");
-   setTimeout(function() { drawBracket(); }, 2000);
+   drawBracket();
 }
 
 function eventCrosstableMain(ii, filename)
