@@ -608,6 +608,34 @@ function copyFen()
    return false;
 }
 
+function setScoreInfoFromCurrentHeaders()
+{
+  var header = loadedPgn.Headers.White;
+  if (engineScore.length > 0)
+  {
+     if (engineScore[0].name == header)
+     {
+        $('.white-engine-score').html(engineScore[0].score);
+     }
+     if (engineScore[1].name == header)
+     {
+        $('.white-engine-score').html(engineScore[1].score);
+     }
+  }
+  header = loadedPgn.Headers.Black;
+  if (engineScore.length > 0)
+  {
+     if (engineScore[0].name == header)
+     {
+        $('.black-engine-score').html(engineScore[0].score);
+     }
+     if (engineScore[1].name == header)
+     {
+        $('.black-engine-score').html(engineScore[1].score);
+     }
+  }
+}
+
 function setInfoFromCurrentHeaders()
 {
   var header = loadedPgn.Headers.White;
@@ -1446,7 +1474,7 @@ function updateCrosstableData(data)
    $('#crosstable').bootstrapTable('load', standingsCross);
    gameNox = gameNox + "/8";
    $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Round', value: gameNox});
-   setInfoFromCurrentHeaders();
+   setScoreInfoFromCurrentHeaders();
 }
 
 function updateCrosstable()
