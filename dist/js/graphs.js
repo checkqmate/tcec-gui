@@ -93,6 +93,10 @@ function updateChartData()
 		}
 	});
 
+	if (labels.length == 0) {
+		labels _.union(labels, [(loadedPlies / 2) + 1]);
+	}
+
 	evalChart.data.labels = labels;
 	evalChart.data.datasets[0].data = liveEval;
 
@@ -110,17 +114,17 @@ function getLiveEval(key, moveNumber, isBlack)
 	if (_.isObject(evalObject)) {
 		eval = evalObject.eval;
 		if (!isNaN(evalObject.eval)) {
-	        if (evalObject.eval > 6.5) {
-	        	evalObject.eval = 6.5;
-	        } else if (evalObject.eval < -6.5) {
-	        	evalObject.eval = -6.5;
-	        }
+	        // if (evalObject.eval > 6.5) {
+	        	// evalObject.eval = 6.5;
+	        // } else if (evalObject.eval < -6.5) {
+	        	// evalObject.eval = -6.5;
+	        // }
 	    } else {
-	    	if (evalObject.eval.substring(0,1) == '-') {
-	    		evalObject.eval = -6.5;
-	    	} else {
-	    		evalObject.eval = 6.5;
-	    	}
+	    	// if (evalObject.eval.substring(0,1) == '-') {
+	    		// evalObject.eval = -6.5;
+	    	// } else {
+	    		// evalObject.eval = 6.5;
+	    	// }
 	    }
 
 	    if (isBlack) {
@@ -129,7 +133,7 @@ function getLiveEval(key, moveNumber, isBlack)
 
 	    return [
 				{
-					'x': Math.round(evalObject.ply / 2) + 1,
+					'x': Math.round(evalObject.ply / 2),
 					'y': evalObject.eval,
 					'eval': eval
 				}

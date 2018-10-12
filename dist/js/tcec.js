@@ -1416,7 +1416,7 @@ function updateLiveEvalData(data)
    var engineData = [];
    livePvs = [];
 
-   pvWhiteMove = (loadedPlies % 0);
+   pvWhiteMove = (loadedPlies % 0) == 0;
 
    _.each(data, function(datum) {
      datum = datum.data;
@@ -1459,7 +1459,7 @@ function updateLiveEvalData(data)
       livePvs = _.union(livePvs, [pvs]);
      }
 
-     if (whiteToPlay) {
+     if (!pvWhiteMove) {
       score *= -1;
      }
 
@@ -1482,8 +1482,6 @@ function updateLiveEvalData(data)
     }
   });
 
-   console.log(livePvs);
-
   $('#live-eval-cont').html('');
   _.each(engineData, function(engineDatum, key) {
     $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' Speed: ' + engineDatum.speed + ' ' + engineDatum.nodes + ' nodes]</small>');
@@ -1494,28 +1492,31 @@ function updateLiveEvalData(data)
       pvKey = key;
         var moveCount = 0;
         splitMoves = engineDatum.pv.split(' ');
-        if (splitMoves % 2 != 0) {
-
-        }
 
         currentMove = Math.floor(loadedPlies / 2);
         currentMove += 1;
 
         if (!pvWhiteMove) {
-          currentMove++;
+          //currentMove++;
+          moveCount++;
         }
 
         pvPlies = 0;
         _.each(engineDatum.pv.split(' '), function(move) {
-          if (moveCount == 0 && !pvWhiteMove) {
-            moveContainer = _.union(moveContainer, [(currentMove - 1) + ' .. ']);  
-          }
           if ((moveCount % 2 == 0 && pvWhiteMove) || (moveCount % 2 == 1 && !pvWhiteMove)) {
             moveAdjust = Math.floor(moveCount / 2);
             moveContainer = _.union(moveContainer, [(currentMove + moveAdjust) + '. ']);
           }
 
-          pvLocation = livePvs[pvKey][moveCount];
+          if (moveCount == 0 && !pvWhiteMove) {
+            moveContainer = _.union(moveContainer, [(currentMove - 1) + ' .. ']);  
+          }
+
+          if (!pvWhiteMove || moveCount == 0) {
+            pvLocation = livePvs[pvKey][moveCount];
+          } else {
+            pvLocation = livePvs[pvKey][moveCount - 1];
+          }
           if (pvLocation) {
              moveContainer = _.union(moveContainer, ["<a href='#' class='set-pv-board' live-pv-key='" + pvKey + "' move-key='" + moveCount + "' color='live'>" + pvLocation.m + '</a>']);
              }
