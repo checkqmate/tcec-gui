@@ -1356,10 +1356,6 @@ function updateCrosstableData(data)
 
      gamesEvent = engineDetails.Games;
      gameNox = engineDetails.Games + 1;
-     if (gameNox > 8)
-     {
-        gameNox = 8;
-     }
 
      var scoreEntry = {"name": engine, "score": engineDetails.Score};
      var entry = {
