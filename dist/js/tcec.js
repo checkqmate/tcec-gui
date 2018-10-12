@@ -2621,6 +2621,14 @@ function getDateRound()
       {
          roundDate[x] = getCurrDate(startDateR2, 1440 * (parseInt((y-1)/2)));
       }
+      if (y == 18)
+      {
+         roundDate[x] = getCurrDate(startDateR1, 1440 * (parseInt((y-1)/2)));
+      }
+      if (y == 17)
+      {
+         roundDate[x] = getCurrDate(startDateR2, 1440 * (parseInt((y-1)/2)));
+      }
    }
 }
 
