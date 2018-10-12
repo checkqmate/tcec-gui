@@ -2870,9 +2870,9 @@ function updateCrosstableDataNew(ii, data)
    var round = 0;
    var roundM = ii;
 
-   round = parseInt(ii/17);
-   roundM = ii - round * 17;
-   plog ("round is " + round + ", ii is " + ii + ", roundM is : " + roundM, 1);
+   round = parseInt(ii/16);
+   roundM = ii - round * 17 - 1 + round;
+   plog ("round is " + round + ", ii is " + ii + ", roundM is : " + roundM, 0);
 
    _.each(crosstableData.Table, function(engine, key) {
      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
@@ -2933,8 +2933,8 @@ function updateCrosstableDataNew(ii, data)
 
         if (isMatchLost == 1)
         {
-           bigData.results[0][round][roundM-1][1] = engineDetails.Score;
-           bigData.results[0][round][roundM-1][0] = entry.point;
+           bigData.results[0][round][roundM][1] = engineDetails.Score;
+           bigData.results[0][round][roundM][0] = entry.point;
            roundResults[ii-1][0].lead = 1;
            roundResults[ii-1][1].lead = 0;
            roundResults[ii-1][1].score = -1;
@@ -2942,8 +2942,8 @@ function updateCrosstableDataNew(ii, data)
         }
         else if (isMatchLost == -1)
         {
-           bigData.results[0][round][roundM-1][1] = 1;
-           bigData.results[0][round][roundM-1][0] = 0;
+           bigData.results[0][round][roundM][1] = 1;
+           bigData.results[0][round][roundM][0] = 0;
 
            roundResults[ii-1][1].score = engineDetails.Score;
            roundResults[ii-1][0].score = entry.point;
@@ -2954,8 +2954,8 @@ function updateCrosstableDataNew(ii, data)
         }
         else
         {
-           bigData.results[0][round][roundM-1][1] = 0;
-           bigData.results[0][round][roundM-1][0] = 0;
+           bigData.results[0][round][roundM][1] = 0;
+           bigData.results[0][round][roundM][0] = 0;
 
            roundResults[ii-1][1].score = engineDetails.Score;
            roundResults[ii-1][0].score = entry.point;
