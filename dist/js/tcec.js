@@ -48,6 +48,8 @@ var manualGamesdecided = 0;
 var mandataGlobal = null;
 var eventCrossTableInitial = 0;
 
+var currentMatch = 0;
+
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
     .addClass('highlight-white');
@@ -549,6 +551,14 @@ function setPgn(pgn)
   }
 
   pgn.Headers.Roundx = gameNox;
+  if (pgn.Headers.Event)
+  {
+     var theMatch = pgn.Headers.Event.match(/TCEC Cup - Round .* - Match (.*)/);
+     if (theMatch)
+     {
+        currentMatch = parseInt(theMatch[1]);
+     }
+  }
   $('#event-overview').bootstrapTable('load', [pgn.Headers]);
   $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: userCount});
   $('#event-name').html(pgn.Headers.Event);
@@ -1249,6 +1259,16 @@ function getLinkArch(gameNumber)
    return (retLink);
 }
 
+function openCrossOrig(gamen)
+{
+   if (currentMatch)
+   {
+      gamen += getPrevGames(currentMatch);
+   }
+   var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=3&ga=" + gamen;
+   window.open(link,'_blank');
+}
+
 function openCross(gamen)
 {
    var gameX = gamen;
@@ -1299,13 +1319,14 @@ function formatter(value, row, index, field) {
       {
          gameXColor = parseInt(engine.Result);
       }
+      var gamen = key + 1;
       if (retStr == '')
       {
-         retStr = '<a title="' + engine.Game + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
+         retStr = '<a title="' + engine.Game + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCrossOrig(' + gamen + ')">' + engine.Result + '</a>';
       }
       else
       {
-         retStr += ' ' + '<a title="' + engine.Game + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
+         retStr += ' ' + '<a title="' + engine.Game + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCrossOrig(' + gamen + ')">' + engine.Result + '</a>';
       }
       countGames = countGames + 1;
       if (countGames%8 == 0)
@@ -2872,7 +2893,7 @@ function updateCrosstableDataNew(ii, data)
 
    round = parseInt(ii/16);
    roundM = ii - round * 17 - 1 + round;
-   plog ("round is " + round + ", ii is " + ii + ", roundM is : " + roundM, 0);
+   plog ("round is " + round + ", ii is " + ii + ", roundM is : " + roundM, 1);
 
    _.each(crosstableData.Table, function(engine, key) {
      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
@@ -3037,8 +3058,21 @@ function updateCrosstableDataNew(ii, data)
 function getPrevGames(ii)
 {
    var total = 0;
+   var start = 0;
+   var end = 0;
 
-   for (var i = 1 ; i < ii ; i ++)
+   if (ii > 16)
+   {
+      start = 17;
+      end = 24;
+   }
+   else
+   {
+      start = 1;
+      end = ii;
+   }
+
+   for (var i = start; i < end; i ++)
    {
       total = gamesEachMatch[i] + total;
    }
