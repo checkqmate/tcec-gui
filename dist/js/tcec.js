@@ -1480,10 +1480,17 @@ function updateCrosstableData(data)
    {
       if (gameNox%2 != 0)
       {
-         gameNox = gameNox + 1;
+         gameNox = gameNox + "/" + (gameNox + 1);
+      }
+      else
+      {
+         gameNox = gameNox + "/" + gameNox;
       }
    }
-   gameNox = gameNox + "/8";
+   else
+   {
+      gameNox = gameNox + "/8";
+   }
    $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Roundx', value: gameNox});
    setScoreInfoFromCurrentHeaders();
 }
