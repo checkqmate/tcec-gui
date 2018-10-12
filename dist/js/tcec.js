@@ -2870,8 +2870,8 @@ function updateCrosstableDataNew(ii, data)
    var round = 0;
    var roundM = ii;
 
-   round = parseInt(ii/15);
-   roundM = ii - round * 15;
+   round = parseInt(ii/17);
+   roundM = ii - round * 17;
    plog ("round is " + round + ", ii is " + ii + ", roundM is : " + roundM, 1);
 
    _.each(crosstableData.Table, function(engine, key) {
