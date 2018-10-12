@@ -2621,11 +2621,11 @@ function getDateRound()
       {
          roundDate[x] = getCurrDate(startDateR2, 1440 * (parseInt((y-1)/2)));
       }
-      if (y == 18)
+      if (y == 20)
       {
          roundDate[x] = getCurrDate(startDateR1, 1440 * (parseInt((y-1)/2)));
       }
-      if (y == 17)
+      if (y == 19)
       {
          roundDate[x] = getCurrDate(startDateR2, 1440 * (parseInt((y-1)/2)));
       }
@@ -3088,6 +3088,8 @@ function drawBracket()
    plog ("Came to drawBracket");
    roundNo = 2;
    getDateRound();
+   $('#spanmessage').html("ATTENTION: !!!! Leela vs Ethereal will start first on " + roundDate[19] + ", followed by Fire vs Booot " + roundDate[18] + "!!!!")
+  
    function onClick(data)
    {
       //alert(data);
@@ -3223,3 +3225,4 @@ function drawBracket()
    });
    });
 }
+
