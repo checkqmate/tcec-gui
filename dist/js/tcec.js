@@ -58,7 +58,7 @@ var onMoveEndPv = function() {
     .addClass('highlight-white');
 }
 
-function printmylog(message, debugl)
+function plog(message, debugl)
 {
    if (debugl == undefined)
    {
@@ -123,7 +123,7 @@ function updatePgn(resettime)
    })
    .catch(function (error) {
      // handle error
-      printmylog(error);
+      plog(error);
    });
 }
 
@@ -278,7 +278,7 @@ function setUsers(data)
    }
    catch(err)
    {
-      printmylog ("Unable to update usercount");
+      plog ("Unable to update usercount");
    }
 }
 
@@ -287,6 +287,8 @@ var newMovesCount = 0;
 function setPgn(pgn)
 {
    var currentPlyCount = 0;
+
+   pgn.Headers.Roundx = 0;
 
    if (!viewingActiveMove)
    {
@@ -311,11 +313,13 @@ function setPgn(pgn)
       {
          if (prevPgnData.Moves.length < pgn.lastMoveLoaded)
          {
+            plog("Calling updateAll1", 0);
             setTimeout(function() { updateAll(); }, 100);
             return;
          }
          else if (parseFloat(prevPgnData.Headers.Round) != parseFloat(pgn.Headers.Round))
          {
+            plog("Calling updateAll2", 0);
             setTimeout(function() { updateAll(); }, 100);
             return;
          }
@@ -544,7 +548,7 @@ function setPgn(pgn)
     }
   }
 
-  pgn.Headers.Round = gameNox;
+  pgn.Headers.Roundx = gameNox;
   $('#event-overview').bootstrapTable('load', [pgn.Headers]);
   $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: userCount});
   $('#event-name').html(pgn.Headers.Event);
@@ -588,7 +592,7 @@ function setPgn(pgn)
   $("#engine-history").scrollTop($("#engine-history")[0].scrollHeight);
   if (pgn.gameChanged)
   {
-     printmylog ("Came to setpgn need to reread dataa at end");
+     plog ("Came to setpgn need to reread dataa at end");
   }
 }
 
@@ -1473,7 +1477,7 @@ function updateCrosstableData(data)
    }
    $('#crosstable').bootstrapTable('load', standingsCross);
    gameNox = gameNox + "/8";
-   $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Round', value: gameNox});
+   $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Roundx', value: gameNox});
    setScoreInfoFromCurrentHeaders();
 }
 
@@ -1487,7 +1491,7 @@ function updateCrosstable()
    .catch(function (error)
    {
       // handle error
-      printmylog(error);
+      plog(error);
    });
 }
 
@@ -1543,7 +1547,7 @@ function updateSchedule()
     })
     .catch(function (error) {
       // handle error
-      printmylog(error);
+      plog(error);
     });
 }
 
@@ -1581,12 +1585,12 @@ function setBoardInit()
    $('input[value='+btheme+'b]').prop('checked', true);
 
    var onDragStart = function(source, piece, position, orientation) {
-     printmylog ("game.turn() is " + game.turn());
-     printmylog ("game.turn() is " + game.fen());
+     plog ("game.turn() is " + game.turn());
+     plog ("game.turn() is " + game.fen());
      if (game.game_over() === true ||
          (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
          (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-       printmylog ("returning false");
+       plog ("returning false");
        return false;
      }
    };
@@ -1699,7 +1703,7 @@ function eventCrosstableWrap()
    })
    .catch(function (error) {
       // handle error
-      printmylog(error);
+      plog(error);
       eventCrossTableInitial = 0;
    });
 }
@@ -2014,7 +2018,7 @@ function updateLiveEvalData(data)
             moveResponse = chess.move(move);
 
             if (!moveResponse || typeof moveResponse == 'undefined') {
-                 printmylog("undefine move" + move);
+                 plog("undefine move" + move);
             } else {
               newPv = {
                 'from': moveResponse.from,
@@ -2063,7 +2067,7 @@ function updateLiveEvalData(data)
                }
             else
             {
-               printmylog ("pvlocation not defined");
+               plog ("pvlocation not defined");
             }
             moveCount++;
           } else {
@@ -2088,7 +2092,7 @@ function updateLiveEval() {
    })
    .catch(function (error) {
       // handle error
-      printmylog(error);
+      plog(error);
    });
 }
 
@@ -2113,7 +2117,7 @@ function updateLiveChart()
    })
    .catch(function (error) {
       // handle error
-      printmylog(error);
+      plog(error);
    });
 }
 
@@ -2219,13 +2223,13 @@ function updateStandtable()
    .catch(function (error)
    {
       // handle error
-      printmylog(error);
+      plog(error);
    });
 }
 
 function setLastMoveTime(data)
 {
-   printmylog ("Setting last move time:" + data);
+   plog ("Setting last move time:" + data);
 }
 
 function checkTwitch(checkbox)
@@ -2615,19 +2619,19 @@ async function eventCrosstable(mandata)
    var divname = '#crosstableevent';
    var startVar = 1;
 
-   printmylog ("Ca,e tp eventCrosstable");
+   plog ("Ca,e tp eventCrosstable");
 
    if (mandata != undefined)
    {
       mandataGlobal = mandata;
       if (mandata.readallfiles == 1)
       {
-         printmylog ("We have games decided:" + mandata.manual.decided);
+         plog ("We have games decided:" + mandata.manual.decided);
          manualGamesdecided = 1;
       }
       if (mandata.manual.decided)
       {
-         printmylog ("We have games decided:" + mandata.manual.decided);
+         plog ("We have games decided:" + mandata.manual.decided);
          manualGamesdecided = 1;
       }
    }
@@ -2643,6 +2647,13 @@ async function eventCrosstable(mandata)
 
    if (manualGamesdecided)
    {
+      var slength = standings.length;
+      for (var i = slength ; i >= 1 ; i --)
+      {
+         standings.splice(i-1, 1);
+         tablesLoaded[i] = -1;
+      }
+      standings = [];
       standings.lastLoaded = 1;
    }
 
@@ -2650,7 +2661,7 @@ async function eventCrosstable(mandata)
    {
       var standingsnew = standings.reverse();
       startVar = standings.lastLoaded;
-      printmylog ("lenght of standings is " + standingsnew.length);
+      plog ("lenght of standings is " + standingsnew.length, 0);
       //standings.splice(0, 1);
       var slength = standingsnew.length;
       for (var i = slength ; i >= startVar ; i --)
@@ -2658,18 +2669,15 @@ async function eventCrosstable(mandata)
          standingsnew.splice(i-1, 1);
          tablesLoaded[i] = -1;
       }
-      printmylog ("lenght of standings is " + standingsnew.length);
+      plog ("lenght of standings is " + standingsnew.length);
       standings=standingsnew.reverse();
    }
 
-   printmylog ("Reading from file " + startVar, 0);
+   plog ("Reading from file " + startVar, 0);
 
    for (var i = 0; i <= 34 ; i++)
    {
-      if (roundResults[i] == undefined)
-      {
-         roundResults[i] = [{lead:-1, score: -1, manual: 0}, {lead:-1, score: -1, manual: 0}];
-      }
+      roundResults[i] = [{lead:-1, score: -1, manual: 0}, {lead:-1, score: -1, manual: 0}];
    }
 
    for (var i = startVar ; i <= 16; i++)
@@ -2681,6 +2689,14 @@ async function eventCrosstable(mandata)
                             {name: getSeededName(teamsx[i-1][1][0]), flag: getShortName(teamsx[i-1][1][0]),
                              score: -1, rank: '2', date: '', lead: 0}];
    }
+
+   _.each(mandata.skip, function(matchdum, key) {
+      plog ("matchdum, " + JSON.stringify(matchdum) + ",key:" + key, 1);
+      if (matchdum.skip)
+      {
+         eventCrosstableMainCooked(matchdum);
+      }
+      });
 
    for (var i = startVar ; i <= 24; i++)
    {
@@ -2705,10 +2721,10 @@ async function eventCrosstable(mandata)
       timeWaited += 100;
       if (timeWaited > 50000)
       {
-         printmylog("Waited long time to load, bailing out");
+         plog("Waited long time to load, bailing out");
       }
    }
-   printmylog("time taken: " + timeWaited);
+   plog("time taken: " + timeWaited);
    for (var i = 0 ; i < totalEvents; i++)
    {
       if (tablesLoaded[i] == 1)
@@ -2717,27 +2733,37 @@ async function eventCrosstable(mandata)
       }
    }
 
-   printmylog ("drawing standings");
+   plog ("drawing standings");
    $(divname).bootstrapTable('load', standings);
-   printmylog ("drawing bracket");
+   plog ("drawing bracket");
    drawBracket();
+}
+
+function eventCrosstableMainCooked(data)
+{
+   var myLocalData = dummyCross;
+   var myLocalDataStr = JSON.stringify(myLocalData);
+   plog("JSON is " + myLocalDataStr, 1);
+   myLocalData.skipDecide = 1;
+   updateCrosstableDataNew(data.match, myLocalData);
+   tablesLoaded[data.match] = 1;
 }
 
 function eventCrosstableMain(ii, filename)
 {
    //filename = filename + '?no-cache' + (new Date()).getTime();
-   printmylog ("trying to read file " + filename);
+   plog ("trying to read file " + filename);
    axios.get(filename)
    .then(function (r)
    {
       updateCrosstableDataNew(ii, r.data);
       tablesLoaded[ii] = 1;
-      printmylog ("after trying to read file " + filename);
+      plog ("after trying to read file " + filename);
    })
    .catch(function (error)
    {
-      printmylog(error);
-      printmylog ("failed trying to read file " + filename + ", error: " + error);
+      plog(error);
+      plog ("failed trying to read file " + filename + ", error: " + error);
       tablesLoaded[ii] = 0;
    });
 }
@@ -2754,7 +2780,7 @@ function checkMatchDone(firstEntry, currEntry, matchNum)
       if (mandataGlobal.manual.decided)
       {
          _.each(mandataGlobal.matches, function(matchdum, key) {
-            printmylog ("match is " + matchdum.match + ", matchNum :" + matchdum.finished);
+            plog ("match is " + matchdum.match + ", matchNum :" + matchdum.finished);
             if (matchNum == matchdum.match)
             {
                if (matchdum.finished == 0)
@@ -2766,7 +2792,7 @@ function checkMatchDone(firstEntry, currEntry, matchNum)
                else if (matchdum.finished > 0)
                {
                   manualDecide = 1;
-                  printmylog ("matchdum.winner: " + matchdum.winner + ",firstEntry.name:" + firstEntry.name + ",currEntry.name:" + currEntry.name);
+                  plog ("matchdum.winner: " + matchdum.winner + ",firstEntry.name:" + firstEntry.name + ",currEntry.name:" + currEntry.name);
                   if (matchdum.winner == firstEntry.name)
                   {
                      isMatchLost = 1;
@@ -2811,7 +2837,7 @@ function checkMatchDone(firstEntry, currEntry, matchNum)
    {
       isMatchLost = 1;
    }
-   printmylog ("checkMatchDone: currEntry : " + currEntry.Abbreviation + " result:" + isMatchLost + ", totalgames" + totalGames + " ,matchNum:" + matchNum);
+   plog ("checkMatchDone: currEntry : " + currEntry.Abbreviation + " result:" + isMatchLost + ", totalgames" + totalGames + " ,matchNum:" + matchNum);
    return isMatchLost;
 }
 
@@ -2826,9 +2852,9 @@ function updateCrosstableDataNew(ii, data)
    var round = 0;
    var roundM = ii;
 
-   round = parseInt(ii/16);
-   roundM = ii - round * 16;
-   printmylog ("round is " + round + ", roundM is : " + roundM);
+   round = parseInt(ii/15);
+   roundM = ii - round * 15;
+   plog ("round is " + round + ", ii is " + ii + ", roundM is : " + roundM, 1);
 
    _.each(crosstableData.Table, function(engine, key) {
      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
@@ -2850,12 +2876,17 @@ function updateCrosstableDataNew(ii, data)
         entry.crashes = entry.crashes + "/" + crashes2;
 
         var isMatchLost = checkMatchDone(entry, engineDetails, ii);
-        printmylog ("For match " + ii + ", result is " + isMatchLost);
+        plog ("For match " + ii + ", result is " + isMatchLost, 1);
         var lead = 0;
 
         if (ii < 17)
         {
+            if (crosstableData.skipDecide)
+            {
+               engine = teamsx[ii-1][1][0];
+            }
             bigData.teams[ii-1][1] = {name: getSeededName(engine), flag: getShortName(engine), score: -1, rank: '2', date: '', lead: 0};
+            plog ("bigData.teams[ii-1][1]: " + JSON.stringify(bigData.teams[ii-1][1]), 1);
         }
 
         if (isMatchLost == 1)
@@ -2873,7 +2904,10 @@ function updateCrosstableDataNew(ii, data)
            entry.name =  entry.name + ' vs ' + engine;
         }
 
-        if (engineDetails.manualDecide)
+        roundResults[ii-1][0].manual = 0;
+        roundResults[ii-1][1].manual = 0;
+
+        if (crosstableData.skipDecide || engineDetails.manualDecide)
         {
            roundResults[ii-1][0].manual = 1;
            roundResults[ii-1][1].manual = 1;
@@ -2915,6 +2949,19 @@ function updateCrosstableDataNew(ii, data)
         }
         return 1;
      }
+
+     if (ii < 17)
+     {
+        bigData.teams[ii-1] = [{name: "", flag: "", score: -1, rank: '1', date: '', lead: 0},
+                               {name: "", flag: "", score: -1, rank: '2', date: '', lead: 0}];
+        if (crosstableData.skipDecide)
+        {
+           engine = teamsx[ii-1][0][0];
+        }
+        bigData.teams[ii-1][1] = {name: getSeededName(engine), flag: getShortName(engine), score: -1, rank: '2', date: '', lead: 0};
+        bigData.teams[ii-1][0] = {name: getSeededName(engine), flag: getShortName(engine), score: '', rank: 1, lead:0};
+     }
+
      entry = {
        Gamesort: ii,
        rank: ii,
@@ -2924,12 +2971,7 @@ function updateCrosstableDataNew(ii, data)
        crashes: engineDetails.Strikes
      };
 
-     if (ii < 17)
-     {
-        bigData.teams[ii-1] = [{name: "", flag: "", score: -1, rank: '1', date: '', lead: 0},
-                               {name: "", flag: "", score: -1, rank: '2', date: '', lead: 0}];
-        bigData.teams[ii-1][0] = {name: getSeededName(engine), flag: getShortName(engine), score: '', rank: 1, lead:0};
-     }
+     plog ("Entry is " + ii + " : " + JSON.stringify(entry), 1); 
 
      if (!totalGamesSingle)
      {
@@ -3025,7 +3067,7 @@ function formatterEvent(value, row, index, field) {
 
 function drawBracket()
 {
-   printmylog ("Came to drawBracket");
+   plog ("Came to drawBracket");
    roundNo = 2;
    getDateRound();
    function onClick(data)
@@ -3055,7 +3097,7 @@ function drawBracket()
    function render_fn(container, data, score, state) {
         var localRound = parseInt(roundNo/2) - 1;
         var isFirst = roundNo%2;
-        printmylog ("Came to round: " + roundNo + " data.name is: ");
+        plog ("Came to round: " + roundNo + " data.name is: ");
         roundNo ++;
         switch(state) {
           case "empty-bye":
@@ -3081,7 +3123,7 @@ function drawBracket()
           case "entry-no-score":
           case "entry-default-win":
           case "entry-complete":
-            printmylog ("localRound is " + (localRound) + ", isfirst: " + isFirst + ", data : " + JSON.stringify(roundResults));
+            plog ("localRound is " + (localRound) + ", isfirst: " + isFirst + ", data : " + JSON.stringify(roundResults));
             var scoreL = roundResults[localRound][isFirst].score;
             if (scoreL >= 0)
             {
@@ -3148,7 +3190,7 @@ function drawBracket()
             return;
         }
    }
-   printmylog ("Data is " + JSON.stringify(bigData));
+   plog ("Data is " + JSON.stringify(bigData));
    $(function () {
       $('#bracket').bracket({
          centerConnectors: true,
