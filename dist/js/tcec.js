@@ -1476,6 +1476,13 @@ function updateCrosstableData(data)
      crossTableInitialized = true;
    }
    $('#crosstable').bootstrapTable('load', standingsCross);
+   if (gameNox > 8)
+   {
+      if (gameNox%2 != 0)
+      {
+         gameNox = gameNox + 1;
+      }
+   }
    gameNox = gameNox + "/8";
    $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Roundx', value: gameNox});
    setScoreInfoFromCurrentHeaders();
