@@ -2893,7 +2893,7 @@ function updateCrosstableDataNew(ii, data)
 
    round = parseInt((ii - 1)/16);
    roundM = ii - ((round) * 16) - 1;
-   plog ("round is " + round + ", ii is " + ii + ", roundM is : " + roundM, 0);
+   plog ("round is " + round + ", ii is " + ii + ", roundM is : " + roundM, 1);
 
    _.each(crosstableData.Table, function(engine, key) {
      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
