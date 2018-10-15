@@ -1269,10 +1269,22 @@ function openCrossOrig(gamen)
    window.open(link,'_blank');
 }
 
-function openCross(gamen)
+function openCross(gamen, value)
 {
    var gameX = gamen;
-   var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=3&ga=" + gameX;
+   var round = parseInt((value - 1)/16);
+   var div = 3;
+
+   if (round == 0)
+   {
+      div = 3;
+   }
+   if (round == 1)
+   {
+      div = 2;
+   }
+
+   var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=" + div + "&ga=" + gameX;
    window.open(link,'_blank');
 }
 
@@ -3077,7 +3089,10 @@ function getPrevGames(ii)
 
    for (var i = start; i < end; i ++)
    {
-      total = gamesEachMatch[i] + total;
+      if (gamesEachMatch[i] != undefined)
+      {
+         total = gamesEachMatch[i] + total;
+      }
    }
 
    return total;
@@ -3105,11 +3120,11 @@ function formatterEvent(value, row, index, field) {
       var gameNum = key + prevGameTota + 1;
       if (retStr == '')
       {
-         retStr = '<a title="' + gameNum + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + gameNum + ')">' + engine + '</a>';
+         retStr = '<a title="' + gameNum + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + gameNum + ',' + row.rank + ')">' + engine + '</a>';
       }
       else
       {
-         retStr += ' ' + '<a title="' + gameNum + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' +  gameNum + ')">' + engine + '</a>';
+         retStr += ' ' + '<a title="' + gameNum + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' +  gameNum + ',' + row.rank + ')">' + engine + '</a>';
       }
       countGames = countGames + 1;
       if (countGames%8 == 0)
