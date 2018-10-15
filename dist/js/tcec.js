@@ -2700,7 +2700,6 @@ async function eventCrosstable(mandata)
    {
       var standingsnew = standings.reverse();
       startVar = standings.lastLoaded;
-      plog ("lenght of standings is " + standingsnew.length, 0);
       //standings.splice(0, 1);
       var slength = standingsnew.length;
       for (var i = slength ; i >= startVar ; i --)
@@ -2711,8 +2710,6 @@ async function eventCrosstable(mandata)
       plog ("lenght of standings is " + standingsnew.length);
       standings=standingsnew.reverse();
    }
-
-   plog ("Reading from file " + startVar, 0);
 
    for (var i = 0; i <= 34 ; i++)
    {
@@ -2776,6 +2773,7 @@ async function eventCrosstable(mandata)
    $(divname).bootstrapTable('load', standings);
    plog ("drawing bracket");
    drawBracket();
+   drawBracket1();
 }
 
 function eventCrosstableMainCooked(data)
@@ -2918,6 +2916,11 @@ function updateCrosstableDataNew(ii, data)
         plog ("For match " + ii + ", result is " + isMatchLost, 1);
         var lead = 0;
 
+        roundResults[ii-1][0].manual = 0;
+        roundResults[ii-1][1].manual = 0;
+        roundResults[ii-1][0].name = entry.name;
+        roundResults[ii-1][1].name = engine;
+
         if (ii < 17)
         {
             if (crosstableData.skipDecide)
@@ -2943,8 +2946,8 @@ function updateCrosstableDataNew(ii, data)
            entry.name =  entry.name + ' vs ' + engine;
         }
 
-        roundResults[ii-1][0].manual = 0;
-        roundResults[ii-1][1].manual = 0;
+        roundResults[ii-1][1].origscore = engineDetails.Score;
+        roundResults[ii-1][0].origscore = entry.point;
 
         if (crosstableData.skipDecide || engineDetails.manualDecide)
         {
@@ -3119,10 +3122,78 @@ function formatterEvent(value, row, index, field) {
 
 function drawBracket()
 {
-   plog ("Came to drawBracket");
    roundNo = 2;
+  
+   function onClick(data)
+   {
+      //alert(data);
+   }
+
+   function edit_fn(container, data, doneCb) {
+      return;
+   }
+
+   function render_fn(container, data, score, state) {
+        var localRound = parseInt(roundNo/2) - 1;
+        var origRoundNo = roundNo; 
+        var isFirst = roundNo%2;
+        roundNo ++;
+
+        switch(state) {
+          case "empty-bye":
+            return;
+          case "empty-tbd":
+            return;
+
+          case "entry-no-score":
+          case "entry-default-win":
+          case "entry-complete":
+            var index = -1;
+            if (roundResults[localRound][0].name == data.name)
+            {
+               index = 0;
+            }
+            if (roundResults[localRound][1].name == data.name)
+            {
+               index = 1;
+            }
+            var ii = parseInt(origRoundNo/2);
+            var round = parseInt((ii - 1)/16);
+            var roundM = ii - ((round) * 16) - 1;
+
+            if (index > -1)
+            {
+               if (isFirst && (index != isFirst))
+               {
+                  var temp = bigData.results[0][round][roundM][0];
+                  bigData.results[0][round][roundM][0] = bigData.results[0][round][roundM][1];
+                  bigData.results[0][round][roundM][1] = temp;
+               }
+            }
+            return;
+        }
+   }
+   $(function () 
+   {
+      $('#bracket').bracket({
+         centerConnectors: true,
+         teamWidth: 220,
+         scoreWidth: 25,
+         matchMargin: 45,
+         roundMargin: 18,
+         init: bigData,
+         skipConsolationRound: true,
+         decorator: {edit: edit_fn,
+                     render: render_fn}
+   });
+   });
+}
+
+function drawBracket1()
+{
+   plog ("Came to drawBracket");
+   var roundNox = 2;
    getDateRound();
-   $('#spanmessage').html("ATTENTION: !!!! Leela vs Ethereal will start first on " + roundDate[19] + ", followed by Fire vs Booot " + roundDate[18] + "!!!!")
   
    function onClick(data)
    {
@@ -3148,17 +3219,19 @@ function drawBracket()
       return;
    }
 
-   function render_fn(container, data, score, state) {
-        var localRound = parseInt(roundNo/2) - 1;
-        var isFirst = roundNo%2;
-        plog ("Came to round: " + roundNo + " data.name is: ");
-        roundNo ++;
+   function render_fn2(container, data, score, state) {
+        var localRound = parseInt(roundNox/2) - 1;
+        var isFirst = roundNox%2;
+
+        plog ("Came to round: " + roundNox + " data.name is: ");
+        roundNox ++;
+
         switch(state) {
           case "empty-bye":
             container.append("No team")
             return;
           case "empty-tbd":
-            if (roundNo%2 == 1)
+            if (roundNox%2 == 1)
             {
                var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
                if (roundDate[localRound] != undefined)
@@ -3177,8 +3250,10 @@ function drawBracket()
           case "entry-no-score":
           case "entry-default-win":
           case "entry-complete":
-            plog ("localRound is " + (localRound) + ", isfirst: " + isFirst + ", data : " + JSON.stringify(roundResults));
+            plog ("localRound is " + (localRound) + ", isfirst: " + isFirst, 1);
+            plog ("localRound enginename:" + data.name + ", 0 engine:" + roundResults[localRound][0].name+ ", 1 engine: " + roundResults[localRound][1].name, 1);
             var scoreL = roundResults[localRound][isFirst].score;
+
             if (scoreL >= 0)
             {
                var appendStr = '';
@@ -3208,7 +3283,7 @@ function drawBracket()
                               '<div class="bracket-score"> <a> (' + scoreL + ')</a> </div>'
                   $(container).parent().addClass('bracket-name-current');
                }
-               if (roundNo%2 == 1)
+               if (roundNox%2 == 1)
                {
                   var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
                   if (roundDate[localRound] != undefined)
@@ -3225,7 +3300,7 @@ function drawBracket()
             }
             else
             {
-               if (roundNo%2 == 1)
+               if (roundNox%2 == 1)
                {
                   var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
                   if (roundDate[localRound] != undefined)
@@ -3244,7 +3319,7 @@ function drawBracket()
             return;
         }
    }
-   plog ("Data is " + JSON.stringify(bigData));
+
    $(function () {
       $('#bracket').bracket({
          centerConnectors: true,
@@ -3255,7 +3330,7 @@ function drawBracket()
          init: bigData,
          skipConsolationRound: true,
          decorator: {edit: edit_fn,
-                     render: render_fn}
+                     render: render_fn2}
    });
    });
 }
