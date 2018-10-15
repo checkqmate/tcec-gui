@@ -1261,17 +1261,28 @@ function getLinkArch(gameNumber)
 
 function openCrossOrig(gamen)
 {
+   var div = 3;
+
    if (currentMatch)
    {
       gamen += getPrevGames(currentMatch);
+      var round = parseInt((currentMatch- 1)/16);
+
+      if (round == 0)
+      {
+         div = 3;
+      }
+      if (round == 1)
+      {
+         div = 2;
+      }
    }
-   var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=3&ga=" + gamen;
+   var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=" + div + "&ga=" + gamen;
    window.open(link,'_blank');
 }
 
 function openCross(gamen, value)
 {
-   var gameX = gamen;
    var round = parseInt((value - 1)/16);
    var div = 3;
 
@@ -1284,7 +1295,7 @@ function openCross(gamen, value)
       div = 2;
    }
 
-   var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=" + div + "&ga=" + gameX;
+   var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=" + div + "&ga=" + gamen;
    window.open(link,'_blank');
 }
 
