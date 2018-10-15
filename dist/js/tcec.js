@@ -2656,22 +2656,21 @@ function getDateRound()
 
    for (var x = 0 ; x < 24; x++)
    {
-      var y = x + 1;
-      if (y%2 == 1)
+      if (roundDateMan[x])
       {
-         roundDate[x] = getCurrDate(startDateR1, 1440 * (parseInt(y/2)));
+         roundDate[x] = getCurrDate(roundDateMan[x], 0);
       }
       else
       {
-         roundDate[x] = getCurrDate(startDateR2, 1440 * (parseInt((y-1)/2)));
-      }
-      if (y == 20)
-      {
-         roundDate[x] = getCurrDate(startDateR1, 1440 * (parseInt((y-1)/2)));
-      }
-      if (y == 19)
-      {
-         roundDate[x] = getCurrDate(startDateR2, 1440 * (parseInt((y-1)/2)));
+         var y = x + 1;
+         if (y%2 == 1)
+         {
+            roundDate[x] = getCurrDate(startDateR1, 1440 * (parseInt(y/2)));
+         }
+         else
+         {
+            roundDate[x] = getCurrDate(startDateR2, 1440 * (parseInt((y-1)/2)));
+         }
       }
    }
 }
