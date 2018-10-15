@@ -3079,7 +3079,7 @@ function getPrevGames(ii)
    if (ii > 16)
    {
       start = 17;
-      end = 24;
+      end = ii;
    }
    else
    {
