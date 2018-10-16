@@ -1259,23 +1259,41 @@ function getLinkArch(gameNumber)
    return (retLink);
 }
 
+function getRound(match)
+{
+   var round = 1;
+
+   if (match > 30)
+   {
+      round = 5;
+   }
+   else if (match > 28)
+   {
+      round = 4;
+   }
+   else if (match > 24)
+   {
+      round = 3;
+   }
+   else if (match > 16)
+   {
+      round = 2;
+   }
+   else
+   {
+      round = 1;
+   }
+
+   return (round - 1);
+}
+
 function openCrossOrig(gamen)
 {
-   var div = 3;
-
+   var round = getRound(currentMatch);
+   var div = round + 1;
    if (currentMatch)
    {
       gamen += getPrevGames(currentMatch);
-      var round = parseInt((currentMatch- 1)/16);
-
-      if (round == 0)
-      {
-         div = 3;
-      }
-      if (round == 1)
-      {
-         div = 2;
-      }
    }
    var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=" + div + "&ga=" + gamen;
    window.open(link,'_blank');
@@ -1283,18 +1301,8 @@ function openCrossOrig(gamen)
 
 function openCross(gamen, value)
 {
-   var round = parseInt((value - 1)/16);
-   var div = 3;
-
-   if (round == 0)
-   {
-      div = 3;
-   }
-   if (round == 1)
-   {
-      div = 2;
-   }
-
+   var round = getRound(gamen);
+   var div = round + 1;
    var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=" + div + "&ga=" + gamen;
    window.open(link,'_blank');
 }
@@ -2546,15 +2554,16 @@ function schedSorted(a,b)
 var filenames = [];
 var tablesLoaded = [];
 
-for (var i = 17; i <= 24; i++)
+function getFileNames()
 {
-   filenames [i] = "archive/TCEC_Cup_-_Round_2_-_Match_" + i + "_crosstable.json";
+   for (var i = 1 ; i <= 34 ; i++)
+   {
+      var round = getRound (i) + 1;
+      filenames [i] = "archive/TCEC_Cup_-_Round_" + round + "_-_Match_" + i + "_crosstable.json";
+   }
 }
 
-for (var i = 1 ; i <= 16 ; i++)
-{
-   filenames [i] = "archive/TCEC_Cup_-_Round_1_-_Match_" + i + "_crosstable.json";
-}
+getFileNames();
 
 var standings = [];
 var gamesEachMatch = [];
@@ -2654,7 +2663,7 @@ function getDateRound()
 {
    roundDate = [];
 
-   for (var x = 0 ; x < 24; x++)
+   for (var x = 0 ; x < 34; x++)
    {
       if (roundDateMan[x])
       {
@@ -3165,11 +3174,6 @@ function drawBracket()
         roundNo ++;
 
         switch(state) {
-          case "empty-bye":
-            return;
-          case "empty-tbd":
-            return;
-
           case "entry-no-score":
           case "entry-default-win":
           case "entry-complete":
@@ -3200,6 +3204,7 @@ function drawBracket()
             }
             return;
         }
+        return;
    }
    $(function () 
    {
@@ -3324,7 +3329,7 @@ function drawBracket1()
                   }
                   $(befStr).insertBefore(container);
                }
-               container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append(appendStr);
+               container.append('<img class="bracket-material" src="img/engines/'+ data.flag +'.jpg" />').append(appendStr);
             }
             else
             {
