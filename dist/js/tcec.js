@@ -1500,9 +1500,6 @@ console.log(loadedPlies);
       pvKey = key;
         var moveCount = 0;
         splitMoves = engineDatum.pv.split(' ');
-        if (splitMoves % 2 != 0) {
-
-        }
 
         currentMove = Math.floor(loadedPlies / 2);
         currentMove += 1;

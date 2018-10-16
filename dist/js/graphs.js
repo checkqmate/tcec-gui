@@ -95,6 +95,10 @@ function updateChartData()
 		}
 	});
 
+	if (labels.length == 0) {
+		labels _.union(labels, [(loadedPlies / 2) + 1]);
+	}
+
 	evalChart.data.labels = labels;
 	evalChart.data.datasets[0].data = liveEval;
 
