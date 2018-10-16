@@ -1479,7 +1479,7 @@ function updateSFLiveEvalData(data)
      }
 
      datum.eval = score;
-     datum.tbhits = getTBHits(datum.tbhits);
+     datum.tbhits = datum.tbhits;
 
      if (datum.pv.length > 0 && datum.pv != "no info") {
       engineData = _.union(engineData, [datum]);
@@ -1621,7 +1621,7 @@ if (loadedPlies % 2 > 0) {
 }
 
         _.each(engineDatum.pv.split(' '), function(move) {
-          if (moveCount > 0 && (moveCount % 2 == 0 && pvWhiteMove) || (moveCount % 2 == 1 && !pvWhiteMove)) {
+          if (moveCount > 0 && moveCount % 2 == 0) {
             moveAdjust = Math.floor(moveCount / 2);
             moveContainer = _.union(moveContainer, [(currentMove + moveAdjust) + '. ']);
           }
@@ -1666,7 +1666,20 @@ function updateLiveEval() {
    });
 }
 
+function updateSFLiveEval() {
+   axios.get('sf_data.json')
+   .then(function (response) 
+   {
+      updateSFLiveEvalData(response.data);
+   })
+   .catch(function (error) {
+      // handle error
+      console.log(error);
+   });
+}
+
 var liveEngineEval = [];
+var liveSFEngineEval = [];
 
 function updateLiveChartData(data) 
 {
@@ -1679,11 +1692,35 @@ function updateLiveChartData(data)
    }
 }
 
+function updatesFLiveChartData(data) 
+{
+   if (typeof data.moves != 'undefined') 
+   {
+      liveSFEngineEval = data.moves;
+      updateSFChartData();
+   } else {
+      liveSFEngineEval = [];
+   }
+}
+
+
 function updateLiveChart() 
 {
    axios.get('liveeval.json')
    .then(function (response) {
       updateLiveChartData(response.data);
+   })
+   .catch(function (error) {
+      // handle error
+      console.log(error);
+   });
+}
+
+function updateSFLiveChart() 
+{
+   axios.get('sf_liveeval.json')
+   .then(function (response) {
+      updateSFLiveChartData(response.data);
    })
    .catch(function (error) {
       // handle error

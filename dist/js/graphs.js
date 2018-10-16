@@ -5,6 +5,16 @@ var evalChartData = {
   datasets: [{
     label: 'Live [LC0]',
     lineTension: 0,
+    borderColor: '#ff8400',
+    backgroundColor: '#ff8400',
+    
+    fill: false,
+    data: [
+    ]
+  },
+  {
+    label: 'Live [SF]',
+    lineTension: 0,
     borderColor: '#007bff',
     backgroundColor: '#007bff',
     
@@ -133,7 +143,59 @@ function getLiveEval(key, moveNumber, isBlack)
 	    	// moveNumber = moveNumber + 0.5;
 	    }
 
-      console.log(Math.round(evalObject.ply / 2));
+	    return [
+				{
+					'x': Math.round(evalObject.ply / 2),
+					'y': evalObject.eval,
+					'eval': eval
+				}
+			];
+	}
+
+	return -1;
+}
+
+function updateSFChartData()
+{
+	evalChart.data.datasets[1].data = [];
+
+	liveEval = [];
+
+   var plyNum = 0;
+
+	_.each(loadedPgn.Moves, function(move, key) {
+		moveNumber = Math.round(key / 2) + 1;
+		if (key % 2 == 0) {
+			evalObject = getSFLiveEval(key, moveNumber, false);
+
+			if (evalObject != -1) {
+				liveEval = _.union(liveEval, evalObject);
+			}
+		}
+	});
+
+	evalChart.data.datasets[1].data = liveEval;
+
+    evalChart.update();
+}
+
+function getSFLiveEval(key, moveNumber, isBlack)
+{
+	key++;
+
+	evalObject = _.find(liveSFEngineEval, function(ev) {
+		return ev.ply == key;
+	});
+
+	if (_.isObject(evalObject)) {
+		eval = evalObject.eval;
+		if (!isNaN(evalObject.eval)) {
+	        if (evalObject.eval > 6.5) {
+	        	//evalObject.eval = 6.5;
+	        } else if (evalObject.eval < -6.5) {
+	        	//evalObject.eval = -6.5;
+	        }
+	    }
 
 	    return [
 				{
