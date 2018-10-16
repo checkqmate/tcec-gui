@@ -118,6 +118,9 @@ function timeToSeconds(time)
   return seconds * 1000;
 }
 
+stopClock('black');
+stopClock('white');
+
 function startClock(color, currentMove, previousMove) {
   stopClock('black');
   stopClock('white');
@@ -1621,7 +1624,11 @@ if (loadedPlies % 2 > 0) {
 }
 
         _.each(engineDatum.pv.split(' '), function(move) {
-          if (moveCount > 0 && moveCount % 2 == 0) {
+          computeMove = (moveCount);
+          if (loadedPlies % 2 > 0) {
+            computeMove = (moveCount + 1);
+          }
+          if (moveCount > 0 && computeMove % 2 == 0) {
             moveAdjust = Math.floor(moveCount / 2);
             moveContainer = _.union(moveContainer, [(currentMove + moveAdjust) + '. ']);
           }
