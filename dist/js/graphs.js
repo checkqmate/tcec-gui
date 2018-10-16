@@ -85,11 +85,13 @@ function updateChartData()
 			}
 
 		} else {
-			evalObject = getLiveEval(key, moveNumber, true);
-
-			if (evalObject != -1) {
-				liveEval = _.union(liveEval, evalObject);
-			}
+         if (key >= (loadedPgn.Moves.length - 1)) {
+	//		evalObject = getLiveEval(key, moveNumber, true);
+//
+//			if (evalObject != -1) {
+//				liveEval = _.union(liveEval, evalObject);
+//			}
+         }
 		}
 	});
 
@@ -111,15 +113,15 @@ function getLiveEval(key, moveNumber, isBlack)
 		eval = evalObject.eval;
 		if (!isNaN(evalObject.eval)) {
 	        if (evalObject.eval > 6.5) {
-	        	evalObject.eval = 6.5;
+	        	//evalObject.eval = 6.5;
 	        } else if (evalObject.eval < -6.5) {
-	        	evalObject.eval = -6.5;
+	        	//evalObject.eval = -6.5;
 	        }
 	    } else {
 	    	if (evalObject.eval.substring(0,1) == '-') {
-	    		evalObject.eval = -6.5;
+	    		//evalObject.eval = -6.5;
 	    	} else {
-	    		evalObject.eval = 6.5;
+	    		//evalObject.eval = 6.5;
 	    	}
 	    }
 
@@ -127,9 +129,11 @@ function getLiveEval(key, moveNumber, isBlack)
 	    	// moveNumber = moveNumber + 0.5;
 	    }
 
+      console.log(Math.round(evalObject.ply / 2));
+
 	    return [
 				{
-					'x': Math.round(evalObject.ply / 2) + 1,
+					'x': Math.round(evalObject.ply / 2),
 					'y': evalObject.eval,
 					'eval': eval
 				}

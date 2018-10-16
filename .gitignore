@@ -10,3 +10,5 @@ eng_debug.txt
 package-lock.json
 event.pgn
 live.json1
+sf_data.json
+sf_liveeval.json

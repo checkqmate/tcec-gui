@@ -53,6 +53,8 @@ watcher.add(liveeval);
 watcher.add('live.json');
 watcher.add('schedule.json');
 watcher.add('liveeval.json');
+watcher.add('sf_liveeval.json');
+watcher.add('sf_data.json');
 
 var count = 0;
 var socket = 0;
@@ -185,6 +187,16 @@ watcher.on('change', (path, stats) => {
       if (path.match(/liveeval.json/))
       {
          broadCastData(socket, 'livechart', path, data, prevevalData);
+         prevevalData = data;
+      }
+      if (path.match(/sf_data.json/))
+      {
+         broadCastData(socket, 'sf_liveeval', path, data, prevliveData);
+         prevliveData = data;
+      }
+      if (path.match(/sf_liveeval.json/))
+      {
+         broadCastData(socket, 'sf_livechart', path, data, prevevalData);
          prevevalData = data;
       }
       if (path.match(/live.json/))

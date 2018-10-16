@@ -107,6 +107,9 @@ function updatePgn(resettime)
 
 function timeToSeconds(time)
 {
+console.log(time);
+  if (!time) {
+return;}
   components = time.split(':');
   seconds = components[2] * 1;
   seconds += components[1] * 60;
@@ -120,6 +123,10 @@ function timeToSeconds(time)
 function startClock(color, currentMove, previousMove) {
   stopClock('black');
   stopClock('white');
+
+ if (!previousMove.clk && !currentMove.clk) {
+return;
+}
 
   previousTime = timeToSeconds(previousMove.clk);
   currentTime = timeToSeconds(currentMove.clk);
@@ -1416,7 +1423,8 @@ function updateLiveEvalData(data)
    var engineData = [];
    livePvs = [];
 
-   pvWhiteMove = (loadedPlies % 0);
+   pvWhiteMove = (loadedPlies % 0) == 0;
+console.log(loadedPlies);
 
    _.each(data, function(datum) {
      datum = datum.data;
@@ -1459,9 +1467,9 @@ function updateLiveEvalData(data)
       livePvs = _.union(livePvs, [pvs]);
      }
 
-     if (whiteToPlay) {
-      score *= -1;
-     }
+     //if (!pvWhiteMove) {
+     // score *= -1;
+    // }
 
      score = score / 100;
 
@@ -1482,8 +1490,6 @@ function updateLiveEvalData(data)
     }
   });
 
-   console.log(livePvs);
-
   $('#live-eval-cont').html('');
   _.each(engineData, function(engineDatum, key) {
     $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' Speed: ' + engineDatum.speed + ' ' + engineDatum.nodes + ' nodes]</small>');
@@ -1502,26 +1508,42 @@ function updateLiveEvalData(data)
         currentMove += 1;
 
         if (!pvWhiteMove) {
-          currentMove++;
+          //moveCount++;
+          //currentMove++;
         }
 
         pvPlies = 0;
+         
+moveContainer = _.union(moveContainer, [currentMove + '. ']);
+if (loadedPlies % 2 > 0) {
+   moveContainer = _.union(moveContainer, [' .. ']);
+   currentMove++;
+}
+
         _.each(engineDatum.pv.split(' '), function(move) {
-          if (moveCount == 0 && !pvWhiteMove) {
-            moveContainer = _.union(moveContainer, [(currentMove - 1) + ' .. ']);  
-          }
-          if ((moveCount % 2 == 0 && pvWhiteMove) || (moveCount % 2 == 1 && !pvWhiteMove)) {
+          if (moveCount > 0 && (moveCount % 2 == 0 && pvWhiteMove) || (moveCount % 2 == 1 && !pvWhiteMove)) {
             moveAdjust = Math.floor(moveCount / 2);
             moveContainer = _.union(moveContainer, [(currentMove + moveAdjust) + '. ']);
           }
+          
+          if (moveCount == 0 && pvWhiteMove) {
+            // moveContainer = _.union(moveContainer, [(currentMove - 1) + ' .. ']);  
+          }
 
-          pvLocation = livePvs[pvKey][moveCount];
+if (!pvWhiteMove || moveCount == 0) {
+            pvLocation = livePvs[pvKey][moveCount];
+          } else {
+            pvLocation = livePvs[pvKey][moveCount - 1];
+          }
+if (moveCount <= 1) {
+console.log(moveCount + ' ' + pvLocation);
+}
           if (pvLocation) {
              moveContainer = _.union(moveContainer, ["<a href='#' class='set-pv-board' live-pv-key='" + pvKey + "' move-key='" + moveCount + "' color='live'>" + pvLocation.m + '</a>']);
              }
           else
           {
-             console.log ("pvlocation not defined");
+             console.log (moveCount + " pvlocation not defined");
           }
           moveCount++;
         });
@@ -1913,3 +1935,4 @@ function simpleAddEvent(obj, evt, cbk)
    }
 }
 simpleAddEvent(document, "keydown", tcecHandleKey);
+
