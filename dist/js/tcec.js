@@ -107,15 +107,13 @@ function updatePgn(resettime)
 
 function timeToSeconds(time)
 {
-console.log(time);
   if (!time) {
-return;}
+    return;
+  }
   components = time.split(':');
   seconds = components[2] * 1;
   seconds += components[1] * 60;
   seconds += components[0] * 60 * 60;
-
-  console.log(components);
 
   return seconds * 1000;
 }
@@ -451,8 +449,6 @@ function setPgn(pgn)
 
   var base = Math.round(TC2[0].split('/')[1] / 60); 
   formatTC += TC2[0].split('/')[0] + '/' + base + "'+" + TC2[1] + '", ';
-
-  console.log(formatTC);
 
   pgn.Headers.TimeControl = formatTC;
 
@@ -973,7 +969,6 @@ function pvBoardAutoplay()
 
 $('#pv-board-next').click(function(e) {
   if (activePvKey < activePv.length) {
-    console.log ("Setting next to :" + (activePvKey + 1));  
     setPvFromKey(activePvKey + 1);
   }
   e.preventDefault();
@@ -1640,9 +1635,6 @@ if (!pvWhiteMove || moveCount == 0) {
           } else {
             pvLocation = livePvs[pvKey][moveCount - 1];
           }
-if (moveCount <= 1) {
-console.log(moveCount + ' ' + pvLocation);
-}
           if (pvLocation) {
              moveContainer = _.union(moveContainer, ["<a href='#' class='set-pv-board' live-pv-key='" + pvKey + "' move-key='" + moveCount + "' color='live'>" + pvLocation.m + '</a>']);
              }

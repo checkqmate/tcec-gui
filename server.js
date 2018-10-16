@@ -179,24 +179,24 @@ watcher.on('change', (path, stats) => {
    try 
    {
       var data = JSON.parse(content);
-      if (path.match(/data.json/))
-      {
-         broadCastData(socket, 'liveeval', path, data, prevliveData);
-         prevliveData = data;
-      }
-      if (path.match(/liveeval.json/))
-      {
-         broadCastData(socket, 'livechart', path, data, prevevalData);
-         prevevalData = data;
-      }
       if (path.match(/sf_data.json/))
       {
          broadCastData(socket, 'sf_liveeval', path, data, prevliveData);
          prevliveData = data;
       }
+      else if (path.match(/data.json/))
+      {
+         broadCastData(socket, 'liveeval', path, data, prevliveData);
+         prevliveData = data;
+      }
       if (path.match(/sf_liveeval.json/))
       {
          broadCastData(socket, 'sf_livechart', path, data, prevevalData);
+         prevevalData = data;
+      }
+      else if (path.match(/liveeval.json/))
+      {
+         broadCastData(socket, 'livechart', path, data, prevevalData);
          prevevalData = data;
       }
       if (path.match(/live.json/))

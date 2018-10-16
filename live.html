@@ -746,6 +746,7 @@
          updateLiveChartData(data);
          });
       socket.on('sf_liveeval', function(data){
+        console.log('sf');
          updateSFLiveEvalData(data);
          });
       // socket.on('sf_livechart', function(data){
