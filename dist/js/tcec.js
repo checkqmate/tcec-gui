@@ -1476,7 +1476,7 @@ function updateSFLiveEvalData(data)
      }
 
      if (pvs.length > 0) {
-      livePvs[3] = pvs[0];
+      livePvs[3] = pvs;
      }
 
      if (score > 0) {
@@ -1531,7 +1531,7 @@ function updateLiveEvalData(data)
 
    pvWhiteMove = (loadedPlies % 0) == 0;
 
-   _.each(data, function(datum) {
+   _.each(data, function(datum, key) {
      datum = datum.data;
      var score = 0;
      var tbhits = datum.tb;
@@ -1569,10 +1569,7 @@ function updateLiveEvalData(data)
      }
 
      if (pvs.length > 0) {
-      livePvs[0] = pvs[0]
-    }
-    if (pvs.length > 1) {
-      livePvs[1] = pvs[1]
+      livePvs[key] = pvs
     }
 
      //if (!pvWhiteMove) {
