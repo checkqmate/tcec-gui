@@ -3194,7 +3194,7 @@ function drawBracket()
                   bigData.results[0][round][roundM][0] = bigData.results[0][round][roundM][1];
                   bigData.results[0][round][roundM][1] = temp;
                   temp = roundResults[localRound][0].score;
-                  roundResults[localRound][0].score = roundResults[localRound][1].score = 1;
+                  roundResults[localRound][0].score = roundResults[localRound][1].score;
                   roundResults[localRound][1].score = temp;
                }
             }
