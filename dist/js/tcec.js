@@ -43,7 +43,7 @@ var lastGame = 0;
 
 var debug = 0;
 
-var totalEvents = 24;
+var totalEvents = 34;
 var manualGamesdecided = 0;
 var mandataGlobal = null;
 var eventCrossTableInitial = 0;
@@ -1259,6 +1259,34 @@ function getLinkArch(gameNumber)
    return (retLink);
 }
 
+function getArrayIndexRound(match)
+{
+   var round = 1;
+
+   if (match > 30)
+   {
+      round = match%30;
+   }
+   else if (match > 28)
+   {
+      round = match%28;
+   }
+   else if (match > 24)
+   {
+      round = match%24;
+   }
+   else if (match > 16)
+   {
+      round = match%16;
+   }
+   else
+   {
+      round = match;
+   }
+
+   return (round - 1);
+}
+
 function getRound(match)
 {
    var round = 1;
@@ -1750,7 +1778,7 @@ function setBoard()
 
 function eventCrosstableWrap()
 {
-   console.log ("eventCrossTableInitial: " + eventCrossTableInitial);
+   plog ("eventCrossTableInitial: " + eventCrossTableInitial, 0);
    if (eventCrossTableInitial)
    {
       return -1;
@@ -1772,14 +1800,14 @@ function eventCrosstableWrap()
 
 function updateTablesData(data)
 {
-   console.log("Came to updateTablesdata");
+   plog("Came to updateTablesdata", 0);
    try
    {
       updateCrosstableData(data);
    }
    catch(err)
    {
-      console.log("Unable to update crosstable from data");
+      plog("Unable to update crosstable from data", 0);
    }
    try
    {
@@ -1787,7 +1815,7 @@ function updateTablesData(data)
    }
    catch(err)
    {
-      console.log("Unable to update standtable from data");
+      plog("Unable to update standtable from data", 0);
    }
    try
    {
@@ -1795,21 +1823,21 @@ function updateTablesData(data)
    }
    catch(err)
    {
-      console.log("Unable to update brackets from data");
+      plog("Unable to update brackets from data", 0);
    }
-   console.log("Exiting updateTablesData");
+   plog("Exiting updateTablesData", 0);
 }
 
 function updateTables()
 {
-   console.log("Came to updateTables");
+   plog("Came to updateTables", 0);
    try
    {
       updateCrosstable();
    }
    catch(err)
    {
-      console.log("Unable to update crosstable");
+      plog("Unable to update crosstable", 0);
    }
    try
    {
@@ -1817,7 +1845,7 @@ function updateTables()
    }
    catch(err)
    {
-      console.log("Unable to update standtable");
+      plog("Unable to update standtable", 0);
    }
    try
    {
@@ -1825,7 +1853,7 @@ function updateTables()
    }
    catch(err)
    {
-      console.log("Unable to update updateLiveEval");
+      plog("Unable to update updateLiveEval", 0);
    }
    try
    {
@@ -1833,7 +1861,7 @@ function updateTables()
    }
    catch(err)
    {
-      console.log("Unable to update brackets");
+      plog("Unable to update brackets", 0);
    }
    try
    {
@@ -1841,9 +1869,9 @@ function updateTables()
    }
    catch(err)
    {
-      console.log("Unable to update brackets");
+      plog("Unable to update brackets", 0);
    }
-   console.log("Exiting updateTables");
+   plog("Exiting updateTables", 0);
 }
 
 function setTwitchBackgroundInit(backg)
@@ -2663,7 +2691,7 @@ function getDateRound()
 {
    roundDate = [];
 
-   for (var x = 0 ; x < 34; x++)
+   for (var x = 0 ; x <= totalEvents; x++)
    {
       if (roundDateMan[x])
       {
@@ -2742,7 +2770,7 @@ async function eventCrosstable(mandata)
       standings=standingsnew.reverse();
    }
 
-   for (var i = 0; i <= 34 ; i++)
+   for (var i = 0; i <= totalEvents; i++)
    {
       roundResults[i] = [{lead:-1, score: -1, manual: 0}, {lead:-1, score: -1, manual: 0}];
    }
@@ -2765,7 +2793,7 @@ async function eventCrosstable(mandata)
       }
       });
 
-   for (var i = startVar ; i <= 24; i++)
+   for (var i = startVar ; i <= totalEvents; i++)
    {
       tablesLoaded[i] = -1;
       eventCrosstableMain(i, filenames[i]);
@@ -2920,8 +2948,8 @@ function updateCrosstableDataNew(ii, data)
    var round = 0;
    var roundM = ii;
 
-   round = parseInt((ii - 1)/16);
-   roundM = ii - ((round) * 16) - 1;
+   round = getRound(ii);
+   roundM = getArrayIndexRound(ii);
    plog ("round is " + round + ", ii is " + ii + ", roundM is : " + roundM, 1);
 
    _.each(crosstableData.Table, function(engine, key) {
@@ -2944,7 +2972,7 @@ function updateCrosstableDataNew(ii, data)
         entry.crashes = entry.crashes + "/" + crashes2;
 
         var isMatchLost = checkMatchDone(entry, engineDetails, ii);
-        plog ("For match " + ii + ", result is " + isMatchLost, 1);
+        plog ("For match " + ii + ", result is " + isMatchLost + ", white: " + entry.name + ", black:" + engine, 1);
         var lead = 0;
 
         roundResults[ii-1][0].manual = 0;
@@ -3157,10 +3185,16 @@ function formatterEvent(value, row, index, field) {
 function drawBracket()
 {
    roundNo = 2;
+   var isChanged = 0;
+   var startRound = -1;
   
    function onClick(data)
    {
       //alert(data);
+   }
+
+   function save_fn(data, userData) {
+      return;
    }
 
    function edit_fn(container, data, doneCb) {
@@ -3168,15 +3202,22 @@ function drawBracket()
    }
 
    function render_fn(container, data, score, state) {
-        var localRound = parseInt(roundNo/2) - 1;
         var origRoundNo = roundNo; 
+        var ii = parseInt(origRoundNo/2);                                                                                                                                                                                                 
+        var round = getRound(ii);                                                                                                                                                                                                         
+        var localRound = parseInt(roundNo/2) - 1;
         var isFirst = roundNo%2;
         roundNo ++;
+        if (round != startRound)                                                                                                                                                                                                          
+        {                                                                                                                                                                                                                                 
+           return;                                                                                                                                                                                                                        
+        }      
 
         switch(state) {
           case "entry-no-score":
           case "entry-default-win":
           case "entry-complete":
+            var roundM = getArrayIndexRound(ii);
             var index = -1;
             if (roundResults[localRound][0].name == data.name)
             {
@@ -3186,9 +3227,9 @@ function drawBracket()
             {
                index = 1;
             }
-            var ii = parseInt(origRoundNo/2);
-            var round = parseInt((ii - 1)/16);
-            var roundM = ii - ((round) * 16) - 1;
+            plog ("Round is " + round + ",localround:" + localRound + ",data.name:" + data.name + ", match#:" + ii, 1);
+            plog ("RoundM is " + roundM + ",score:" + bigData.results[0][round][roundM][index] + ", name:" + roundResults[localRound][0].name, 1);
+            plog ("RoundM is " + roundM + ",score:" + bigData.results[0][round][roundM][index] + ", name:" + roundResults[localRound][1].name, 1);
 
             if (index > -1)
             {
@@ -3200,14 +3241,19 @@ function drawBracket()
                   temp = roundResults[localRound][0].score;
                   roundResults[localRound][0].score = roundResults[localRound][1].score;
                   roundResults[localRound][1].score = temp;
+                  isChanged = round;
+                  plog ("Swappting for Round is " + round + ",data.name:" + data.name + ", match#:" + ii, 1);
                }
             }
             return;
         }
         return;
    }
-   $(function () 
+
+   for (var i = 0 ; i < 4 ; i ++)
    {
+      roundNo = 2;
+      startRound = i;
       $('#bracket').bracket({
          centerConnectors: true,
          teamWidth: 220,
@@ -3216,10 +3262,12 @@ function drawBracket()
          roundMargin: 18,
          init: bigData,
          skipConsolationRound: true,
+         save: save_fn,
+         userData: bigData,
          decorator: {edit: edit_fn,
                      render: render_fn}
-   });
-   });
+      });
+   }
 }
 
 function drawBracket1()
