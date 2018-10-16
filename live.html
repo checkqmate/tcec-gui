@@ -458,6 +458,7 @@
           <br>
 
           <div id="live-eval-cont"></div>
+          <div id="sf-live-eval-cont"></div>
 
           <div id="charts">
             <div class="row">
@@ -744,6 +745,12 @@
       socket.on('livechart', function(data){
          updateLiveChartData(data);
          });
+      socket.on('sf_liveeval', function(data){
+         updateSFLiveEvalData(data);
+         });
+      // socket.on('sf_livechart', function(data){
+      //    updateLiveChartData(data);
+      //    });
       socket.on('lastpgntime', function(data){
         setLastMoveTime(data);
         });

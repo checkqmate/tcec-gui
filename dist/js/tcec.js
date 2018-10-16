@@ -670,7 +670,7 @@ function updateMoveValues(whiteToPlay, whiteEval, blackEval)
 
 var whitePv = [];
 var blackPv = [];
-var livePvs = [];
+var livePvs = [{}, {}, {}];
 var activePv = [];
 
 $(document).on('click', '.change-move', function(e) {
@@ -1418,13 +1418,118 @@ function updateLiveEvalInit()
       });
 }
 
+function updateSFLiveEvalData(data)
+{
+   var engineData = [];
+   _.each(data, function(datum) {
+     var score = 0;
+     var tbhits = datum.tbhits;
+     if (!isNaN(datum.eval))
+     {
+        score = parseFloat(datum.eval);
+     }
+     else
+     {
+        score = datum.eval;
+     }
+
+     if (datum.pv.search(/.*\.\.\..*/i) == 0)
+     {
+      if (!isNaN(score))
+      {
+        score = parseFloat(score) * -1;
+        if (score === 0) {
+          score = 0;
+        }
+      }
+     }
+
+     pvs = [];
+
+     if (datum.pv.length > 0 && datum.pv.trim() != "no info") {
+      var chess = new Chess(activeFen);
+
+      var currentFen = activeFen;
+
+      datum.pv = datum.pv.replace("...", ". .. ");
+      _.each(datum.pv.split(' '), function(move) {
+          if (isNaN(move.charAt(0)) && move != '..') {
+            moveResponse = chess.move(move);
+
+            if (!moveResponse || typeof moveResponse == 'undefined') {
+                 //console.log("undefine move" + move);
+            } else {
+              newPv = {
+                'from': moveResponse.from,
+                'to': moveResponse.to,
+                'm': moveResponse.san,
+                'fen': currentFen
+              };
+
+              currentFen = chess.fen();
+              currentLastMove = move.slice(-2);
+
+              pvs = _.union(pvs, [newPv]);
+            }
+          }
+      });
+     }
+
+     if (pvs.length > 0) {
+      livePvs[3] = pvs[0];
+     }
+
+     if (score > 0) {
+      score = '+' + score;
+     }
+
+     datum.eval = score;
+     datum.tbhits = getTBHits(datum.tbhits);
+
+     if (datum.pv.length > 0 && datum.pv != "no info") {
+      engineData = _.union(engineData, [datum]);
+    }
+  });
+
+  $('#sf-live-eval-cont').html('');
+  _.each(engineData, function(engineDatum) {
+    $('#sf-live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Speed: ' + engineDatum.speed + ' | Nodes: ' + engineDatum.nodes +']</small>');
+    var moveContainer = [];
+    if (livePvs.length > 0) {
+      _.each(livePvs, function(livePv, pvKey) {
+        var moveCount = 0;
+        _.each(engineDatum.pv.split(' '), function(move) {
+          if (isNaN(move.charAt(0)) && move != '..') {
+            pvLocation = livePvs[pvKey][moveCount];
+            if (pvLocation) {
+               moveContainer = _.union(moveContainer, ["<a href='#' class='set-pv-board' live-pv-key='" + pvKey + "' move-key='" + moveCount + "' color='live'>" + pvLocation.m + '</a>']);
+               }
+            else
+            {
+               console.log ("pvlocation not defined");
+            }
+            moveCount++;
+          } else {
+            moveContainer = _.union(moveContainer, [move]);
+          }
+        });
+      });
+    }
+    $('#sf-live-eval-cont').append('<div class="engine-pv alert alert-dark">' + moveContainer.join(' ') + '</div>');
+  });
+
+
+   // $('#live-eval').bootstrapTable('load', engineData);
+   // handle success
+}
+
+
 function updateLiveEvalData(data) 
 {
    var engineData = [];
-   livePvs = [];
+   // livePvs = [];
 
    pvWhiteMove = (loadedPlies % 0) == 0;
-console.log(loadedPlies);
 
    _.each(data, function(datum) {
      datum = datum.data;
@@ -1464,8 +1569,11 @@ console.log(loadedPlies);
      }
 
      if (pvs.length > 0) {
-      livePvs = _.union(livePvs, [pvs]);
-     }
+      livePvs[0] = pvs[0]
+    }
+    if (pvs.length > 1) {
+      livePvs[1] = pvs[1]
+    }
 
      //if (!pvWhiteMove) {
      // score *= -1;
@@ -1492,7 +1600,10 @@ console.log(loadedPlies);
 
   $('#live-eval-cont').html('');
   _.each(engineData, function(engineDatum, key) {
-    $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' Speed: ' + engineDatum.speed + ' ' + engineDatum.nodes + ' nodes]</small>');
+    $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5>');
+    if (engineDatum.engine == 'LC0 Line 1') {
+      $('#live-eval-cont').append('<small>[Depth: ' + engineDatum.depth + ' Speed: ' + engineDatum.speed + ' ' + engineDatum.nodes + ' nodes]</small>');
+    }
     var moveContainer = [];
     if (livePvs.length > 0) {
     //   _.each(livePvs, function(livePv, pvKey) {
