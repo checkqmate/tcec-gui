@@ -751,9 +751,9 @@
         console.log('sf');
          updateSFLiveEvalData(data);
          });
-      // socket.on('sf_livechart', function(data){
-      //    updateLiveChartData(data);
-      //    });
+      socket.on('sf_livechart', function(data){
+         updateSFLiveChartData(data);
+         });
       socket.on('lastpgntime', function(data){
         setLastMoveTime(data);
         });

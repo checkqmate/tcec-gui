@@ -1692,7 +1692,7 @@ function updateLiveChartData(data)
    }
 }
 
-function updatesFLiveChartData(data) 
+function updateSFLiveChartData(data) 
 {
    if (typeof data.moves != 'undefined') 
    {
