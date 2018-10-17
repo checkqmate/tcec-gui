@@ -1473,7 +1473,8 @@ function updateSFLiveEvalData(data)
 
      datum.eval = score;
 
-     datum.speed = Math.round(datum.nps / 1000) + ' knps';
+     datum.tbhits = Math.round(datum.tbhits / 1000000) + ' M';
+     datum.speed = Math.round(datum.nps / 1000000) + ' Mnps';
      datum.nodes = Math.round(datum.nodes / 1000000) + ' M';
 
      if (datum.pv.length > 0 && datum.pv != "no info") {
@@ -1483,7 +1484,7 @@ function updateSFLiveEvalData(data)
 
   $('#sf-live-eval-cont').html('');
   _.each(engineData, function(engineDatum) {
-    $('#sf-live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Speed: ' + engineDatum.speed + ' | Nodes: ' + engineDatum.nodes +']</small>');
+    $('#sf-live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' TB: ' + engineDatum.tbhits + ' | Speed: ' + engineDatum.speed + ' | Nodes: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
     if (livePvs[3].length > 0) {
       livePv = livePvs[3];
@@ -1545,7 +1546,7 @@ function updateLiveEvalData(data)
    _.each(data, function(datum, key) {
      datum = datum.data;
      var score = 0;
-     var tbhits = datum.tb;
+     datum.tbhits = datum.tb;
      score = datum.score.score;
      datum.engine = "LC0 Line " + datum.multi;
 
@@ -1595,6 +1596,9 @@ function updateLiveEvalData(data)
 
      datum.eval = score;
 
+     if (datum.tbhits > 1000) {
+      datum.tbhits = Math.round(datum.tbhits / 1000) + ' k';
+    }
      datum.speed = Math.round(datum.nps / 1000) + ' knps';
      datum.nodes = Math.round(datum.nodes / 1000000) + ' M';
 
@@ -1610,7 +1614,7 @@ function updateLiveEvalData(data)
   _.each(engineData, function(engineDatum, key) {
     $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5>');
     if (engineDatum.engine == 'LC0 Line 1') {
-      $('#live-eval-cont').append('<small>[Depth: ' + engineDatum.depth + ' Speed: ' + engineDatum.speed + ' ' + engineDatum.nodes + ' nodes]</small>');
+      $('#live-eval-cont').append('<small>[Depth: ' + engineDatum.depth + ' TB: ' + engineDatum.tbhits + ' Speed: ' + engineDatum.speed + ' Nodes: ' + engineDatum.nodes + ']</small>');
     }
     var moveContainer = [];
     if (livePvs.length > 0) {
