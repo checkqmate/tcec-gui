@@ -3072,7 +3072,7 @@ function updateCrosstableDataNew(ii, data)
        crashes: engineDetails.Strikes
      };
 
-     plog ("Entry is " + ii + " : " + JSON.stringify(entry), 1); 
+     plog ("Entry is " + ii + " : " + JSON.stringify(entry), 1);
 
      if (!totalGamesSingle)
      {
@@ -3187,7 +3187,7 @@ function drawBracket()
    roundNo = 2;
    var isChanged = 0;
    var startRound = -1;
-  
+
    function onClick(data)
    {
       //alert(data);
@@ -3202,16 +3202,16 @@ function drawBracket()
    }
 
    function render_fn(container, data, score, state) {
-        var origRoundNo = roundNo; 
-        var ii = parseInt(origRoundNo/2);                                                                                                                                                                                                 
-        var round = getRound(ii);                                                                                                                                                                                                         
+        var origRoundNo = roundNo;
+        var ii = parseInt(origRoundNo/2);
+        var round = getRound(ii);
         var localRound = parseInt(roundNo/2) - 1;
         var isFirst = roundNo%2;
         roundNo ++;
-        if (round != startRound)                                                                                                                                                                                                          
-        {                                                                                                                                                                                                                                 
-           return;                                                                                                                                                                                                                        
-        }      
+        if (round != startRound)
+        {
+           return;
+        }
 
         switch(state) {
           case "entry-no-score":
@@ -3238,9 +3238,9 @@ function drawBracket()
                   var temp = bigData.results[0][round][roundM][0];
                   bigData.results[0][round][roundM][0] = bigData.results[0][round][roundM][1];
                   bigData.results[0][round][roundM][1] = temp;
-                  temp = roundResults[localRound][0].score;
-                  roundResults[localRound][0].score = roundResults[localRound][1].score;
-                  roundResults[localRound][1].score = temp;
+                  temp = roundResults[localRound][0];
+                  roundResults[localRound][0] = roundResults[localRound][1];
+                  roundResults[localRound][1] = temp;
                   isChanged = round;
                   plog ("Swappting for Round is " + round + ",data.name:" + data.name + ", match#:" + ii, 1);
                }
@@ -3256,14 +3256,8 @@ function drawBracket()
       startRound = i;
       $('#bracket').bracket({
          centerConnectors: true,
-         teamWidth: 220,
-         scoreWidth: 25,
-         matchMargin: 45,
-         roundMargin: 18,
          init: bigData,
          skipConsolationRound: true,
-         save: save_fn,
-         userData: bigData,
          decorator: {edit: edit_fn,
                      render: render_fn}
       });
@@ -3275,7 +3269,7 @@ function drawBracket1()
    plog ("Came to drawBracket");
    var roundNox = 2;
    getDateRound();
-  
+
    function onClick(data)
    {
       //alert(data);
