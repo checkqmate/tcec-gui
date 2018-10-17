@@ -698,11 +698,11 @@
         <div class="tab-pane show active fade smallfont scheduleclass darkback" id="pills-trial" role="tabpanel" aria-labelledby="pills-trial-tab">
            <table class="table-dark table-noborder" width="1290" border=0 style="font-size:medium;background-color:transparent">
               <tr>
-                 <td style="width: 15%; color: green">Round of 32</th>
-                 <td style="width: 15%; color: grey">OctoFinal</th>
-                 <td style="width: 15%; color: grey">QuarterFinal</th>
-                 <td style="width: 15%; color: grey">SemiFinal</th>
                  <td style="width: 15%; color: grey">Final</th>
+                 <td style="width: 15%; color: grey">SemiFinal</th>
+                 <td style="width: 15%; color: grey">QuarterFinal</th>
+                 <td style="width: 15%; color: grey">OctoFinal</th>
+                 <td style="width: 15%; color: green">Round of 32</th>
                 </tr>
             </table>
            <div id="bracket" style="background-color: transparent; height:1450px; width:1350px"></div>
@@ -1058,7 +1058,7 @@ OS: Ubuntu 18.04 server
          updateTablesData(data);
          });
       socket.on('liveeval', function(data){
-         updateLiveEvalData(data);
+         updateLiveEvalData(data, 1);
          });
       socket.on('pgn', function(data){
          updatePgnData(data, 1);

@@ -49,6 +49,8 @@ var mandataGlobal = null;
 var eventCrossTableInitial = 0;
 
 var currentMatch = 0;
+var liveEngineEval = [];
+var livePVHist = 0;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -613,12 +615,6 @@ function copyFen()
          return currentPosition;
       }
    });
-/*
-   clip.on('success', function(e) {
-      $('.copied').show();
-      $('.copied').fadeOut(1000);
-   });
-*/
    return false;
 }
 
@@ -1061,8 +1057,21 @@ function handlePlyChange(handleclick)
 
    /* Arun: we should get move from ply - 1 as index starts at 0 */
    currentMove = getMoveFromPly(activePly - 1);
+   if (livePVHist)
+   {
+      for (var xx = 0 ; xx < livePVHist.moves.length ; xx ++)
+      {
+         if (parseInt(livePVHist.moves[xx].ply) == activePly)
+         {
+            //livePVHist.engine = 
+            livePVHist.moves[xx].engine = livePVHist.engine;
+            updateLiveEvalData(livePVHist.moves[xx], 0);
+            break;
+         }
+      }
+   }
 
-   /* Arun: why do we need to keep swappging the pieces captured */
+   /* Arun: why do we need to keep swapping the pieces captured */
    if (typeof currentMove != 'undefined') {
     setMoveMaterial(currentMove.material, 0);
    }
@@ -2068,82 +2077,92 @@ function updateLiveEvalInit()
       });
 }
 
-function updateLiveEvalData(data)
+function updateLiveEvalData(datum, update)
 {
    var engineData = [];
    livePvs = [];
-   _.each(data, function(datum) {
-     var score = 0;
-     var tbhits = datum.tbhits;
-     if (!isNaN(datum.eval))
-     {
-        score = parseFloat(datum.eval);
-     }
-     else
-     {
-        score = datum.eval;
-     }
+   var score = 0;
+   var tbhits = datum.tbhits;
 
-     if (datum.pv.search(/.*\.\.\..*/i) == 0)
-     {
+   if (update && !viewingActiveMove)
+   {
+      return;
+   }
+
+   if (!isNaN(datum.eval))
+   {
+      score = parseFloat(datum.eval);
+   }
+   else
+   {
+      score = datum.eval;
+   }
+
+   if (datum.pv.search(/.*\.\.\..*/i) == 0)
+   {
       if (!isNaN(score))
       {
-        score = parseFloat(score) * -1;
-        if (score === 0) {
-          score = 0;
-        }
+         score = parseFloat(score) * -1;
+         if (score === 0) 
+         {
+            score = 0;
+         }
       }
-     }
+   }
 
-     pvs = [];
+   pvs = [];
 
-     if (datum.pv.length > 0 && datum.pv.trim() != "no info") {
-      var chess = new Chess(activeFen);
+   if (datum.pv.length > 0 && datum.pv.trim() != "no info") 
+   {
+    var chess = new Chess(activeFen);
 
-      var currentFen = activeFen;
+    var currentFen = activeFen;
 
-      datum.pv = datum.pv.replace("...", ". .. ");
-      _.each(datum.pv.split(' '), function(move) {
-          if (isNaN(move.charAt(0)) && move != '..') {
-            moveResponse = chess.move(move);
+    datum.pv = datum.pv.replace("...", ". .. ");
+    _.each(datum.pv.split(' '), function(move) {
+        if (isNaN(move.charAt(0)) && move != '..') {
+          moveResponse = chess.move(move);
 
-            if (!moveResponse || typeof moveResponse == 'undefined') {
-                 plog("undefine move" + move);
-            } else {
-              newPv = {
-                'from': moveResponse.from,
-                'to': moveResponse.to,
-                'm': moveResponse.san,
-                'fen': currentFen
-              };
+          if (!moveResponse || typeof moveResponse == 'undefined') {
+               plog("undefine move" + move);
+          } else {
+            newPv = {
+              'from': moveResponse.from,
+              'to': moveResponse.to,
+              'm': moveResponse.san,
+              'fen': currentFen
+            };
 
-              currentFen = chess.fen();
-              currentLastMove = move.slice(-2);
+            currentFen = chess.fen();
+            currentLastMove = move.slice(-2);
 
-              pvs = _.union(pvs, [newPv]);
-            }
+            pvs = _.union(pvs, [newPv]);
           }
-      });
-     }
+        }
+    });
+   }
 
-     if (pvs.length > 0) {
-      livePvs = _.union(livePvs, [pvs]);
-     }
+   if (pvs.length > 0) {
+    livePvs = _.union(livePvs, [pvs]);
+   }
 
-     if (score > 0) {
-      score = '+' + score;
-     }
+   if (score > 0) {
+    score = '+' + score;
+   }
 
-     datum.eval = score;
-     datum.tbhits = getTBHits(datum.tbhits);
+   datum.eval = score;
+   datum.tbhits = getTBHits(datum.tbhits);
 
-     if (datum.pv.length > 0 && datum.pv != "no info") {
-      engineData = _.union(engineData, [datum]);
-    }
-  });
+   if (datum.pv.length > 0 && datum.pv != "no info") {
+    engineData = _.union(engineData, [datum]);
+   }
 
   $('#live-eval-cont').html('');
   _.each(engineData, function(engineDatum) {
+    if (engineDatum.engine == '')
+    {
+       engineDatum.engine = datum.engine;
+    }
     $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Speed: ' + engineDatum.speed + ' | Nodes: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
     if (livePvs.length > 0) {
@@ -2178,7 +2197,7 @@ function updateLiveEval() {
    axios.get('data.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
-      updateLiveEvalData(response.data);
+      updateLiveEvalData(response.data, 0);
    })
    .catch(function (error) {
       // handle error
@@ -2186,14 +2205,14 @@ function updateLiveEval() {
    });
 }
 
-var liveEngineEval = [];
-
 function updateLiveChartData(data)
 {
    if (typeof data.moves != 'undefined')
    {
       liveEngineEval = data.moves;
       updateChartData();
+      livePVHist = data;
+      //updateLiveEvalData(data.moves[data.moves.length - 1]);
    } else {
       liveEngineEval = [];
    }
@@ -3398,6 +3417,7 @@ function drawBracket1()
    $(function () {
       $('#bracket').bracket({
          centerConnectors: true,
+         dir: 'rl',
          teamWidth: 220,
          scoreWidth: 25,
          matchMargin: 45,
