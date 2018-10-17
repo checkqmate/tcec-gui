@@ -1419,10 +1419,14 @@ function updateLiveEvalInit()
 function updateSFLiveEvalData(data)
 {
    var engineData = [];
+
+   pvWhiteMove = (loadedPlies % 0) == 0;
+
    _.each(data, function(datum) {
      datum = datum.data;
      var score = datum.score.score;
-     var tbhits = datum.tbhits;
+     var tbhits = datum.tb;
+     datum.speed: 
      datum.engine = "SF Dev [128]";
 
      pvs = [];
@@ -1439,6 +1443,7 @@ function updateSFLiveEvalData(data)
 
             if (!moveResponse || typeof moveResponse == 'undefined') {
                  console.log("undefine move" + move);
+                 return;
             } else {
               currentFen = chess.fen();
 
@@ -1466,7 +1471,9 @@ function updateSFLiveEvalData(data)
      }
 
      datum.eval = score;
-     datum.tbhits = datum.tbhits;
+
+     datum.speed = Math.round(datum.nps / 1000) + ' knps';
+     datum.nodes = Math.round(datum.nodes / 1000000) + ' M';
 
      if (datum.pv.length > 0 && datum.pv != "no info") {
       engineData = _.union(engineData, [datum]);
@@ -1513,6 +1520,7 @@ function updateSFLiveEvalData(data)
           else
           {
              console.log (moveCount + " pvlocation not defined");
+             return;
           }
           moveCount++;
         });
