@@ -1602,9 +1602,6 @@ function updateLiveEvalData(data)
      datum.speed = Math.round(datum.nps / 1000) + ' knps';
      datum.nodes = Math.round(datum.nodes / 1000000) + ' M';
 
-     // tbhits= tbhits.toFixed(0);
-     tbhits = tbhits + "k";
-
      if (datum.pv.length > 0 && datum.pv != "no info") {
       engineData = _.union(engineData, [datum]);
     }
