@@ -1420,6 +1420,7 @@ function updateSFLiveEvalData(data)
 {
    var engineData = [];
    _.each(data, function(datum) {
+     datum = datum.data;
      var score = 0;
      var tbhits = datum.tbhits;
 
