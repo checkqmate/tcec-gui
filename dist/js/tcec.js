@@ -1342,7 +1342,7 @@ function openCrossOrig(gamen)
 
 function openCross(gamen, value)
 {
-   var round = getRound(gamen);
+   var round = getRound(value);
    var div = round + 1;
    var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=" + div + "&ga=" + gamen;
    window.open(link,'_blank');
