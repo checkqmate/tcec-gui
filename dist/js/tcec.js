@@ -1452,7 +1452,7 @@ function updateSFLiveEvalData(data)
       datum.pv = datum.pv.replace("...", ". .. ");
       _.each(datum.pv.split(' '), function(move) {
           if (isNaN(move.charAt(0)) && move != '..') {
-            moveResponse = chess.move(move);
+            moveResponse = chess.move({from: move.substring(0,2), to: move.substring(2)});
 
             if (!moveResponse || typeof moveResponse == 'undefined') {
                  plog("undefine move" + move);
