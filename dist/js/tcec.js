@@ -1058,15 +1058,16 @@ function handlePlyChange(handleclick)
 
    /* Arun: we should get move from ply - 1 as index starts at 0 */
    currentMove = getMoveFromPly(activePly - 1);
+   prevMove = getMoveFromPly(activePly - 2);
    if (livePVHist)
    {
       for (var xx = 0 ; xx < livePVHist.moves.length ; xx ++)
       {
          if (parseInt(livePVHist.moves[xx].ply) == activePly)
          {
-            //livePVHist.engine = 
+            //livePVHist.engine =
             livePVHist.moves[xx].engine = livePVHist.engine;
-            updateLiveEvalData(livePVHist.moves[xx], 0);
+            updateLiveEvalData(livePVHist.moves[xx], 0, prevMove.fen);
             break;
          }
       }
@@ -1090,7 +1091,7 @@ var activePvColor = '';
 
 $(document).on('click', '.set-pv-board', function(e) {
   $('#v-pills-pv-tab').click();
-  moveKey = $(this).attr('move-key') * 1;
+  moveKey = $(this).attr('move-key');
   pvColor = $(this).attr('color');
 
   activePvColor = pvColor;
@@ -1129,6 +1130,8 @@ function setPvFromKey(moveKey)
   moveFrom = activePv[moveKey].from;
   moveTo = activePv[moveKey].to;
   fen = activePv[moveKey].fen;
+  console.log ("activePv is " + JSON.stringify(activePv[moveKey]));
+
   game.load(fen);
 
   $('.active-pv-move').removeClass('active-pv-move');
@@ -2078,7 +2081,117 @@ function updateLiveEvalInit()
       });
 }
 
-function updateLiveEvalData(datum, update)
+function updateLiveEvalDataHistory(engineDatum, fen)
+{
+   var engineData = [];
+   livePvs = [];
+   var score = 0;
+   datum = engineDatum;
+   var tbhits = datum.tbhits;
+
+   if (!isNaN(datum.eval))
+   {
+      score = parseFloat(datum.eval);
+   }
+   else
+   {
+      score = datum.eval;
+   }
+
+   if (datum.pv.search(/.*\.\.\..*/i) == 0)
+   {
+      if (!isNaN(score))
+      {
+         score = parseFloat(score) * -1;
+         if (score === 0)
+         {
+            score = 0;
+         }
+      }
+   }
+
+   pvs = [];
+
+   if (datum.pv.length > 0 && datum.pv.trim() != "no info")
+   {
+    var chess = new Chess(fen);
+    var currentFen = fen;
+
+    datum.pv = datum.pv.replace("...", ". .. ");
+    _.each(datum.pv.split(' '), function(move) {
+        if (isNaN(move.charAt(0)) && move != '..') {
+          moveResponse = chess.move(move);
+
+          if (!moveResponse || typeof moveResponse == 'undefined') {
+               plog("undefine move" + move);
+          } else {
+            newPv = {
+              'from': moveResponse.from,
+              'to': moveResponse.to,
+              'm': moveResponse.san,
+              'fen': currentFen
+            };
+
+            currentFen = chess.fen();
+            currentLastMove = move.slice(-2);
+
+            pvs = _.union(pvs, [newPv]);
+          }
+        }
+    });
+   }
+
+   if (pvs.length > 0) {
+    livePvs = _.union(livePvs, [pvs]);
+   }
+
+   if (score > 0) {
+    score = '+' + score;
+   }
+
+   datum.eval = score;
+   datum.tbhits = getTBHits(datum.tbhits);
+
+   if (datum.pv.length > 0 && datum.pv != "no info") {
+    engineData = _.union(engineData, [datum]);
+   }
+
+  $('#live-eval-cont').html('');
+  _.each(engineData, function(engineDatum) {
+    if (engineDatum.engine == '')
+    {
+       engineDatum.engine = datum.engine;
+    }
+    $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Speed: ' + engineDatum.speed + ' | Nodes: ' + engineDatum.nodes +']</small>');
+    var moveContainer = [];
+    if (livePvs.length > 0) {
+      _.each(livePvs, function(livePv, pvKey) {
+        var moveCount = 0;
+        _.each(engineDatum.pv.split(' '), function(move) {
+          if (isNaN(move.charAt(0)) && move != '..') {
+            pvLocation = livePvs[pvKey][moveCount];
+            if (pvLocation) {
+               moveContainer = _.union(moveContainer, ["<a href='#' class='set-pv-board' live-pv-key='" + pvKey + "' move-key='" + moveCount + "' color='live'>" + pvLocation.m + '</a>']);
+               }
+            else
+            {
+               plog ("pvlocation not defined");
+            }
+            moveCount++;
+          } else {
+            moveContainer = _.union(moveContainer, [move]);
+          }
+        });
+      });
+    }
+    $('#live-eval-cont').append('<div class="engine-pv alert alert-dark">' + moveContainer.join(' ') + '</div>');
+  });
+
+   // $('#live-eval').bootstrapTable('load', engineData);
+   // handle success
+}
+
+function updateLiveEvalData(datum, update, fen)
 {
    var engineData = [];
    livePvs = [];
@@ -2087,6 +2200,12 @@ function updateLiveEvalData(datum, update)
 
    if (update && !viewingActiveMove)
    {
+      return;
+   }
+
+   if (!update && !viewingActiveMove)
+   {
+      updateLiveEvalDataHistory(datum, fen);
       return;
    }
 
@@ -2104,7 +2223,7 @@ function updateLiveEvalData(datum, update)
       if (!isNaN(score))
       {
          score = parseFloat(score) * -1;
-         if (score === 0) 
+         if (score === 0)
          {
             score = 0;
          }
@@ -2113,7 +2232,7 @@ function updateLiveEvalData(datum, update)
 
    pvs = [];
 
-   if (datum.pv.length > 0 && datum.pv.trim() != "no info") 
+   if (datum.pv.length > 0 && datum.pv.trim() != "no info")
    {
     var chess = new Chess(activeFen);
 
@@ -2198,7 +2317,7 @@ function updateLiveEval() {
    axios.get('data.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
-      updateLiveEvalData(response.data, 0);
+      updateLiveEvalData(response.data, 1);
    })
    .catch(function (error) {
       // handle error
@@ -2213,7 +2332,6 @@ function updateLiveChartData(data)
       liveEngineEval = data.moves;
       updateChartData();
       livePVHist = data;
-      //updateLiveEvalData(data.moves[data.moves.length - 1]);
    } else {
       liveEngineEval = [];
    }
