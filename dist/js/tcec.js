@@ -1421,8 +1421,9 @@ function updateSFLiveEvalData(data)
    var engineData = [];
    _.each(data, function(datum) {
      datum = datum.data;
-     var score = 0;
+     var score = datum.score.score;
      var tbhits = datum.tbhits;
+     datum.engine = "SF Dev [128]";
 
      pvs = [];
 
@@ -1477,23 +1478,45 @@ function updateSFLiveEvalData(data)
     $('#sf-live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Speed: ' + engineDatum.speed + ' | Nodes: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
     if (livePvs[3].length > 0) {
+      livePv = livePvs[key];
+      pvKey = key;
         var moveCount = 0;
+        splitMoves = engineDatum.pv.split(' ');
+
+        currentMove = Math.floor(loadedPlies / 2);
+        currentMove += 1;
+
+        moveContainer = _.union(moveContainer, [currentMove + '. ']);
+        if (loadedPlies % 2 > 0) {
+           moveContainer = _.union(moveContainer, [' .. ']);
+           currentMove++;
+        }
+
         _.each(engineDatum.pv.split(' '), function(move) {
-          if (isNaN(move.charAt(0)) && move != '..') {
-            pvLocation = livePvs[3][moveCount];
-            if (pvLocation) {
-               moveContainer = _.union(moveContainer, ["<a href='#' class='set-pv-board' live-pv-key='" + 3 + "' move-key='" + moveCount + "' color='live'>" + pvLocation.m + '</a>']);
-               }
-            else
-            {
-               console.log ("pvlocation not defined");
-            }
-            moveCount++;
-          } else {
-            moveContainer = _.union(moveContainer, [move]);
+          computeMove = (moveCount);
+          if (loadedPlies % 2 > 0) {
+            computeMove = (moveCount + 1);
           }
+          if (moveCount > 0 && computeMove % 2 == 0) {
+            moveAdjust = Math.floor(moveCount / 2);
+            moveContainer = _.union(moveContainer, [(currentMove + moveAdjust) + '. ']);
+          }
+          
+          if (!pvWhiteMove || moveCount == 0) {
+                  pvLocation = livePvs[pvKey][moveCount];
+          } else {
+            pvLocation = livePvs[pvKey][moveCount - 1];
+          }
+          if (pvLocation) {
+             moveContainer = _.union(moveContainer, ["<a href='#' class='set-pv-board' live-pv-key='" + pvKey + "' move-key='" + moveCount + "' color='live'>" + pvLocation.m + '</a>']);
+             }
+          else
+          {
+             console.log (moveCount + " pvlocation not defined");
+          }
+          moveCount++;
         });
-    }
+      }
     $('#sf-live-eval-cont').append('<div class="engine-pv alert alert-dark">' + moveContainer.join(' ') + '</div>');
   });
 
@@ -1591,18 +1614,11 @@ function updateLiveEvalData(data)
         currentMove = Math.floor(loadedPlies / 2);
         currentMove += 1;
 
-        if (!pvWhiteMove) {
-          //moveCount++;
-          //currentMove++;
+        moveContainer = _.union(moveContainer, [currentMove + '. ']);
+        if (loadedPlies % 2 > 0) {
+           moveContainer = _.union(moveContainer, [' .. ']);
+           currentMove++;
         }
-
-        pvPlies = 0;
-         
-moveContainer = _.union(moveContainer, [currentMove + '. ']);
-if (loadedPlies % 2 > 0) {
-   moveContainer = _.union(moveContainer, [' .. ']);
-   currentMove++;
-}
 
         _.each(engineDatum.pv.split(' '), function(move) {
           computeMove = (moveCount);
@@ -1614,12 +1630,8 @@ if (loadedPlies % 2 > 0) {
             moveContainer = _.union(moveContainer, [(currentMove + moveAdjust) + '. ']);
           }
           
-          if (moveCount == 0 && pvWhiteMove) {
-            // moveContainer = _.union(moveContainer, [(currentMove - 1) + ' .. ']);  
-          }
-
-if (!pvWhiteMove || moveCount == 0) {
-            pvLocation = livePvs[pvKey][moveCount];
+          if (!pvWhiteMove || moveCount == 0) {
+                  pvLocation = livePvs[pvKey][moveCount];
           } else {
             pvLocation = livePvs[pvKey][moveCount - 1];
           }
@@ -1632,9 +1644,9 @@ if (!pvWhiteMove || moveCount == 0) {
           }
           moveCount++;
         });
-    //   });
-    }
-    $('#live-eval-cont').append('<div class="engine-pv alert alert-dark">' + moveContainer.join(' ') + '</div>');
+          //   });
+      }
+      $('#live-eval-cont').append('<div class="engine-pv alert alert-dark">' + moveContainer.join(' ') + '</div>');
   });
 
 
