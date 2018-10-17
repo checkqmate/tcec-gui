@@ -2203,7 +2203,7 @@ function updateLiveEvalData(datum, update, fen)
       return;
    }
 
-   if (!update && !viewingActiveMove)
+   if (!update)
    {
       updateLiveEvalDataHistory(datum, fen);
       return;
