@@ -1600,7 +1600,11 @@ function updateLiveEvalData(data)
       datum.tbhits = Math.round(datum.tbhits / 1000) + ' k';
     }
      datum.speed = Math.round(datum.nps / 1000) + ' knps';
-     datum.nodes = Math.round(datum.nodes / 1000000) + ' M';
+     if (datum.nodes >= 1000000) {
+      datum.nodes = Math.round(datum.nodes / 1000000) + ' M';
+    } else {
+      datum.nodes = Math.round(datum.nodes / 1000) + ' k';
+    }
 
      if (datum.pv.length > 0 && datum.pv != "no info") {
       engineData = _.union(engineData, [datum]);
