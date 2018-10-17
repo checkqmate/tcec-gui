@@ -39,6 +39,7 @@ var timeDiff = 0;
 var timeDiffRead = 0;
 var prevPgnData = 0;
 var playSound = 1;
+var reverseBracketSet = 0;
 var lastGame = 0;
 
 var debug = 0;
@@ -2386,16 +2387,56 @@ function checkSound(checkbox)
    }
 }
 
+function reverseBracket(checkbox)
+{
+   if (checkbox.checked)
+   {
+      localStorage.setItem('tcec-bracket-reverse', 1);
+      reverseBracketSet = 1;
+      $('#reverstable').show();
+      $('#normaltable').hide();
+   }
+   else
+   {
+      localStorage.setItem('tcec-bracket-reverse', 0);
+      reverseBracketSet = 0;
+      $('#reverstable').hide();
+      $('#normaltable').show();
+   }
+   drawBracket1();
+}
+
+function setBracket()
+{
+   var getBrack = localStorage.getItem('tcec-bracket-reverse');
+   if (getBrack == undefined || getBrack == 0)
+   {
+      reverseBracketSet = 0;
+      $('#brackcheck').prop('checked', false);
+      $('#reverstable').hide();
+      $('#normaltable').show();
+   }
+   else
+   {
+      reverseBracketSet = 1;
+      $('#brackcheck').prop('checked', true);
+      $('#reverstable').show();
+      $('#normaltable').hide();
+   }
+}
+
 function setSound()
 {
    var getSound = localStorage.getItem('tcec-sound-video');
    if (getSound == undefined || getSound == 0)
    {
       playSound = 1;
+      $('#soundcheck').prop('checked', false);
    }
    else
    {
       playSound = 0;
+      $('#soundchcheck').prop('checked', false);
    }
 }
 
@@ -3414,10 +3455,15 @@ function drawBracket1()
         }
    }
 
+   var direction = 'lr';
+   if (reverseBracketSet)
+   {
+      direction = 'rl';
+   }
    $(function () {
       $('#bracket').bracket({
          centerConnectors: true,
-         dir: 'rl',
+         dir: direction,
          teamWidth: 220,
          scoreWidth: 25,
          matchMargin: 45,

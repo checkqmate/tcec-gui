@@ -243,6 +243,17 @@
                   </ul>
                 </li>
                 <div class="dropdown-divider"></div>
+                <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Brackets</a>
+                  <ul class="dropdown-menu bg-dark whitefont">
+                    <div class="form-check" style="margin-left: 10px">
+                      <input class="form-check-input" type="checkbox" onclick="reverseBracket(this)" value="" id="brackcheck">
+                      <label class="form-check-label" for="defaultCheck1">
+                        Reverse
+                      </label>
+                    </div>
+                  </ul>
+                </li>
+                <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Twitch Theme</a>
                   <ul class="dropdown-menu bg-dark whitefont">
                       <div class="form-check classpad">
@@ -696,7 +707,7 @@
       </ul>
       <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane show active fade smallfont scheduleclass darkback" id="pills-trial" role="tabpanel" aria-labelledby="pills-trial-tab">
-           <table class="table-dark table-noborder" width="1290" border=0 style="font-size:medium;background-color:transparent">
+           <table class="table-dark table-noborder" width="1290" border=0 id="reverstable" style="font-size:medium;background-color:transparent">
               <tr>
                  <td style="width: 15%; color: grey">Final</th>
                  <td style="width: 15%; color: grey">SemiFinal</th>
@@ -704,7 +715,16 @@
                  <td style="width: 15%; color: grey">OctoFinal</th>
                  <td style="width: 15%; color: green">Round of 32</th>
                 </tr>
-            </table>
+           </table>
+           <table class="table-dark table-noborder" width="1290" border=0 id="normaltable" style="font-size:medium;background-color:transparent">
+              <tr>
+                 <td style="width: 15%; color: green">Round of 32</th>
+                 <td style="width: 15%; color: grey">OctoFinal</th>
+                 <td style="width: 15%; color: grey">QuarterFinal</th>
+                 <td style="width: 15%; color: grey">SemiFinal</th>
+                 <td style="width: 15%; color: grey">Final</th>
+                </tr>
+           </table>
            <div id="bracket" style="background-color: transparent; height:1450px; width:1350px"></div>
            <table class="table-dark table-noborder" width="1350" border=0 style="background-color:transparent">
                 <tr background=transparent align="middle">
@@ -1017,6 +1037,7 @@ OS: Ubuntu 18.04 server
         });
 
         setSound();
+        setBracket();
         initToolTip();
         updatePgn();
         updateLiveEvalInit();
