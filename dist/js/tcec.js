@@ -1455,8 +1455,10 @@ function updateSFLiveEvalData(data)
             moveResponse = chess.move(move);
 
             if (!moveResponse || typeof moveResponse == 'undefined') {
-                 //console.log("undefine move" + move);
+                 plog("undefine move" + move);
             } else {
+              currentFen = chess.fen();
+              
               newPv = {
                 'from': moveResponse.from,
                 'to': moveResponse.to,
@@ -1464,7 +1466,6 @@ function updateSFLiveEvalData(data)
                 'fen': currentFen
               };
 
-              currentFen = chess.fen();
               currentLastMove = move.slice(-2);
 
               pvs = _.union(pvs, [newPv]);
