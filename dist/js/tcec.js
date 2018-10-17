@@ -1438,7 +1438,7 @@ function updateSFLiveEvalData(data)
             moveResponse = chess.move({from: move.substring(0,2), to: move.substring(2)});
 
             if (!moveResponse || typeof moveResponse == 'undefined') {
-                 plog("undefine move" + move);
+                 console.log("undefine move" + move);
             } else {
               currentFen = chess.fen();
 
@@ -1478,8 +1478,8 @@ function updateSFLiveEvalData(data)
     $('#sf-live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Speed: ' + engineDatum.speed + ' | Nodes: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
     if (livePvs[3].length > 0) {
-      livePv = livePvs[key];
-      pvKey = key;
+      livePv = livePvs[3];
+      pvKey = 3;
         var moveCount = 0;
         splitMoves = engineDatum.pv.split(' ');
 
