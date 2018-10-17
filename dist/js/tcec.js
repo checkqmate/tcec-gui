@@ -1422,25 +1422,6 @@ function updateSFLiveEvalData(data)
    _.each(data, function(datum) {
      var score = 0;
      var tbhits = datum.tbhits;
-     if (!isNaN(datum.eval))
-     {
-        score = parseFloat(datum.eval);
-     }
-     else
-     {
-        score = datum.eval;
-     }
-
-     if (datum.pv.search(/.*\.\.\..*/i) == 0)
-     {
-      if (!isNaN(score))
-      {
-        score = parseFloat(score) * -1;
-        if (score === 0) {
-          score = 0;
-        }
-      }
-     }
 
      pvs = [];
 
@@ -1458,7 +1439,7 @@ function updateSFLiveEvalData(data)
                  plog("undefine move" + move);
             } else {
               currentFen = chess.fen();
-              
+
               newPv = {
                 'from': moveResponse.from,
                 'to': moveResponse.to,
