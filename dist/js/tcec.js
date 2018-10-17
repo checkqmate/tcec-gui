@@ -1493,14 +1493,13 @@ function updateSFLiveEvalData(data)
   _.each(engineData, function(engineDatum) {
     $('#sf-live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Speed: ' + engineDatum.speed + ' | Nodes: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
-    if (livePvs.length > 0) {
-      _.each(livePvs, function(livePv, pvKey) {
+    if (livePvs[3].length > 0) {
         var moveCount = 0;
         _.each(engineDatum.pv.split(' '), function(move) {
           if (isNaN(move.charAt(0)) && move != '..') {
-            pvLocation = livePvs[pvKey][moveCount];
+            pvLocation = livePvs[3][moveCount];
             if (pvLocation) {
-               moveContainer = _.union(moveContainer, ["<a href='#' class='set-pv-board' live-pv-key='" + pvKey + "' move-key='" + moveCount + "' color='live'>" + pvLocation.m + '</a>']);
+               moveContainer = _.union(moveContainer, ["<a href='#' class='set-pv-board' live-pv-key='" + 3 + "' move-key='" + moveCount + "' color='live'>" + pvLocation.m + '</a>']);
                }
             else
             {
@@ -1511,7 +1510,6 @@ function updateSFLiveEvalData(data)
             moveContainer = _.union(moveContainer, [move]);
           }
         });
-      });
     }
     $('#sf-live-eval-cont').append('<div class="engine-pv alert alert-dark">' + moveContainer.join(' ') + '</div>');
   });
