@@ -1425,8 +1425,7 @@ function updateSFLiveEvalData(data)
    _.each(data, function(datum) {
      datum = datum.data;
      var score = datum.score.score;
-     var tbhits = datum.tb;
-     datum.speed: 
+     datum.tbhits = datum.tb;
      datum.engine = "SF Dev [128]";
 
      pvs = [];
@@ -1465,6 +1464,8 @@ function updateSFLiveEvalData(data)
      if (pvs.length > 0) {
       livePvs[3] = pvs;
      }
+
+     score = score / 100;
 
      if (score > 0) {
       score = '+' + score;
