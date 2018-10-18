@@ -3224,6 +3224,12 @@ function updateCrosstableDataNew(ii, data)
               roundResults[ii-1][0].lead = 1;
               roundResults[ii-1][1].lead = 0;
            }
+           console.log ("came here:" + mandataGlobal.matches[0].e1);
+           if (mandataGlobal.matches[0])
+           {
+              roundResults[ii-1][0].score = mandataGlobal.matches[0].e1;
+              roundResults[ii-1][1].score = mandataGlobal.matches[0].e2;
+           }
         }
         return 1;
      }
