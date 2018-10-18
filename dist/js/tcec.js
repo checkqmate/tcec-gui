@@ -3060,6 +3060,11 @@ function checkMatchDone(firstEntry, currEntry, matchNum)
                {
                   isMatchLost = 0;
                   manualDecide = 1;
+                  if (matchdum.e1)
+                  {
+                     roundResults[ii-1][0].score = mandataGlobal.matches[0].e1;
+                     roundResults[ii-1][1].score = mandataGlobal.matches[0].e2;
+                  }
                   return false;
                }
                else if (matchdum.finished > 0)
@@ -3223,12 +3228,6 @@ function updateCrosstableDataNew(ii, data)
            {
               roundResults[ii-1][0].lead = 1;
               roundResults[ii-1][1].lead = 0;
-           }
-           console.log ("came here:" + mandataGlobal.matches[0].e1);
-           if (mandataGlobal.matches[0])
-           {
-              roundResults[ii-1][0].score = mandataGlobal.matches[0].e1;
-              roundResults[ii-1][1].score = mandataGlobal.matches[0].e2;
            }
         }
         return 1;
