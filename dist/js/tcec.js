@@ -1130,7 +1130,6 @@ function setPvFromKey(moveKey)
   moveFrom = activePv[moveKey].from;
   moveTo = activePv[moveKey].to;
   fen = activePv[moveKey].fen;
-  console.log ("activePv is " + JSON.stringify(activePv[moveKey]));
 
   game.load(fen);
 
@@ -3301,7 +3300,17 @@ function getPrevGames(ii)
    var start = 0;
    var end = 0;
 
-   if (ii > 16)
+   if (ii > 28)
+   {
+      start = 29;
+      end = ii;
+   }
+   else if (ii > 24)
+   {
+      start = 25;
+      end = ii;
+   }
+   else if (ii > 16)
    {
       start = 17;
       end = ii;
