@@ -96,17 +96,19 @@ function updateChartData()
 
 		} else {
          if (key >= (loadedPgn.Moves.length - 1)) {
-	//		evalObject = getLiveEval(key, moveNumber, true);
-//
-//			if (evalObject != -1) {
-//				liveEval = _.union(liveEval, evalObject);
-//			}
+			evalObject = getLiveEval(key, moveNumber, true);
+
+			if (evalObject != -1) {
+				liveEval = _.union(liveEval, evalObject);
+			}
          }
 		}
 	});
 
 	if (labels.length == 0) {
 		labels = _.union(labels, [(loadedPlies / 2) + 1]);
+	} else {
+		labels = _.union(labels, [moveNumber + 1]);
 	}
 
 	evalChart.data.labels = labels;
@@ -165,13 +167,13 @@ function updateSFChartData()
 
 	_.each(loadedPgn.Moves, function(move, key) {
 		moveNumber = Math.round(key / 2) + 1;
-		if (key % 2 == 0) {
+		// if (key % 2 == 0) {
 			evalObject = getSFLiveEval(key, moveNumber, false);
 
 			if (evalObject != -1) {
 				liveEval = _.union(liveEval, evalObject);
 			}
-		}
+		// }
 	});
 
 	evalChart.data.datasets[1].data = liveEval;
