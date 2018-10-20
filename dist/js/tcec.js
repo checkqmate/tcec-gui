@@ -40,6 +40,9 @@ var timeDiffRead = 0;
 var prevPgnData = 0;
 var playSound = 1;
 
+var liveEngineEval = [];
+var livePVHist = 0;
+
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
     .addClass('highlight-white');
@@ -54,6 +57,19 @@ function updateAll()
 {
    updatePgn(1);
    setTimeout(function() { updateTables(); }, 5000);
+}
+
+function plog(message, debugl)
+{
+   if (debugl == undefined)
+   {
+      debugl = 1;
+   }
+
+   if (debugl <= debug)
+   {
+      console.log (message);
+   }
 }
 
 function updatePgnData(data, read)
@@ -980,6 +996,20 @@ function handlePlyChange(handleclick)
    /* Arun: we should get move from ply - 1 as index starts at 0 */
    currentMove = getMoveFromPly(activePly - 1);
 
+   var prevMove = getMoveFromPly(activePly - 2);
+   if (livePVHist)
+   {
+      for (var xx = 0 ; xx < livePVHist.moves.length ; xx ++)
+      {
+         if (parseInt(livePVHist.moves[xx].ply) == activePly)
+         {
+            livePVHist.moves[xx].engine = livePVHist.engine;
+            updateLiveEvalData(livePVHist.moves[xx], 0, prevMove.fen);
+            break;
+         }
+      }
+   }
+
    /* Arun: why do we need to keep swappging the pieces captured */
    if (typeof currentMove != 'undefined') {
     setMoveMaterial(currentMove.material, 0);
@@ -1751,82 +1781,87 @@ function updateLiveEvalInit()
       });
 }
 
-function updateLiveEvalData(data) 
+function updateLiveEvalDataHistory(engineDatum, fen)
 {
    var engineData = [];
    livePvs = [];
-   _.each(data, function(datum) {
-     var score = 0;
-     var tbhits = datum.tbhits;
-     if (!isNaN(datum.eval))
-     {
-        score = parseFloat(datum.eval);
-     }
-     else
-     {
-        score = datum.eval;
-     }
+   var score = 0;
+   datum = engineDatum;
+   var tbhits = datum.tbhits;
 
-     if (datum.pv.search(/.*\.\.\..*/i) == 0)
-     {
+   if (!isNaN(datum.eval))
+   {
+      score = parseFloat(datum.eval);
+   }
+   else
+   {
+      score = datum.eval;
+   }
+
+   if (datum.pv.search(/.*\.\.\..*/i) == 0)
+   {
       if (!isNaN(score))
       {
-        score = parseFloat(score) * -1;
-        if (score === 0) {
-          score = 0;
-        }
+         score = parseFloat(score) * -1;
+         if (score === 0)
+         {
+            score = 0;
+         }
       }
-     }
+   }
 
-     pvs = [];
+   pvs = [];
 
-     if (datum.pv.length > 0 && datum.pv.trim() != "no info") {
-      var chess = new Chess(activeFen);
+   if (datum.pv.length > 0 && datum.pv.trim() != "no info")
+   {
+    var chess = new Chess(fen);
+    var currentFen = fen;
 
-      var currentFen = activeFen;
+    datum.pv = datum.pv.replace("...", ". .. ");
+    _.each(datum.pv.split(' '), function(move) {
+        if (isNaN(move.charAt(0)) && move != '..') {
+          moveResponse = chess.move(move);
 
-      datum.pv = datum.pv.replace("...", ". .. ");
-      _.each(datum.pv.split(' '), function(move) {
-          if (isNaN(move.charAt(0)) && move != '..') {
-            moveResponse = chess.move(move);
+          if (!moveResponse || typeof moveResponse == 'undefined') {
+               plog("undefine move" + move);
+          } else {
+            newPv = {
+              'from': moveResponse.from,
+              'to': moveResponse.to,
+              'm': moveResponse.san,
+              'fen': currentFen
+            };
 
-            if (!moveResponse || typeof moveResponse == 'undefined') {
-                 //console.log("undefine move" + move);
-            } else {
-              newPv = {
-                'from': moveResponse.from,
-                'to': moveResponse.to,
-                'm': moveResponse.san,
-                'fen': currentFen
-              };
+            currentFen = chess.fen();
+            currentLastMove = move.slice(-2);
 
-              currentFen = chess.fen();
-              currentLastMove = move.slice(-2);
-
-              pvs = _.union(pvs, [newPv]);
-            }
+            pvs = _.union(pvs, [newPv]);
           }
-      });
-     }
+        }
+    });
+   }
 
-     if (pvs.length > 0) {
-      livePvs = _.union(livePvs, [pvs]);
-     }
+   if (pvs.length > 0) {
+    livePvs = _.union(livePvs, [pvs]);
+   }
 
-     if (score > 0) {
-      score = '+' + score;
-     }
+   if (score > 0) {
+    score = '+' + score;
+   }
 
-     datum.eval = score;
-     datum.tbhits = getTBHits(datum.tbhits);
+   datum.eval = score;
+   datum.tbhits = getTBHits(datum.tbhits);
 
-     if (datum.pv.length > 0 && datum.pv != "no info") {
-      engineData = _.union(engineData, [datum]);
-    }
-  });
+   if (datum.pv.length > 0 && datum.pv != "no info") {
+    engineData = _.union(engineData, [datum]);
+   }
 
   $('#live-eval-cont').html('');
   _.each(engineData, function(engineDatum) {
+    if (engineDatum.engine == '')
+    {
+       engineDatum.engine = datum.engine;
+    }
     $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Speed: ' + engineDatum.speed + ' | Nodes: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
     if (livePvs.length > 0) {
@@ -1840,7 +1875,128 @@ function updateLiveEvalData(data)
                }
             else
             {
-               console.log ("pvlocation not defined");
+               plog ("pvlocation not defined");
+            }
+            moveCount++;
+          } else {
+            moveContainer = _.union(moveContainer, [move]);
+          }
+        });
+      });
+    }
+    $('#live-eval-cont').append('<div class="engine-pv alert alert-dark">' + moveContainer.join(' ') + '</div>');
+  });
+
+   // $('#live-eval').bootstrapTable('load', engineData);
+   // handle success
+}
+
+function updateLiveEvalData(datum, update, fen)
+{
+   var engineData = [];
+   livePvs = [];
+   var score = 0;
+   var tbhits = datum.tbhits;
+
+   if (update && !viewingActiveMove)
+   {
+      return;
+   }
+
+   if (!update)
+   {
+      updateLiveEvalDataHistory(datum, fen);
+      return;
+   }
+
+   if (!isNaN(datum.eval))
+   {
+      score = parseFloat(datum.eval);
+   }
+   else
+   {
+      score = datum.eval;
+   }
+
+   if (datum.pv.search(/.*\.\.\..*/i) == 0)
+   {
+      if (!isNaN(score))
+      {
+         score = parseFloat(score) * -1;
+         if (score === 0)
+         {
+            score = 0;
+         }
+      }
+   }
+
+   pvs = [];
+
+   if (datum.pv.length > 0 && datum.pv.trim() != "no info")
+   {
+    var chess = new Chess(activeFen);
+
+    var currentFen = activeFen;
+
+    datum.pv = datum.pv.replace("...", ". .. ");
+    _.each(datum.pv.split(' '), function(move) {
+        if (isNaN(move.charAt(0)) && move != '..') {
+          moveResponse = chess.move(move);
+
+          if (!moveResponse || typeof moveResponse == 'undefined') {
+               plog("undefine move" + move);
+          } else {
+            newPv = {
+              'from': moveResponse.from,
+              'to': moveResponse.to,
+              'm': moveResponse.san,
+              'fen': currentFen
+            };
+
+            currentFen = chess.fen();
+            currentLastMove = move.slice(-2);
+
+            pvs = _.union(pvs, [newPv]);
+          }
+        }
+    });
+   }
+
+   if (pvs.length > 0) {
+    livePvs = _.union(livePvs, [pvs]);
+   }
+
+   if (score > 0) {
+    score = '+' + score;
+   }
+
+   datum.eval = score;
+   datum.tbhits = getTBHits(datum.tbhits);
+
+   if (datum.pv.length > 0 && datum.pv != "no info") {
+    engineData = _.union(engineData, [datum]);
+   }
+
+  $('#live-eval-cont').html('');
+  _.each(engineData, function(engineDatum) {
+    if (engineDatum.engine == '')
+    {
+       engineDatum.engine = datum.engine;
+    }
+    $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Speed: ' + engineDatum.speed + ' | Nodes: ' + engineDatum.nodes +']</small>');
+    var moveContainer = [];
+    if (livePvs.length > 0) {
+      _.each(livePvs, function(livePv, pvKey) {
+        var moveCount = 0;
+        _.each(engineDatum.pv.split(' '), function(move) {
+          if (isNaN(move.charAt(0)) && move != '..') {
+            pvLocation = livePvs[pvKey][moveCount];
+            if (pvLocation) {
+               moveContainer = _.union(moveContainer, ["<a href='#' class='set-pv-board' live-pv-key='" + pvKey + "' move-key='" + moveCount + "' color='live'>" + pvLocation.m + '</a>']);
+               }
+            else
+            {
+               plog ("pvlocation not defined");
             }
             moveCount++;
           } else {
@@ -1858,14 +2014,14 @@ function updateLiveEvalData(data)
 }
 
 function updateLiveEval() {
-   axios.get('data.json')
-   .then(function (response) 
+   axios.get('data.json?no-cache' + (new Date()).getTime())
+   .then(function (response)
    {
-      updateLiveEvalData(response.data);
+      updateLiveEvalData(response.data, 1);
    })
    .catch(function (error) {
       // handle error
-      console.log(error);
+      plog(error);
    });
 }
 
@@ -1877,6 +2033,7 @@ function updateLiveChartData(data)
    {
       liveEngineEval = data.moves;
       updateChartData();
+      livePVHist = data;
    } else {
       liveEngineEval = [];
    }
