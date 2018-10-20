@@ -953,7 +953,7 @@
     <script src="dist/js/themes.js"></script>
     <script src="dist/js/bootstrap-slider.min.js"></script>
     <script src="dist/js/clipboard.min.js"></script>
-    <script src="http://tcec.chessdom.com:8888/socket.io/socket.io.js"></script>
+    <script src="http://tcecbonus.club:8080/socket.io/socket.io.js"></script>
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
     <script>
@@ -1173,14 +1173,14 @@
         });
       });
 
-      var socket = io.connect('http://tcec.chessdom.com:8888');
+      var socket = io.connect('http://tcecbonus.club:8080');
      
       socket.on('crosstable', function(data){
          updateCrosstableData(data);
          updateStandtableData(data);
          });
       socket.on('liveeval', function(data){
-         updateLiveEvalData(data);
+         updateLiveEvalData(data, 1);
          });
       socket.on('pgn', function(data){
          updatePgnData(data, 1);
