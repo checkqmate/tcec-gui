@@ -332,3 +332,22 @@ canvas {
    margin-left: 10%;
 }
 
+.right-align-pic
+{
+   height: 25px;
+   width: 50px;
+   margin-left:10px;
+   float:left;
+}
+
+.right-align
+{
+   clear:left;
+   float:left;
+}
+
+.right-align-name
+{
+   margin-left:10px;
+}
+

@@ -606,6 +606,16 @@ function copyFen()
    return false;
 }
 
+function getShortEngineName(engine)
+{
+   var name = engine;
+   if (engine.indexOf(' ') > 0)
+   {
+      name = engine.substring(0, engine.indexOf(' '));
+   }
+   return name;
+}
+
 function setInfoFromCurrentHeaders()
 {
   var header = loadedPgn.Headers.White;
@@ -1295,6 +1305,7 @@ function updateCrosstableData(data)
      wins = (engineDetails.WinsAsBlack + engineDetails.WinsAsWhite);
      elo = Math.round(engineDetails.Elo);
      eloDiff = engineDetails.Rating + elo;
+     engine = '<div class="right-align"><img class="right-align-pic" src="img/engines/'+ getShortEngineName(engine) +'.jpg" />' + '<a class="right-align-name">' + engine + '</a></div>';
 
      var entry = {
        rank: engineDetails.Rank,
@@ -2068,6 +2079,8 @@ function updateStandtableData(data)
      wins = (engineDetails.WinsAsBlack + engineDetails.WinsAsWhite);
      elo = Math.round(engineDetails.Elo);
      eloDiff = engineDetails.Rating + elo;
+
+     engine = '<div class="right-align"><img class="right-align-pic" src="img/engines/'+ getShortEngineName(engine) +'.jpg" />' + '<a class="right-align-name">' + engine + '</a></div>';
 
      var entry = {
        rank: engineDetails.Rank,
