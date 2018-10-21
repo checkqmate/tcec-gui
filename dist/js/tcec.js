@@ -42,6 +42,7 @@ var playSound = 1;
 
 var liveEngineEval = [];
 var livePVHist = 0;
+var debug = 0;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -546,6 +547,9 @@ function setPgn(pgn)
   $('#event-overview').bootstrapTable('load', [pgn.Headers]);
   $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: userCount});
   $('#event-name').html(pgn.Headers.Event);
+  plog ("pgn.Headers.BlackElo:" + pgn.Headers.BlackElo, 0);
+  $('#white-engine-elo').html(pgn.Headers.WhiteElo);
+  $('#black-engine-elo').html(pgn.Headers.BlackElo);
 
   if (viewingActiveMove) {
     setInfoFromCurrentHeaders();
