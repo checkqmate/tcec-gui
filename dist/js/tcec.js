@@ -547,7 +547,6 @@ function setPgn(pgn)
   $('#event-overview').bootstrapTable('load', [pgn.Headers]);
   $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: userCount});
   $('#event-name').html(pgn.Headers.Event);
-  plog ("pgn.Headers.BlackElo:" + pgn.Headers.BlackElo, 0);
   $('#white-engine-elo').html(pgn.Headers.WhiteElo);
   $('#black-engine-elo').html(pgn.Headers.BlackElo);
 
@@ -2136,7 +2135,7 @@ function updateStandtableData(data)
          field: 'name',
          title: 'Engine'
         ,sortable: true
-        ,width: '14%'
+        ,width: '18%'
        },
        {
          field: 'points',
