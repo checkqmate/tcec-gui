@@ -3305,7 +3305,12 @@ function getPrevGames(ii)
    var start = 0;
    var end = 0;
 
-   if (ii > 28)
+   if (ii > 30)
+   {
+      start = 31;
+      end = ii;
+   }
+   else if (ii > 28)
    {
       start = 29;
       end = ii;
