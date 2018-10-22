@@ -119,7 +119,6 @@ function updatePgn(resettime)
    })
    .catch(function (error) {
      // handle error
-      console.log(error);
    });
 }
 
@@ -252,10 +251,6 @@ function setTimeRemaining(color, time)
     time = 0;
   }
 
-  if (isNaN(time)) {
-    console.log ("setting null time to : " + time);
-  }
-
   if (viewingActiveMove) {
     $('.' + color + '-time-remaining').html(secFormat(time));
   }
@@ -365,7 +360,6 @@ function setPgn(pgn)
   }
    
   if (!currentGameActive) {
-    console.log ("Current game not active so stopping both clocks2");
     stopClock('white');
     stopClock('black');
   }
@@ -619,6 +613,9 @@ function getShortEngineName(engine)
    return name;
 }
 
+var whiteEngineFull = null;
+var blackEngineFull = null;
+
 function setInfoFromCurrentHeaders()
 {
   var header = loadedPgn.Headers.White;
@@ -628,12 +625,14 @@ function setInfoFromCurrentHeaders()
   }
   $('.white-engine-name').html(name);
   $('.white-engine-name-full').html(header);
+  whiteEngineFull = header;
   var imgsrc = 'img/engines/' + name + '.jpg';
   $('#white-engine').attr('src', imgsrc);
   $('#white-engine').attr('alt', header);
   $('#white-engine-chessprogramming').attr('href', 'https://www.chessprogramming.org/' + name);
   header = loadedPgn.Headers.Black;
   name = header;
+  blackEngineFull = header;
   if (header.indexOf(' ') > 0) {
     name = header.substring(0, header.indexOf(' '))
   }
@@ -1291,17 +1290,51 @@ function cellformatter(value, row, index, field) {
    return {classes: 'monofont'};
 }
 
+var engineScores = [];
+
 function updateCrosstableData(data) 
 {
    var crosstableData = data;
 
    var abbreviations = [];
    var standings = [];
+   whiteScore = 0;
+   blackScore = 0;
 
    _.each(crosstableData.Table, function(engine, key) {
      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
+     _.each(engine.Results, function(oppEngine, oppkey)
+     {
+        plog ("Opp engine is " + oppkey);  
+        if (whiteEngineFull != null && key == whiteEngineFull)
+        {
+           if (oppkey == blackEngineFull)
+           {
+              var strText = oppEngine.Text;
+              for (var i = 0; i < strText; i++) 
+              {
+                 if (strText.charAt(i) == '0')
+                 {
+                    blackScore = blackScore + 1;
+                 }
+                 else if (strText.charAt(i) == '0')
+                 {
+                    whiteScore = whiteScore + 1;
+                 }
+                 if (strText.charAt(i) == '=')
+                 {
+                    blackScore = blackScore + 0.5;
+                    whiteScore = whiteScore + 0.5;
+                 }
+              } 
+           }
+        }
+     }); 
    });
 
+   plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore);
+   $('.white-engine-score').html(whiteScore);
+   $('.black-engine-score').html(whiteScore);
    _.each(crosstableData.Order, function(engine, key) {
      engineDetails = _.get(crosstableData.Table, engine);
 
@@ -2382,7 +2415,6 @@ function endButton()
 function tcecHandleKey(e) 
 {
     var keycode, oldPly, oldVar, colRow, colRowList;
-    console.log ("keycode");
     if (!e) 
     {
         e = window.event

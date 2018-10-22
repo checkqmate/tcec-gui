@@ -485,6 +485,15 @@
               </tr>
               <tr>
                 <td>
+                  <span class="white-engine-score"></span>
+                </td>
+                <td>Score</td>
+                <td>
+                  <span class="black-engine-score"></span>
+                </td>
+              </tr>
+              <tr>
+                <td>
                   <span class="h5 d-inline white-time-remaining">
                     0:00:00
                   </span>
@@ -530,8 +539,6 @@
             </tbody>
           </table>
    
-          <br>
-
           <div id="charts">
             <div class="row">
               <div class="col-12 justify-content-around d-flex">
@@ -1182,7 +1189,7 @@
         });
       });
 
-      var socket = io.connect('http://tcecbonus.club:8080');
+      var socket = io.connect('http://tcecbonus.club:8888');
      
       socket.on('crosstable', function(data){
          updateCrosstableData(data);
