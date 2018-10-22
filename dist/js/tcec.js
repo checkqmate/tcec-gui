@@ -1311,17 +1311,20 @@ function updateCrosstableData(data)
            if (oppkey == blackEngineFull)
            {
               var strText = oppEngine.Text;
-              for (var i = 0; i < strText; i++) 
+              for (var i = 0; i < strText.length; i++) 
               {
+                 plog ("strText.charAt(i): " + strText.charAt(i));
                  if (strText.charAt(i) == '0')
                  {
                     blackScore = blackScore + 1;
+                    plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore + ",oppEngine.Text:" + oppEngine.Text, 0);
                  }
-                 else if (strText.charAt(i) == '0')
+                 else if (strText.charAt(i) == '1')
                  {
                     whiteScore = whiteScore + 1;
+                    plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore + ",oppEngine.Text:" + oppEngine.Text, 0);
                  }
-                 if (strText.charAt(i) == '=')
+                 else if (strText.charAt(i) == '=')
                  {
                     blackScore = blackScore + 0.5;
                     whiteScore = whiteScore + 0.5;
@@ -1331,10 +1334,9 @@ function updateCrosstableData(data)
         }
      }); 
    });
-
-   plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore);
    $('.white-engine-score').html(whiteScore);
    $('.black-engine-score').html(blackScore);
+
    _.each(crosstableData.Order, function(engine, key) {
      engineDetails = _.get(crosstableData.Table, engine);
 
