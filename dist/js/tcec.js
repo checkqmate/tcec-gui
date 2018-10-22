@@ -1334,7 +1334,7 @@ function updateCrosstableData(data)
 
    plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore);
    $('.white-engine-score').html(whiteScore);
-   $('.black-engine-score').html(whiteScore);
+   $('.black-engine-score').html(blackScore);
    _.each(crosstableData.Order, function(engine, key) {
      engineDetails = _.get(crosstableData.Table, engine);
 
