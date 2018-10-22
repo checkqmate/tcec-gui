@@ -3495,7 +3495,7 @@ function drawBracket1()
         var localRound = parseInt(roundNox/2) - 1;
         var isFirst = roundNox%2;
 
-        plog ("Came to round: " + roundNox + " data.name is: ");
+        plog ("Came to round: " + roundNox + " data.name is: " + data.name, 1);
         roundNox ++;
 
         switch(state) {
@@ -3526,67 +3526,75 @@ function drawBracket1()
             plog ("localRound enginename:" + data.name + ", 0 engine:" + roundResults[localRound][0].name+ ", 1 engine: " + roundResults[localRound][1].name, 1);
             var scoreL = roundResults[localRound][isFirst].score;
 
-            if (scoreL >= 0)
+            if (1)
             {
-               var appendStr = '';
-               var lead = roundResults[localRound][isFirst].lead;
-               var manual = roundResults[localRound][isFirst].manual;
-               if (manual == 1)
+               if (scoreL >= 0)
                {
-                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
-                              '<div class="bracket-score orange"> <a> (' + scoreL + ')</a> </div>'
-                  $(container).parent().addClass('bracket-name-orange');
-               }
-               else if (lead == 0)
-               {
-                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
-                              '<div class="bracket-score red"> <a> (' + scoreL + ')</a> </div>'
-                  $(container).parent().addClass('bracket-name-red');
-               }
-               else if (lead == 1)
-               {
-                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
-                              '<div class="bracket-score green"> <a> (' + scoreL + ')</a> </div>'
-                  $(container).parent().addClass('bracket-name-green');
+                  var appendStr = '';
+                  var lead = roundResults[localRound][isFirst].lead;
+                  var manual = roundResults[localRound][isFirst].manual;
+                  if (manual == 1)
+                  {
+                     appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
+                                 '<div class="bracket-score orange"> <a> (' + scoreL + ')</a> </div>'
+                     $(container).parent().addClass('bracket-name-orange');
+                  }
+                  else if (lead == 0)
+                  {
+                     appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
+                                 '<div class="bracket-score red"> <a> (' + scoreL + ')</a> </div>'
+                     $(container).parent().addClass('bracket-name-red');
+                  }
+                  else if (lead == 1)
+                  {
+                     appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
+                                 '<div class="bracket-score green"> <a> (' + scoreL + ')</a> </div>'
+                     $(container).parent().addClass('bracket-name-green');
+                  }
+                  else
+                  {
+                     appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
+                                 '<div class="bracket-score"> <a> (' + scoreL + ')</a> </div>'
+                     $(container).parent().addClass('bracket-name-current');
+                  }
+                  if (roundNox%2 == 1)
+                  {
+                     var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
+                     if (roundDate[localRound] != undefined)
+                     {
+                        befStr = befStr + '<a> ' + roundDate[localRound] + '</a> </div>';
+                     }
+                     else
+                     {
+                        befStr = befStr + '</div>';
+                     }
+                     $(befStr).insertBefore(container);
+                  }
+                  container.append('<img class="bracket-material" src="img/engines/'+ data.flag +'.jpg" />').append(appendStr);
                }
                else
                {
-                  appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
-                              '<div class="bracket-score"> <a> (' + scoreL + ')</a> </div>'
-                  $(container).parent().addClass('bracket-name-current');
-               }
-               if (roundNox%2 == 1)
-               {
-                  var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
-                  if (roundDate[localRound] != undefined)
+                  if (roundNox%2 == 1)
                   {
-                     befStr = befStr + '<a> ' + roundDate[localRound] + '</a> </div>';
+                     var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
+                     if (roundDate[localRound] != undefined)
+                     {
+                        //befStr = befStr + '<a class="dateright"> ' + roundDate[localRound] + '</a> </div>';
+                        befStr = befStr + '<a> ' + roundDate[localRound] + '</a> </div>';
+                     }
+                     else
+                     {
+                        befStr = befStr + '</div>';
+                     }
+                     $(befStr).insertBefore(container);
                   }
-                  else
-                  {
-                     befStr = befStr + '</div>';
-                  }
-                  $(befStr).insertBefore(container);
+                  container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append('<div class="bracket-name"> <a> ' + data.name + '</a> </div>')
                }
-               container.append('<img class="bracket-material" src="img/engines/'+ data.flag +'.jpg" />').append(appendStr);
             }
-            else
+            if (roundNox > 64)
             {
-               if (roundNox%2 == 1)
-               {
-                  var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
-                  if (roundDate[localRound] != undefined)
-                  {
-                     //befStr = befStr + '<a class="dateright"> ' + roundDate[localRound] + '</a> </div>';
-                     befStr = befStr + '<a> ' + roundDate[localRound] + '</a> </div>';
-                  }
-                  else
-                  {
-                     befStr = befStr + '</div>';
-                  }
-                  $(befStr).insertBefore(container);
-               }
-               container.append('<img class="bracket-material" src="img/engines/'+data.flag+'.jpg" />').append('<div class="bracket-name"> <a> ' + data.name + '</a> </div>')
+               $(container).parent().append('<div class="bubblex third">3rd</div>');
+               //container.append('<div class="bubble third">3rd</div>');
             }
             return;
         }
@@ -3606,7 +3614,7 @@ function drawBracket1()
          matchMargin: 45,
          roundMargin: 18,
          init: bigData,
-         skipConsolationRound: true,
+         //skipConsolationRound: true,
          decorator: {edit: edit_fn,
                      render: render_fn2}
    });
