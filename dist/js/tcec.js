@@ -1222,7 +1222,7 @@ function getLinkArch(gameNumber)
 
 function openCross(gamen)
 {
-   var link = "http://tcec.chessdom.com/archive.php?se=13&di=P&ga=" + gamen;
+   var link = "http://legacy-tcec.chessdom.com/archive.php?se=13&sf&ga=" + gamen;
    window.open(link,'_blank');
 }
 
@@ -1317,12 +1317,12 @@ function updateCrosstableData(data)
                  if (strText.charAt(i) == '0')
                  {
                     blackScore = blackScore + 1;
-                    plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore + ",oppEngine.Text:" + oppEngine.Text, 0);
+                    plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore + ",oppEngine.Text:" + oppEngine.Text, 1);
                  }
                  else if (strText.charAt(i) == '1')
                  {
                     whiteScore = whiteScore + 1;
-                    plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore + ",oppEngine.Text:" + oppEngine.Text, 0);
+                    plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore + ",oppEngine.Text:" + oppEngine.Text, 1);
                  }
                  else if (strText.charAt(i) == '=')
                  {
@@ -1911,7 +1911,7 @@ function updateLiveEvalDataHistory(engineDatum, fen)
     {
        engineDatum.engine = datum.engine;
     }
-    $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Speed: ' + engineDatum.speed + ' | Nodes: ' + engineDatum.nodes +']</small>');
+    $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
     if (livePvs.length > 0) {
       _.each(livePvs, function(livePv, pvKey) {
@@ -2032,7 +2032,7 @@ function updateLiveEvalData(datum, update, fen)
     {
        engineDatum.engine = datum.engine;
     }
-    $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[Depth: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Speed: ' + engineDatum.speed + ' | Nodes: ' + engineDatum.nodes +']</small>');
+    $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
     if (livePvs.length > 0) {
       _.each(livePvs, function(livePv, pvKey) {
