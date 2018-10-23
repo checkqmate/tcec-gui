@@ -649,6 +649,20 @@ function getMoveFromPly(ply)
   return loadedPgn.Moves[ply];
 }
 
+function getNodes(nodes)
+{
+  if (nodes > 1000000 * 1000)
+  {
+     nodes = Math.round(nodes / (1000000 * 1000)) + 'B';
+  }
+  else if (nodes > 1000000) {
+    nodes = Math.round(nodes / 1000000) + ' M';
+  } else {
+    nodes = Math.round(nodes / 1000) + ' K';
+  }
+  return nodes;
+}
+
 function getTBHits(tbhits)
 {
    var tbHits = 'N/A';
@@ -722,12 +736,7 @@ function getEvalFromPly(ply)
     speed = Math.round(speed / 1000000) + ' Mnps';
   }
 
-  nodes = selectedMove.n;
-  if (nodes < 1000000) {
-    nodes = Math.round(nodes / 1000) + ' K';
-  } else {
-    nodes = Math.round(nodes / 1000000) + ' M';
-  }
+  nodes = getNodes(selectedMove.n);
 
   var depth = selectedMove.d + '/' + selectedMove.sd;
   var tbHits = 0;
@@ -1900,6 +1909,7 @@ function updateLiveEvalDataHistory(engineDatum, fen)
 
    datum.eval = score;
    datum.tbhits = getTBHits(datum.tbhits);
+   datum.nodes = getNodes(datum.nodes);
 
    if (datum.pv.length > 0 && datum.pv != "no info") {
     engineData = _.union(engineData, [datum]);
@@ -2021,6 +2031,7 @@ function updateLiveEvalData(datum, update, fen)
 
    datum.eval = score;
    datum.tbhits = getTBHits(datum.tbhits);
+   datum.nodes = getNodes(datum.nodes);
 
    if (datum.pv.length > 0 && datum.pv != "no info") {
     engineData = _.union(engineData, [datum]);
