@@ -154,7 +154,7 @@ $(function() {
 	            	if (typeof data.datasets[2].data[tooltipItem.index] != 'undefined') {
 	            		eval = _.union(eval, ['Live Eval: ' + data.datasets[2].data[tooltipItem.index].eval]);
 	            	}
-	                return eval;
+	               return eval;
 	            }
 	      } // end callbacks:
 	    },
@@ -550,7 +550,10 @@ function updateChartData()
 	evalChart.data.labels = labels;
 	evalChart.data.datasets[0].data = whiteEval;
 	evalChart.data.datasets[1].data = blackEval;
-	evalChart.data.datasets[2].data = liveEval;
+   if (showLivEng)
+   {
+	   evalChart.data.datasets[2].data = liveEval;
+   }
 
 	timeChart.data.labels = labels;
 	timeChart.data.datasets[0].data = whiteTime;

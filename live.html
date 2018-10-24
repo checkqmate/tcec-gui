@@ -236,6 +236,17 @@
                   </ul>
                 </li>
                 <div class="dropdown-divider"></div>
+                <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Live Engine</a>
+                  <ul class="dropdown-menu bg-dark whitefont">
+                    <div class="form-check" style="margin-left: 10px">
+                      <input class="form-check-input" type="checkbox" onclick="liveEngine(this)" value="" id="liveenginecheck">
+                      <label class="form-check-label" for="defaultCheck1">
+                        Off
+                      </label>
+                    </div>
+                  </ul>
+                </li>
+                <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Twitch Theme</a>
                   <ul class="dropdown-menu bg-dark whitefont">
                       <div class="form-check classpad">
@@ -1257,6 +1268,7 @@
         });
 
         setSound();  
+        setliveEngine();
         initToolTip();
         updatePgn();
         updateLiveEvalInit();

@@ -51,6 +51,7 @@ var blackPv = [];
 var livePvs = [];
 var activePv = [];
 var highlightpv = 0;
+var showLivEng = 1;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -2084,6 +2085,11 @@ function updateLiveEvalDataHistory(engineDatum, fen)
 
 function updateLiveEvalData(datum, update, fen)
 {
+   if (!showLivEng)
+   {
+      $('#live-eval-cont').html(''); 
+      return;
+   }
    var engineData = [];
    livePvs = [];
    var score = 0;
@@ -2384,6 +2390,40 @@ function setTwitch()
    {
       $('iframe#twitchvid').hide();
       $('#twitchcheck').prop('checked', true);
+   }
+}
+
+function liveEngine(checkbox)
+{
+   if (checkbox.checked)
+   {
+      localStorage.setItem('tcec-live-engine', 1);
+      showLivEng = 0;
+      $('#live-eval-cont').html(''); 
+      updateChartData();
+   }
+   else
+   {
+      localStorage.setItem('tcec-live-engine', 0);
+      showLivEng = 1;
+      updateLiveEval();
+      updateChartData();
+   }
+}
+
+function setliveEngine()
+{
+   var getlive = localStorage.getItem('tcec-live-engine');        
+   if (getlive == undefined || getlive == 0)
+   {
+      showLivEng = 1;
+      $('#liveenginecheck').prop('checked', false);
+   }
+   else
+   {
+      showLivEng = 0;
+      $('#liveenginecheck').prop('checked', true);
+      $('#live-eval-cont').html(''); 
    }
 }
 
