@@ -46,6 +46,12 @@ var debug = 0;
 var whiteEngineFull = null;
 var blackEngineFull = null;
 
+var whitePv = [];
+var blackPv = [];
+var livePvs = [];
+var activePv = [];
+var highlightpv = 0;
+
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
     .addClass('highlight-white');
@@ -440,6 +446,7 @@ function setPgn(pgn)
 
   if (viewingActiveMove) {
     updateMoveValues(whiteToPlay, whiteEval, blackEval);
+    findDiffPv(whiteEval.pv, blackEval.pv);
     updateEnginePv('white', whiteToPlay, whiteEval.pv);
     updateEnginePv('black', whiteToPlay, blackEval.pv);
   }
@@ -585,7 +592,7 @@ function setPgn(pgn)
   $("#engine-history").scrollTop($("#engine-history")[0].scrollHeight);
   if (pgn.gameChanged)
   {
-     console.log ("Came to setpgn need to reread dataa at end");
+     plog ("Came to setpgn need to reread dataa at end", 1);
   }
 }
 
@@ -645,21 +652,29 @@ function setInfoFromCurrentHeaders()
 
 function getMoveFromPly(ply)
 {
-  return loadedPgn.Moves[ply];
+   return loadedPgn.Moves[ply];
+}
+
+function fixedDeci(value)
+{
+   return value.toFixed(1);
 }
 
 function getNodes(nodes)
 {
-  if (nodes > 1000000 * 1000)
-  {
-     nodes = Math.round(nodes / (1000000 * 1000)) + 'B';
-  }
-  else if (nodes > 1000000) {
-    nodes = Math.round(nodes / 1000000) + ' M';
-  } else {
-    nodes = Math.round(nodes / 1000) + ' K';
-  }
-  return nodes;
+   if (nodes > 1000000 * 1000)
+   {
+      nodes = fixedDeci(parseFloat(nodes / (1000000 * 1000))) + 'B';
+   }
+   else if (nodes > 1000000) 
+   {
+      nodes = fixedDeci(parseFloat(nodes / (1000000 * 1))) + 'M';
+   } 
+   else 
+   {
+      nodes = fixedDeci(parseFloat(nodes / (1000* 1))) + 'K';
+   }
+   return nodes;
 }
 
 function getTBHits(tbhits)
@@ -674,11 +689,11 @@ function getTBHits(tbhits)
       } 
       else if (tbhits < 1000000)
       {
-         tbHits = Math.round(tbhits / 1000) + 'K';
+         tbHits = fixedDeci(parseFloat(tbhits/ (1000* 1))) + 'K';
       } 
       else 
       {
-         tbHits = Math.round(tbhits / 1000000) + 'M'; 
+         tbHits = fixedDeci(parseFloat(tbhits/ (1000000* 1))) + 'M';
       }
    }
    return tbHits;
@@ -794,6 +809,7 @@ function updateMoveValues(whiteToPlay, whiteEval, blackEval)
    $('.white-engine-nodes').html(whiteEval.nodes);
    $('.white-engine-depth').html(whiteEval.depth);
    $('.white-engine-tbhits').html(whiteEval.tbhits);
+   findDiffPv(whiteEval.pv, blackEval.pv);
    updateEnginePv('white', whiteToPlay, whiteEval.pv);
 
    $('.black-engine-eval').html(blackEval.eval);
@@ -804,13 +820,9 @@ function updateMoveValues(whiteToPlay, whiteEval, blackEval)
    updateEnginePv('black', whiteToPlay, blackEval.pv);
 }
 
-var whitePv = [];
-var blackPv = [];
-var livePvs = [];
-var activePv = [];
-
 function updateEnginePv(color, whiteToPlay, moves)
 {
+   var classhigh = '';
   if (typeof moves != 'undefined') {
     currentMove = Math.floor(activePly / 2);
 
@@ -834,8 +846,41 @@ function updateEnginePv(color, whiteToPlay, moves)
     }
     $('#' + color + '-engine-pv').html('');
     _.each(moves, function(move, key) {
+      classhigh = "";
       effectiveKey = key + keyOffset;
       pvMove = currentMove + Math.floor(effectiveKey / 2);
+      pvMoveNofloor = currentMove + effectiveKey;
+      if (whiteToPlay)
+      {
+         if (color == "white" && (highlightpv == pvMoveNofloor))
+         {
+            plog ("Need to highlight:" + pvMove + ", move is :" + move.m, 1);
+            classhigh = "active-pv-move";
+         }
+         if (color == "black" && key == 0) 
+         {
+            plog ("Need to highlight:" + pvMove + ", move is :" + move.m + ",highlightpv:" + highlightpv + ",pvMoveNofloor:" + pvMoveNofloor, 1);
+            pvMoveNofloor = pvMoveNofloor + 1;
+         }
+         if (color == "black" && (highlightpv == pvMoveNofloor))
+         {
+            plog ("Need to highlight:" + pvMove + ", move is :" + move.m, 0);
+            classhigh = "active-pv-move";
+         }
+      }
+      else
+      {
+         if (color == "white" && (highlightpv == pvMoveNofloor))
+         {
+            plog ("Need to highlight:" + pvMove + ", move is :" + move.m, 1);
+            classhigh = "active-pv-move";
+         }
+         if (color == "black" && (highlightpv + 1 == pvMoveNofloor))
+         {
+            plog ("Need to highlight:" + pvMove + ", move is :" + move.m, 1);
+            classhigh = "active-pv-move";
+         }
+      }
       if (color == "white" && effectiveKey % 2 == 0 ) {
         $('#' + color + '-engine-pv').append(pvMove + '. ');
       }
@@ -849,12 +894,48 @@ function updateEnginePv(color, whiteToPlay, moves)
         $('#' + color + '-engine-pv').append(' .. ');
         currentMove++;
       }
-
-      $('#' + color + '-engine-pv').append("<a href='#' class='set-pv-board' move-key='" + key + "' color='" + color + "'>" + move.m + '</a> ');
+      plog ("classhigh: " + classhigh, 1);
+      $('#' + color + '-engine-pv').append("<a href='#' class='set-pv-board " + classhigh + "' move-key='" + key + "' color='" + color + "'>" + move.m + '</a> ');
     });
   } else {
     $('#' + color + '-engine-pv').html('');
   }
+}
+
+function findDiffPv(whitemoves, blackmoves)
+{
+   highlightpv = 0;
+
+   if (typeof whitemoves != 'undefined') 
+   {
+      currentMove = Math.floor(activePly / 2);
+ 
+      if (!whiteToPlay) 
+      {
+         currentMove++;
+      }
+      
+      _.each(whitemoves, function(move, key) 
+      {
+         pvMove = currentMove + key;
+         if (whiteToPlay)
+         {
+            if (!highlightpv && blackmoves && blackmoves[key - 1] && (blackmoves[key - 1].m != whitemoves[key].m))
+            {
+               plog ("Need to color this pvmove is :" + pvMove + ", pv:" + whitemoves[key].m + ", black: " + blackmoves[key - 1].m, 1);
+               highlightpv = pvMove;
+            }
+         }
+         else
+         {
+            if (!highlightpv && blackmoves && blackmoves[key + 1] && (blackmoves[key + 1].m != whitemoves[key].m))
+            {
+               plog ("Need to color this pvmove is :" + pvMove + ", pv:" + whitemoves[key].m + ", black: " + blackmoves[key + 1].m, 1);
+               highlightpv = pvMove;
+            }
+         }
+      });
+   }
 }
 
 $(document).on('click', '.change-move', function(e) {
@@ -1234,18 +1315,18 @@ function openCross(gamen)
    window.open(link,'_blank');
 }
 
-var gameArrayClass = ['#39FF14', 'red', 'whitesmoke'];
+var gameArrayClass = ['#39FF14', 'red', 'whitesmoke', 'orange'];
 
 function setDarkMode(value)
 {
    darkMode = value;
    if (!darkMode)
    {
-      gameArrayClass = ['red', 'darkgreen', '#696969'];
+      gameArrayClass = ['red', 'darkgreen', '#696969', 'darkblue'];
    }
    else
    {
-      gameArrayClass = ['red', '#39FF14', 'whitesmoke'];
+      gameArrayClass = ['red', '#39FF14', 'whitesmoke', 'orange'];
    }
 }
 
@@ -1490,7 +1571,7 @@ function updateScheduleData(data)
       if (typeof engine.Moves != 'undefined')
       {
          gamesDone = engine.Game;
-         engine.Game = '<a title="TBD" style="cursor:pointer; color: red;"onclick="openCross(' + engine.Game + ')">' + engine.Game + '</a>';
+         engine.Game = '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass[3] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Game + '</a>';
       }
       if ((engine.Black == blackEngineFull && engine.White == whiteEngineFull) ||
           (engine.Black == whiteEngineFull && engine.White == blackEngineFull))
@@ -1506,13 +1587,13 @@ function updateScheduleData(data)
             }
             else if (engine.Result == "1-0")
             {
-               engineX.White = '<div class="lightgreen">' + engine.White + '</div>';
-               engineX.Black = '<div class="red">' + engine.Black + '</div>';
+               engineX.White = '<div style="color:' + gameArrayClass[1] + '">' + engine.White + '</div>';
+               engineX.Black = '<div style="color:' + gameArrayClass[0] + '">' + engine.Black + '</div>';
             }
             else if (engine.Result == "0-1")
             {
-               engineX.White = '<div class="red">' + engine.White + '</div>';
-               engineX.Black = '<div class="lightgreen">' + engine.Black + '</div>';
+               engineX.White = '<div style="color:' + gameArrayClass[0] + '">' + engine.White + '</div>';
+               engineX.Black = '<div style="color:' + gameArrayClass[1] + '">' + engine.Black + '</div>';
             }
             h2hrank += 1;
             if (h2hrank%2 == 0)
@@ -1770,6 +1851,7 @@ function setDark()
   $('#schedule').addClass('table-dark');
   $('#standtable').addClass('table-dark');
   $('#infotable').addClass('table-dark');
+  $('#h2h').addClass('table-dark');
   setDarkMode(1);
 }
 
@@ -1785,6 +1867,7 @@ function setLight()
   $('#info-frame').attr('src', 'info.html?body=light');
   $('#standtable').removeClass('table-dark');
   $('#infotable').removeClass('table-dark');
+  $('#h2h').removeClass('table-dark');
   setDarkMode(0);
 }
 
