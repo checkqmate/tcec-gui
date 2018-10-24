@@ -101,6 +101,7 @@ body {
 #event-overview th,
 #engine-eval th,
 #live-eval th,
+#h2h th,
 #schedule th 
 {
     background-color: #191919;
@@ -350,3 +351,17 @@ canvas {
    margin-left:10px;
 }
 
+.red
+{
+   color:red;
+}
+
+.fmedium
+{
+   font-size:14px;
+}
+
+.lightgreen
+{
+   color: #39FF14;
+}

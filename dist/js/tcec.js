@@ -43,6 +43,8 @@ var playSound = 1;
 var liveEngineEval = [];
 var livePVHist = 0;
 var debug = 0;
+var whiteEngineFull = null;
+var blackEngineFull = null;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -612,9 +614,6 @@ function getShortEngineName(engine)
    }
    return name;
 }
-
-var whiteEngineFull = null;
-var blackEngineFull = null;
 
 function setInfoFromCurrentHeaders()
 {
@@ -1449,13 +1448,21 @@ function updateCrosstable()
    });
 }
 
+function strx(json)
+{
+   return JSON.stringify(json);
+}
+
 function updateScheduleData(data) 
 {
+   var h2hdata = [];
+   var scdata = [];
    var prevDate = 0;
    var momentDate = 0;
    var diff = 0;
    var gameDiff = 0;
    var timezoneDiff = moment().utcOffset() * 60 * 1000 - 3600 * 1000;
+   var h2hrank = 0;
 
    _.each(data, function(engine, key) 
    {
@@ -1485,9 +1492,40 @@ function updateScheduleData(data)
          gamesDone = engine.Game;
          engine.Game = '<a title="TBD" style="cursor:pointer; color: red;"onclick="openCross(' + engine.Game + ')">' + engine.Game + '</a>';
       }
+      if ((engine.Black == blackEngineFull && engine.White == whiteEngineFull) ||
+          (engine.Black == whiteEngineFull && engine.White == blackEngineFull))
+      {
+         scdata = _.union(scdata, [engine]);
+         var engineX = engine;
+         engine.h2hrank = engine.Game;
+         if (engine.Result != undefined)
+         {
+            if (engine.Result == "1/2-1/2")
+            {
+               /* do nothing */
+            }
+            else if (engine.Result == "1-0")
+            {
+               engineX.White = '<div class="lightgreen">' + engine.White + '</div>';
+               engineX.Black = '<div class="red">' + engine.Black + '</div>';
+            }
+            else if (engine.Result == "0-1")
+            {
+               engineX.White = '<div class="red">' + engine.White + '</div>';
+               engineX.Black = '<div class="lightgreen">' + engine.Black + '</div>';
+            }
+            h2hrank += 1;
+            if (h2hrank%2 == 0)
+            {
+               engineX.h2hrank = engine.Game + ' (R)';
+            }
+         }
+         h2hdata = _.union(h2hdata, [engineX]);
+      }
    });
 
-   $('#schedule').bootstrapTable('load', data);
+   $('#schedule').bootstrapTable('load', scdata);
+   $('#h2h').bootstrapTable('load', h2hdata);
    var options = $('#schedule').bootstrapTable('getOptions');
    pageNum = parseInt(gamesDone/options.pageSize) + 1;
    $('#schedule').bootstrapTable('selectPage', pageNum);
