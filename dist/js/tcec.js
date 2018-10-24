@@ -62,9 +62,19 @@ var onMoveEndPv = function() {
     .addClass('highlight-white');
 }
 
-function updateAll()
+function updateAll(refresh)
 {
-   updatePgn(1);
+   var uppgn;
+
+   if (refresh)
+   {
+      uppgn = refresh;
+   }
+   else
+   {
+      uppgn = 1;
+   }
+   updatePgn(uppgn);
    setTimeout(function() { updateTables(); }, 5000);
 }
 
@@ -107,9 +117,10 @@ function updatePgnData(data, read)
 
 function updatePgn(resettime)
 {
-   if (resettime != undefined)
+   if (resettime != undefined && resettime != 2)
    {
       timeDiffRead = 0;
+      timeDiff = 0;
    }
 
    axios.get('live.json?no-cache' + (new Date()).getTime())
