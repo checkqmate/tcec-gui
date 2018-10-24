@@ -554,6 +554,10 @@ function updateChartData()
    {
 	   evalChart.data.datasets[2].data = liveEval;
    }
+   else
+   {
+      evalChart.data.datasets[2].data = [];
+   }
 
 	timeChart.data.labels = labels;
 	timeChart.data.datasets[0].data = whiteTime;
