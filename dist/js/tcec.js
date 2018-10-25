@@ -1853,8 +1853,8 @@ function setTwitchBackground(backg)
 
 function setDark()
 {
-  $('.toggleDark').find('i').removeClass('fa-moon-o');
-  $('.toggleDark').find('i').addClass('fa-sun-o');
+  $('.toggleDark').find('i').removeClass('fa-moon');
+  $('.toggleDark').find('i').addClass('fa-sun');
   $('body').addClass('dark');
   setTwitchBackground(2);
   $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat?darkpopout');
@@ -1870,8 +1870,8 @@ function setDark()
 function setLight()
 {
   $('body').removeClass('dark');
-  $('.toggleDark').find('i').addClass('fa-moon-o');
-  $('.toggleDark').find('i').removeClass('fa-sun-o');
+  $('.toggleDark').find('i').addClass('fa-moon');
+  $('.toggleDark').find('i').removeClass('fa-sun');
   $('input.toggleDark').prop('checked', false);
   $('#crosstable').removeClass('table-dark');
   $('#schedule').removeClass('table-dark');
