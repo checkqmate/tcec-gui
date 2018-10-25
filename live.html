@@ -400,7 +400,27 @@
           <br>
           <div id="engine-history"></div>
           <hr />
-          <div id="live-eval-cont"></div>
+
+          <ul class="nav nav-pills mb-3 nav-justified" id="pills-tab" role="tablist">
+             <li class="nav-item">
+                <a class="nav-link active" id="pills-eval-tab1" data-toggle="pill" href="#pills-eval1" role="tab" aria-controls="pills-eval" aria-selected="true">
+                   <span id="engine1name">176Th 7Men TB</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a class="nav-link" id="pills-eval-tab2" data-toggle="pill" href="#pills-eval2" role="tab" aria-controls="pills-eval" aria-selected="false">
+                   <span id="engine1name">128C 6Men TB</span>
+                </a>
+            </li>
+         </ul>
+         <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane show active" id="pills-eval1" role="tabpanel" aria-labelledby="pills-eval-tab1">
+               <div id="live-eval-cont1"></div>
+            </div>
+            <div class="tab-pane fade" id="pills-eval2" role="tabpanel" aria-labelledby="pills-eval-tab2">
+               <div id="live-eval-cont2"></div>
+            </div>
+         </div>
           <h5><span class="black-engine-name-full"></span> PV (Black)</h5>
           <div class="engine-pv alert alert-dark" id="black-engine-pv"></div>
           <h5><span class="white-engine-name-full"></span> PV (White)</h5>
@@ -1316,7 +1336,10 @@
          updateStandtableData(data);
          });
       socket.on('liveeval', function(data){
-         updateLiveEvalData(data, 1);
+         updateLiveEvalData(data, 1, null, '#live-eval-cont1');
+         });
+      socket.on('liveeval1', function(data){
+         updateLiveEvalData(data, 1, null, '#live-eval-cont2');
          });
       socket.on('pgn', function(data){
          updatePgnData(data, 1);

@@ -1117,7 +1117,8 @@ function handlePlyChange(handleclick)
          if (parseInt(livePVHist.moves[xx].ply) == activePly)
          {
             livePVHist.moves[xx].engine = livePVHist.engine;
-            updateLiveEvalData(livePVHist.moves[xx], 0, prevMove.fen);
+            updateLiveEvalData(livePVHist.moves[xx], 0, prevMove.fen, '#live-eval-cont1');
+            updateLiveEvalData(livePVHist.moves[xx], 0, prevMove.fen, '#live-eval-cont2');
             break;
          }
       }
@@ -1972,7 +1973,7 @@ function updateLiveEvalInit()
       });
 }
 
-function updateLiveEvalDataHistory(engineDatum, fen)
+function updateLiveEvalDataHistory(engineDatum, fen, container)
 {
    var engineData = [];
    livePvs = [];
@@ -2048,13 +2049,13 @@ function updateLiveEvalDataHistory(engineDatum, fen)
     engineData = _.union(engineData, [datum]);
    }
 
-  $('#live-eval-cont').html('');
+  $(container).html('');
   _.each(engineData, function(engineDatum) {
     if (engineDatum.engine == '')
     {
        engineDatum.engine = datum.engine;
     }
-    $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
+    $(container).append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
     if (livePvs.length > 0) {
       _.each(livePvs, function(livePv, pvKey) {
@@ -2076,18 +2077,18 @@ function updateLiveEvalDataHistory(engineDatum, fen)
         });
       });
     }
-    $('#live-eval-cont').append('<div class="engine-pv alert alert-dark">' + moveContainer.join(' ') + '</div>');
+    $(container).append('<div class="engine-pv alert alert-dark">' + moveContainer.join(' ') + '</div>');
   });
 
    // $('#live-eval').bootstrapTable('load', engineData);
    // handle success
 }
 
-function updateLiveEvalData(datum, update, fen)
+function updateLiveEvalData(datum, update, fen, container)
 {
    if (!showLivEng)
    {
-      $('#live-eval-cont').html(''); 
+      $(container).html(''); 
       return;
    }
    var engineData = [];
@@ -2102,7 +2103,7 @@ function updateLiveEvalData(datum, update, fen)
 
    if (!update)
    {
-      updateLiveEvalDataHistory(datum, fen);
+      updateLiveEvalDataHistory(datum, fen, '#live-eval-cont1');
       return;
    }
 
@@ -2175,13 +2176,13 @@ function updateLiveEvalData(datum, update, fen)
     engineData = _.union(engineData, [datum]);
    }
 
-  $('#live-eval-cont').html('');
+  $(container).html('');
   _.each(engineData, function(engineDatum) {
     if (engineDatum.engine == '')
     {
        engineDatum.engine = datum.engine;
     }
-    $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
+    $(container).append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
     if (livePvs.length > 0) {
       _.each(livePvs, function(livePv, pvKey) {
@@ -2203,7 +2204,7 @@ function updateLiveEvalData(datum, update, fen)
         });
       });
     }
-    $('#live-eval-cont').append('<div class="engine-pv alert alert-dark">' + moveContainer.join(' ') + '</div>');
+    $(container).append('<div class="engine-pv alert alert-dark">' + moveContainer.join(' ') + '</div>');
   });
 
 
@@ -2215,7 +2216,16 @@ function updateLiveEval() {
    axios.get('data.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
-      updateLiveEvalData(response.data, 1);
+      updateLiveEvalData(response.data, 1, null, '#live-eval-cont1');
+   })
+   .catch(function (error) {
+      // handle error
+      plog(error);
+   });
+   axios.get('data1.json?no-cache' + (new Date()).getTime())
+   .then(function (response)
+   {
+      updateLiveEvalData(response.data, 1, null, '#live-eval-cont2');
    })
    .catch(function (error) {
       // handle error
@@ -2399,7 +2409,8 @@ function liveEngine(checkbox)
    {
       localStorage.setItem('tcec-live-engine', 1);
       showLivEng = 0;
-      $('#live-eval-cont').html(''); 
+      $('#live-eval-cont1').html(''); 
+      $('#live-eval-cont2').html(''); 
       updateChartData();
    }
    else
@@ -2423,7 +2434,8 @@ function setliveEngine()
    {
       showLivEng = 0;
       $('#liveenginecheck').prop('checked', true);
-      $('#live-eval-cont').html(''); 
+      $('#live-eval-cont1').html(''); 
+      $('#live-eval-cont2').html(''); 
    }
 }
 

@@ -49,6 +49,8 @@ var watcher = chokidar.watch('crosstable.json', {
 });
 var liveeval = 'data.json';
 var ctable = 'crosstable.json';
+watcher.add('data1.json');
+watcher.add('liveeval1.json');
 watcher.add(liveeval);
 watcher.add('live.json');
 watcher.add('schedule.json');
@@ -167,6 +169,9 @@ function getDeltaPgn(pgnX)
 var prevData = 0;
 var prevliveData = 0;
 var prevevalData = 0;
+var prevliveData1 = 0;
+var prevevalData1 = 0;
+
 watcher.on('change', (path, stats) => {
    console.log ("path changed:" + path + ",count is " + count);
    if (!socket)
@@ -182,10 +187,20 @@ watcher.on('change', (path, stats) => {
          broadCastData(socket, 'liveeval', path, data, prevliveData);
          prevliveData = data;
       }
+      if (path.match(/data1.json/))
+      {
+         broadCastData(socket, 'liveeval1', path, data, prevliveData1);
+         prevliveData1 = data;
+      }
       if (path.match(/liveeval.json/))
       {
          broadCastData(socket, 'livechart', path, data, prevevalData);
          prevevalData = data;
+      }
+      if (path.match(/liveeval1.json/))
+      {
+         broadCastData(socket, 'livechart1', path, data, prevevalData1);
+         prevevalData1 = data;
       }
       if (path.match(/live.json/))
       {
