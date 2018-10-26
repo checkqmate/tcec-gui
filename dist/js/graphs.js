@@ -23,10 +23,19 @@ var evalChartData = {
     data: [
     ]
   }, {
-    label: 'Live engine',
+    label: 'Live engine1',
     lineTension: 0,
+    
     borderColor: '#007bff',
     backgroundColor: '#007bff',
+    fill: false,
+    data: [
+    ]
+  }, {
+    label: 'Live engine2',
+    lineTension: 0,
+    borderColor: 'red',
+    backgroundColor: 'red',
     
     fill: false,
     data: [
@@ -410,7 +419,8 @@ function updateChartData()
 
 	whiteEval = [];
 	blackEval = [];
-	liveEval = [];
+	liveEval1 = [];
+	liveEval2 = [];
 
 	whiteTime = [];
 	blackTime = [];
@@ -522,11 +532,18 @@ function updateChartData()
 				whiteDepth = _.union(whiteDepth, depth);
 				whiteTBHits = _.union(whiteTBHits, tbHits);
 
-				evalObject = getLiveEval(key, moveNumber, false);
+				evalObject = getLiveEval(key, moveNumber, false, 1);
 
 				if (evalObject != -1) {
-					liveEval = _.union(liveEval, evalObject);
+					liveEval1 = _.union(liveEval1, evalObject);
 				}
+            evalObject = -1;
+				evalObject = getLiveEval(key, moveNumber, false, 2);
+
+				if (evalObject != -1) {
+					liveEval2 = _.union(liveEval2, evalObject);
+				}
+
 
 			} else {
 				// evalLabels = _.union(evalLabels, [moveNumber + 0.5]);
@@ -550,13 +567,21 @@ function updateChartData()
 	evalChart.data.labels = labels;
 	evalChart.data.datasets[0].data = whiteEval;
 	evalChart.data.datasets[1].data = blackEval;
-   if (showLivEng)
+   if (showLivEng1)
    {
-	   evalChart.data.datasets[2].data = liveEval;
+	   evalChart.data.datasets[2].data = liveEval1;
    }
    else
    {
       evalChart.data.datasets[2].data = [];
+   }
+   if (showLivEng2)
+   {
+	   evalChart.data.datasets[3].data = liveEval2;
+   }
+   else
+   {
+      evalChart.data.datasets[3].data = [];
    }
 
 	timeChart.data.labels = labels;
@@ -582,11 +607,21 @@ function updateChartData()
     tbHitsChart.update();
 }
 
-function getLiveEval(key, moveNumber, isBlack)
+function getLiveEval(key, moveNumber, isBlack, contno)
 {
 	key++;
+   var engineEval = null;
 
-	evalObject = _.find(liveEngineEval, function(ev) {
+   if (contno == 1)
+   {
+      engineEval = liveEngineEval1;
+   }
+   else
+   {
+      engineEval = liveEngineEval2;
+   }
+
+	evalObject = _.find(engineEval, function(ev) {
 		return ev.ply == key;
 	});
 

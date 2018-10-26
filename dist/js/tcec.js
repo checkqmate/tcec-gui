@@ -40,7 +40,8 @@ var timeDiffRead = 0;
 var prevPgnData = 0;
 var playSound = 1;
 
-var liveEngineEval = [];
+var liveEngineEval1 = [];
+var liveEngineEval2 = [];
 var livePVHist = 0;
 var debug = 0;
 var whiteEngineFull = null;
@@ -51,7 +52,18 @@ var blackPv = [];
 var livePvs = [];
 var activePv = [];
 var highlightpv = 0;
-var showLivEng = 1;
+var livePVHist = 0;
+var debug = 0;
+var whiteEngineFull = null;
+var blackEngineFull = null;
+
+var whitePv = [];
+var blackPv = [];
+var livePvs = [];
+var activePv = [];
+var highlightpv = 0;
+var showLivEng1 = 1;
+var showLivEng2 = 1;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -1117,8 +1129,8 @@ function handlePlyChange(handleclick)
          if (parseInt(livePVHist.moves[xx].ply) == activePly)
          {
             livePVHist.moves[xx].engine = livePVHist.engine;
-            updateLiveEvalData(livePVHist.moves[xx], 0, prevMove.fen, '#live-eval-cont1');
-            updateLiveEvalData(livePVHist.moves[xx], 0, prevMove.fen, '#live-eval-cont2');
+            updateLiveEvalData(livePVHist.moves[xx], 0, prevMove.fen, 1);
+            updateLiveEvalData(livePVHist.moves[xx], 0, prevMove.fen, 2);
             break;
          }
       }
@@ -1265,7 +1277,6 @@ function pvBoardAutoplay()
 
 $('#pv-board-next').click(function(e) {
   if (activePvKey < activePv.length) {
-    console.log ("Setting next to :" + (activePvKey + 1));  
     setPvFromKey(activePvKey + 1);
   }
   e.preventDefault();
@@ -2084,13 +2095,23 @@ function updateLiveEvalDataHistory(engineDatum, fen, container)
    // handle success
 }
 
-function updateLiveEvalData(datum, update, fen, container)
+function updateLiveEvalData(datum, update, fen, contno)
 {
-   if (!showLivEng)
+   var container = '#live-eval-cont' + contno;
+
+   if (contno == 1 && !showLivEng1)
    {
       $(container).html(''); 
+      console.log ("Setting 1 to null");
       return;
    }
+   if (contno == 2 && !showLivEng2)
+   {
+      $(container).html(''); 
+      console.log ("Setting 2 to null");
+      return;
+   }
+
    var engineData = [];
    livePvs = [];
    var score = 0;
@@ -2103,7 +2124,7 @@ function updateLiveEvalData(datum, update, fen, container)
 
    if (!update)
    {
-      updateLiveEvalDataHistory(datum, fen, '#live-eval-cont1');
+      updateLiveEvalDataHistory(datum, fen, container, contno);
       return;
    }
 
@@ -2216,7 +2237,7 @@ function updateLiveEval() {
    axios.get('data.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
-      updateLiveEvalData(response.data, 1, null, '#live-eval-cont1');
+      updateLiveEvalData(response.data, 1, null, 1);
    })
    .catch(function (error) {
       // handle error
@@ -2225,7 +2246,7 @@ function updateLiveEval() {
    axios.get('data1.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
-      updateLiveEvalData(response.data, 1, null, '#live-eval-cont2');
+      updateLiveEvalData(response.data, 1, null, 2);
    })
    .catch(function (error) {
       // handle error
@@ -2233,17 +2254,29 @@ function updateLiveEval() {
    });
 }
 
-var liveEngineEval = [];
-
-function updateLiveChartData(data) 
+function updateLiveChartData(data, contno) 
 {
    if (typeof data.moves != 'undefined') 
    {
-      liveEngineEval = data.moves;
+      if (contno == 1)
+      {
+         liveEngineEval1 = data.moves;
+      }
+      else
+      {
+         liveEngineEval2 = data.moves;
+      }
       updateChartData();
       livePVHist = data;
    } else {
-      liveEngineEval = [];
+      if (contno == 1)
+      {
+         liveEngineEval1 = [];
+      }
+      if (contno == 2)
+      {
+         liveEngineEval2 = [];
+      }
    }
 }
 
@@ -2251,7 +2284,15 @@ function updateLiveChart()
 {
    axios.get('liveeval.json')
    .then(function (response) {
-      updateLiveChartData(response.data);
+      updateLiveChartData(response.data, 1);
+   })
+   .catch(function (error) {
+      // handle error
+      console.log(error);
+   });
+   axios.get('liveeval1.json')
+   .then(function (response) {
+      updateLiveChartData(response.data, 2);
    })
    .catch(function (error) {
       // handle error
@@ -2403,40 +2444,123 @@ function setTwitch()
    }
 }
 
-function liveEngine(checkbox)
+function showEvalCont()
 {
-   if (checkbox.checked)
+   var evalcont = '#evalcont';
+   if (showLivEng1 || showLivEng2)
    {
-      localStorage.setItem('tcec-live-engine', 1);
-      showLivEng = 0;
-      $('#live-eval-cont1').html(''); 
-      $('#live-eval-cont2').html(''); 
-      updateChartData();
+      $(evalcont).show();
    }
    else
    {
-      localStorage.setItem('tcec-live-engine', 0);
-      showLivEng = 1;
-      updateLiveEval();
-      updateChartData();
+      $(evalcont).hide();
+   }
+
+   if (showLivEng1)
+   {
+      $('#pills-eval-tab1').addClass('active');
+      $('#pills-eval-tab2').removeClass('active');
+      $('#pills-eval1').addClass('active');
+      $('#pills-eval2').removeClass('active');
+   }
+   if (showLivEng2)
+   {
+      $('#pills-eval-tab2').show();
+      $('#pills-eval-tab2').addClass('active');
+      $('#pills-eval-tab1').removeClass('active');
+      $('#pills-eval2').addClass('active');
+      $('#pills-eval1').removeClass('active');
+      $('#pills-eval2').show();
+   }
+}
+
+function liveEngine(checkbox, checknum)
+{
+   var config = 'tcec-live-engine' + checknum;
+   var evalcont = '#evalcont';
+
+   if (checkbox.checked)
+   {
+      localStorage.setItem(config, 1);
+      if (checknum == 1)
+      {
+         showLivEng1 = 1;
+      }
+      else
+      {
+         showLivEng2 = 1;
+      }
+   }
+   else
+   {
+      localStorage.setItem(config, 0);
+      if (checknum == 1)
+      {
+         showLivEng1 = 0;
+      }
+      else
+      {
+         showLivEng2 = 0;
+      }
+   }
+   if (showLivEng1 || showLivEng2)
+   {
+      $(evalcont).show();
+   }
+   else
+   {
+      $(evalcont).hide();
+   }
+
+   showEvalCont();
+   updateLiveEval();
+   updateChartData();
+}
+
+function setliveEngineInit(value)
+{
+   var config = 'tcec-live-engine' + value;
+   var getlive = localStorage.getItem(config);
+   var cont = '#liveenginecheck' + value;
+   var checknum = value;
+   var evalcont = '#evalcont';
+
+   if (getlive == undefined || getlive == 1)
+   {
+      if (checknum == 1)
+      {
+         showLivEng1 = 1;
+         $('#pills-tab a[href="#pills-eval' + 1 + '"]').tab('show');
+      }
+      else
+      {
+         showLivEng2 = 1;
+         if (!showLivEng1)
+         {
+            $('#pills-tab a[href="#pills-eval' + 2 + '"]').tab('show');
+         }
+      }
+      $(cont).prop('checked', true);
+   }
+   else
+   {
+      if (checknum == 1)
+      {
+         showLivEng1 = 0;
+      }
+      else
+      {
+         showLivEng2 = 0;
+      }
+      $(cont).prop('checked', false);
    }
 }
 
 function setliveEngine()
 {
-   var getlive = localStorage.getItem('tcec-live-engine');        
-   if (getlive == undefined || getlive == 0)
-   {
-      showLivEng = 1;
-      $('#liveenginecheck').prop('checked', false);
-   }
-   else
-   {
-      showLivEng = 0;
-      $('#liveenginecheck').prop('checked', true);
-      $('#live-eval-cont1').html(''); 
-      $('#live-eval-cont2').html(''); 
-   }
+   setliveEngineInit(1);
+   setliveEngineInit(2);
+   showEvalCont();
 }
 
 function checkSound(checkbox)
