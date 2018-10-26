@@ -2463,7 +2463,7 @@ function showEvalCont()
       $('#pills-eval1').addClass('active');
       $('#pills-eval2').removeClass('active');
    }
-   if (showLivEng2)
+   else if (showLivEng2)
    {
       $('#pills-eval-tab2').addClass('active');
       $('#pills-eval-tab1').removeClass('active');
