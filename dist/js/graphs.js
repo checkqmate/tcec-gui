@@ -34,8 +34,8 @@ var evalChartData = {
   }, {
     label: 'Live engine2',
     lineTension: 0,
-    borderColor: 'red',
-    backgroundColor: 'red',
+    borderColor: 'darkred',
+    backgroundColor: 'darkred',
     
     fill: false,
     data: [
