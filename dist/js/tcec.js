@@ -2465,12 +2465,10 @@ function showEvalCont()
    }
    if (showLivEng2)
    {
-      $('#pills-eval-tab2').show();
       $('#pills-eval-tab2').addClass('active');
       $('#pills-eval-tab1').removeClass('active');
       $('#pills-eval2').addClass('active');
       $('#pills-eval1').removeClass('active');
-      $('#pills-eval2').show();
    }
 }
 
