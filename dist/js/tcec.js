@@ -2460,14 +2460,18 @@ function showEvalCont()
    {
       $('#pills-eval-tab1').addClass('active');
       $('#pills-eval-tab2').removeClass('active');
+      $('#pills-eval-tab1').addClass('show');
       $('#pills-eval1').addClass('active');
       $('#pills-eval2').removeClass('active');
+      $('#pills-eval1').addClass('show');
    }
    else if (showLivEng2)
    {
       $('#pills-eval-tab2').addClass('active');
+      $('#pills-eval-tab2').addClass('show');
       $('#pills-eval-tab1').removeClass('active');
       $('#pills-eval2').addClass('active');
+      $('#pills-eval2').addClass('show');
       $('#pills-eval1').removeClass('active');
    }
 }
@@ -2500,14 +2504,6 @@ function liveEngine(checkbox, checknum)
       {
          showLivEng2 = 0;
       }
-   }
-   if (showLivEng1 || showLivEng2)
-   {
-      $(evalcont).show();
-   }
-   else
-   {
-      $(evalcont).hide();
    }
 
    showEvalCont();
