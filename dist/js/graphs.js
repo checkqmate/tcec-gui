@@ -3,46 +3,55 @@ var timeChart;
 var speedChart;
 var depthChart;
 var tbHitsChart;
+var engine2colorno = 0;
+var engine2color = '#FF0000';
+engine2color = '#66CC00';
+engine2color = '#A44BC0';
+var evalChartData = {};
+var engineColorArray = ['darkred', 'red', 'green', 'darkgreen', 'yellow', 'purple', 'orange'];
 
-var evalChartData = {
-  labels: [],
-  datasets: [{
-    label: 'White',
-    lineTension: 0,
-    borderColor: '#EFEFEF',
-    backgroundColor: '#EFEFEF',
-    fill: false,
-    data: [
-    ]
-  }, {
-    label: 'Black',
-    lineTension: 0,
-    borderColor: '#000000',
-    backgroundColor: '#000000',
-    fill: false,
-    data: [
-    ]
-  }, {
-    label: 'Live engine1',
-    lineTension: 0,
-    
-    borderColor: '#007bff',
-    backgroundColor: '#007bff',
-    fill: false,
-    data: [
-    ]
-  }, {
-    label: 'Live engine2',
-    lineTension: 0,
-    borderColor: 'darkred',
-    backgroundColor: 'darkred',
-    
-    fill: false,
-    data: [
-    ]
-  }
-  ]
-};
+function setevalChartData()
+{
+   engine2color = engineColorArray[engine2colorno];
+   evalChartData = {
+     labels: [],
+     datasets: [{
+       label: 'White',
+       lineTension: 0,
+       borderColor: '#EFEFEF',
+       backgroundColor: '#EFEFEF',
+       fill: false,
+       data: [
+       ]
+     }, {
+       label: 'Black',
+       lineTension: 0,
+       borderColor: '#000000',
+       backgroundColor: '#000000',
+       fill: false,
+       data: [
+       ]
+     }, {
+       label: '176 Th',
+       lineTension: 0,
+       borderColor: '#007bff',
+       backgroundColor: '#007bff',
+       fill: false,
+       data: [
+       ]
+     }, {
+       label: '128 Core',
+       lineTension: 0,
+       borderColor: engine2color,
+       backgroundColor: engine2color,
+       fill: false,
+       data: [
+       ]
+     }
+     ]
+   };
+}
+setevalChartData();
 
 var timeChartData = {
   labels: [],
@@ -132,8 +141,9 @@ var tbHitsChartData = {
   }]
 };
 
-
-$(function() {
+function drawEval()
+{
+   setevalChartData();
 	evalChart = Chart.Line($('#eval-graph'), {
 	  data: evalChartData,
 	  options: {
@@ -183,7 +193,10 @@ $(function() {
 	    }
 	  }
 	});
+}
 
+$(function() {
+   drawEval();
 	timeChart = Chart.Line($('#time-graph'), {
 	  data: timeChartData,
 	  options: {
@@ -394,6 +407,7 @@ $(function() {
 
 function updateChartData()
 {
+   setevalChartData();
 	evalChart.data.labels = [];
 	evalChart.data.datasets[0].data = [];
 	evalChart.data.datasets[1].data = [];

@@ -1940,6 +1940,13 @@ function setPieceDefault(pTheme)
    setBoard();
 }
 
+function setEngineColor(color)
+{
+   engine2colorno = color; 
+   drawEval();
+   updateChartData(); 
+}
+
 function updateLiveEvalInit()
 {
       $('#live-eval').bootstrapTable({
