@@ -476,10 +476,6 @@
             </div>
          </div>
          </div>
-          <h5><span class="black-engine-name-full"></span> PV (Black)</h5>
-          <div class="engine-pv alert alert-dark" id="black-engine-pv"></div>
-          <h5><span class="white-engine-name-full"></span> PV (White)</h5>
-          <div class="engine-pv alert alert-dark" id="white-engine-pv"></div>
         </div>
 
         <div class="col-md-4 col-sm-5 col-12" id="middle-data-column">
@@ -562,20 +558,11 @@
               </tr>
               <tr>
                 <td>
-                  <span id="white-engine-elo"></span>
+                  <span id="white-engine-elo"></span> / <span class="white-engine-score"></span>
                 </td>
-                <td>ELO</td>
+                <td>ELO/Score</td>
                 <td>
-                  <span id="black-engine-elo"></span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <span class="white-engine-score"></span>
-                </td>
-                <td>Score</td>
-                <td>
-                  <span class="black-engine-score"></span>
+                  <span id="black-engine-elo"></span> / <span class="black-engine-score"></span>
                 </td>
               </tr>
               <tr>
@@ -659,6 +646,11 @@
                         PV
                       </a>
                     </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="v-pills-pv-analys-tab" data-toggle="pill" href="#v-pills-pvanalys" role="tab" aria-controls="v-pills-pvanalys" aria-selected="false">
+                        PV(A)
+                      </a>
+                    </li>
                   </ul>
               </div>
               <div class="col-12">
@@ -678,10 +670,11 @@
                   <div class="tab-pane fade" id="v-pills-tbhits" role="tabpanel" aria-labelledby="v-pills-tbhits-tab">
                     <canvas style="height: 250px;" id="tbhits-graph"></canvas>
                   </div>
-                  <div class="tab-pane fade" id="v-pills-pv" role="tabpanel" aria-labelledby="v-pills-pv-tab">
+
+                  <div class="tab-pane fade" id="v-pills-pvanalys" role="tabpanel" aria-labelledby="v-pills-pv-analys-tab">
                     <div class="row">
                       <div class="col-12 col-md-12">
-                        <div id="pv-board" style="width: 250px; margin-left: auto; margin-right: auto;"></div>
+                        <div id="pv-boarda" style="width: 250px; margin-left: auto; margin-right: auto;"></div>
                       </div>
                     </div>
                      <div class="btn-group d-flex navigation-buttons" style="width: 250px; margin-left: auto; margin-right:auto;" role="group">
@@ -718,6 +711,64 @@
                         </div>
                       </div>
                     </div>
+
+
+                  <div class="tab-pane fade" id="v-pills-pv" role="tabpanel" aria-labelledby="v-pills-pv-tab">
+                    <div class="row">
+                      <div class="col-12 col-md-12">
+                        <div style="width:402px; border:0px solid yellow ; margin-left: auto; margin-right:auto;">
+                        <div id="pv-board2" style="width: 200px;float:left; margin-left: auto; margin-right:auto;"></div>
+                        <div id="pv-board" style="width: 200px;float:left; margin-left: auto; margin-right:auto;"></div>
+                        <div style="width:201px; margin-left: auto; margin-right:auto; float:left">
+                        <div class="engine-pv alert alert-dark" style="width: 195px;float:left; margin-left: auto; margin-right:auto;" id="white-engine-pv"></div>
+                        </div>
+                        <div class="engine-pv alert alert-dark" style="width: 195px;float:left; margin-left: auto; margin-right:auto;" id="black-engine-pv"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="width:402px; margin-left: auto; margin-right:auto;">
+                       <div class="btn-group d-flex navigation-buttons" style="float:left; width: 196px; margin-left: auto; margin-right:auto;" id="nav1" role="group">
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-to-first1">
+                          <i class="fa fa-angle-double-left"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-previous1">
+                          <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-autoplay1">
+                          <i class="fa fa-play"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-next1">
+                          <i class="fa fa-angle-right"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-to-last1">
+                          <i class="fa fa-angle-double-right"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-reverse1">
+                          <i class="fa fa-random"></i>
+                        </a>
+                       </div>
+                       <div class="btn-group d-flex navigation-buttons" style="width: 196px; margin-left: auto; margin-right:auto;" id="nav2" role="group">
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-to-first2">
+                          <i class="fa fa-angle-double-left"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-previous2">
+                          <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-autoplay2">
+                          <i class="fa fa-play"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-next2">
+                          <i class="fa fa-angle-right"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-to-last2">
+                          <i class="fa fa-angle-double-right"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-reverse2">
+                          <i class="fa fa-random"></i>
+                        </a>
+                       </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1351,6 +1402,7 @@
         initToolTip();
         updatePgn();
         updateLiveEvalInit();
+        setBoard();
         $(document).ready(function () {
         	 setDefaultThemes();
           window.setTimeout(function() 

@@ -1,5 +1,7 @@
 boardEl = $('#board');
 pvBoardEl = $('#pv-board');
+pvBoardEl2 = $('#pv-board2');
+pvBoardEl3 = $('#pv-boarda');
 
 var squareToHighlight = '';
 var pvSquareToHighlight = '';
@@ -39,6 +41,7 @@ var timeDiff = 0;
 var timeDiffRead = 0;
 var prevPgnData = 0;
 var playSound = 1;
+var pvBoard3;
 
 var liveEngineEval1 = [];
 var liveEngineEval2 = [];
@@ -64,6 +67,8 @@ var activePv = [];
 var highlightpv = 0;
 var showLivEng1 = 1;
 var showLivEng2 = 1;
+var activePvKey = [];
+var activePvColor = '';
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -848,12 +853,17 @@ function updateEnginePv(color, whiteToPlay, moves)
 {
    var classhigh = '';
   if (typeof moves != 'undefined') {
+
     currentMove = Math.floor(activePly / 2);
 
     if (color == 'white') {
       whitePv = moves;
+      //activePv = whitePv.slice();
+      //setPvFromKey(0, 'white', 0);
     } else {
       blackPv = moves;
+      //activePv = blackPv.slice();
+      //setPvFromKey(0, 'black', 0);
     }
 
     keyOffset = 0;
@@ -868,6 +878,7 @@ function updateEnginePv(color, whiteToPlay, moves)
     if (!whiteToPlay && color == "black") {
       currentMove++;
     }
+    setpvmove = 0;
     $('#' + color + '-engine-pv').html('');
     _.each(moves, function(move, key) {
       classhigh = "";
@@ -880,6 +891,7 @@ function updateEnginePv(color, whiteToPlay, moves)
          {
             plog ("Need to highlight:" + pvMove + ", move is :" + move.m, 1);
             classhigh = "active-pv-move";
+            setpvmove = effectiveKey;
          }
          if (color == "black" && key == 0) 
          {
@@ -890,6 +902,7 @@ function updateEnginePv(color, whiteToPlay, moves)
          {
             plog ("Need to highlight:" + pvMove + ", move is :" + move.m, 0);
             classhigh = "active-pv-move";
+            setpvmove = effectiveKey;
          }
       }
       else
@@ -898,11 +911,13 @@ function updateEnginePv(color, whiteToPlay, moves)
          {
             plog ("Need to highlight:" + pvMove + ", move is :" + move.m, 1);
             classhigh = "active-pv-move";
+            setpvmove = effectiveKey;
          }
          if (color == "black" && (highlightpv + 1 == pvMoveNofloor))
          {
             plog ("Need to highlight:" + pvMove + ", move is :" + move.m, 1);
             classhigh = "active-pv-move";
+            setpvmove = effectiveKey;
          }
       }
       if (color == "white" && effectiveKey % 2 == 0 ) {
@@ -919,8 +934,23 @@ function updateEnginePv(color, whiteToPlay, moves)
         currentMove++;
       }
       plog ("classhigh: " + classhigh, 1);
-      $('#' + color + '-engine-pv').append("<a href='#' class='set-pv-board " + classhigh + "' move-key='" + key + "' color='" + color + "'>" + move.m + '</a> ');
-    });
+      $('#' + color + '-engine-pv').append("<a href='#' id='" + color + '-' + key + "' class='set-pv-board " + classhigh + "' move-key='" + key + "' color='" + color + "'>" + move.m + '</a> ');
+      });
+    if (color == 'white') {
+      whitePv = moves;
+      if (whitePv.length > 0)
+      {
+         activePv = whitePv.slice();
+         setPvFromKey(setpvmove, 'white');
+      }
+    } else {
+      blackPv = moves;
+      if (blackPv.length > 0)
+      {
+         activePv = blackPv.slice();
+         setPvFromKey(setpvmove, 'black');
+      }
+    }
   } else {
     $('#' + color + '-engine-pv').html('');
   }
@@ -1149,9 +1179,6 @@ function handlePlyChange(handleclick)
    }
 }
 
-var activePvKey = 0;
-var activePvColor = '';
-
 $(document).on('click', '.set-pv-board', function(e) {
   $('#v-pills-pv-tab').click();
   moveKey = $(this).attr('move-key') * 1;
@@ -1171,41 +1198,116 @@ $(document).on('click', '.set-pv-board', function(e) {
     // pvBoard.orientation('white');
   }
 
-  setPvFromKey(moveKey);
+  setPvFromKey(moveKey, pvColor);
 
   e.preventDefault(); 
 
   return false;
 });
 
-function setPvFromKey(moveKey)
+function setActiveKey(pvColor, value)
 {
+    if (pvColor == undefined || pvColor == 'white')
+    {
+      activePvKey[0] = value;
+    }
+    else if (pvColor == 'black')
+    {
+       activePvKey[1] = value;
+    }
+    else if (pvColor == 'live')
+    {
+       activePvKey[2] = value;
+       plog ("setting live to:" + value, 1);
+    }
+}
+
+function scrollDiv(container, element)
+{
+   $(container).scrollTop(
+      $(element).offset().top - $(container).offset().top + $(container).scrollTop()
+      );
+}
+
+var choosePv;
+
+function setPvFromKey(moveKey, pvColor, choosePvx)
+{
+  var activePv;
+
+  if (pvColor == undefined || pvColor == 'white')
+  {
+    activePv  = whitePv.slice();
+  }
+  else if (pvColor == 'black')
+  {
+    activePv  = blackPv.slice();
+  }
+  else if (pvColor == 'live')
+  {
+    if (choosePvx != undefined)
+    {
+       activePv = choosePvx;
+       choosePv = choosePvx;
+    }
+    else
+    {
+       activePv = choosePv;
+       plog ('live choseny:' + activePv.length + " ,moveKey:" + moveKey, 1);
+    }
+  }
+
   if (activePv.length < 1) {
-    activePvKey = 0;
+    setActiveKey(pvColor, 0);
     return;
   }
 
   if (moveKey >= activePv.length) {
      return;
      }
-  activePvKey = moveKey;
+  setActiveKey(pvColor, moveKey);
 
   moveFrom = activePv[moveKey].from;
   moveTo = activePv[moveKey].to;
   fen = activePv[moveKey].fen;
   game.load(fen);
 
-  $('.active-pv-move').removeClass('active-pv-move');
-  $(this).addClass('active-pv-move');
+   $('.active-pv-move').removeClass('active-pv-move');
+   if (pvColor == 'white')
+   {
+      pvBoardL = pvBoard2;
+      pvBoardElL = pvBoardEl2;
+      $('#white-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
+      $('#black-engine-pv').find('#black-'+activePvKey[1]).addClass('active-pv-move');
+      scrollDiv('#white-engine-pv', '#'+pvColor+'-'+moveKey);
+   }
+   else if (pvColor == 'black')
+   {
+      pvBoardL = pvBoard;
+      pvBoardElL = pvBoardEl;
+      //$('#black-engine-pv').addClass('active-pv-move');
+      $('#black-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
+      $('#white-engine-pv').find('#white-'+activePvKey[0]).addClass('active-pv-move');
+      scrollDiv('#black-engine-pv', '#'+pvColor+'-'+moveKey);
+   }
+   else if (pvColor == 'live')
+   {
+      pvBoardL = pvBoard3;
+      pvBoardElL = pvBoardEl3;
+      //$('#black-engine-pv').addClass('active-pv-move');
+      //$('#black-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
+      //$('#white-engine-pv').find('#white-'+activePvKey[0]).addClass('active-pv-move');
+      //scrollDiv('#black-engine-pv', '#'+pvColor+'-'+moveKey);
+   }
 
   $('#pv-board-fen').html(fen);
 
-  pvBoardEl.find('.' + squareClass).removeClass('highlight-white');
-  pvBoardEl.find('.square-' + moveFrom).addClass('highlight-white');
-  pvBoardEl.find('.square-' + moveTo).addClass('highlight-white');
+  pvBoardElL.find('.' + squareClass).removeClass('highlight-white');
+  pvBoardElL.find('.square-' + moveFrom).addClass('highlight-white');
+  pvBoardElL.find('.square-' + moveTo).addClass('highlight-white');
   pvSquareToHighlight = moveTo;
 
-  pvBoard.position(fen, false);
+  pvBoardL.position(fen, false);
 }
 
 $('#pv-board-fen').click(function(e) {
@@ -1215,7 +1317,7 @@ $('#pv-board-fen').click(function(e) {
 
 $('#pv-board-black').click(function(e) {
   activePv = blackPv;
-  setPvFromKey(0);
+  setPvFromKey(0, 'live', blackPv);
   e.preventDefault();
 
   return false;
@@ -1223,78 +1325,165 @@ $('#pv-board-black').click(function(e) {
 
 $('#pv-board-white').click(function(e) {
   activePv = whitePv;
-  setPvFromKey(0);
+  setPvFromKey(0, 'live', whitePv);
   e.preventDefault();
 
   return false;
 });
 
 $('#pv-board-to-first').click(function(e) {
-  setPvFromKey(0);
+  setPvFromKey(0, 'live');
   e.preventDefault();
-
   return false;
 });
 
 $('#pv-board-previous').click(function(e) {
-  if (activePvKey > 0) {
-    setPvFromKey(activePvKey - 1);
+  if (activePvKey[2] > 0) {
+    setPvFromKey(activePvKey[2] - 1, 'live');
   }
   e.preventDefault();
 
   return false;
 });
 
-var isPvAutoplay = false;
+$('#pv-board-next').click(function(e) {
+  if (activePvKey[2] < choosePv.length) {
+    setPvFromKey(activePvKey[2] + 1, 'live');
+  }
+  e.preventDefault();
 
-$('#pv-board-autoplay').click(function(e) {
-  if (isPvAutoplay) {
-    isPvAutoplay = false;
-    $('#pv-board-autoplay i').removeClass('fa-pause');
-    $('#pv-board-autoplay i').addClass('fa-play');
+  return false;
+});
+
+$('#pv-board-to-first1').click(function(e) {
+  setPvFromKey(0, 'white');
+  e.preventDefault();
+  return false;
+});
+
+$('#pv-board-to-first2').click(function(e) {
+  setPvFromKey(0, 'black');
+  e.preventDefault();
+  return false;
+});
+
+$('#pv-board-previous1').click(function(e) {
+  if (activePvKey[0] > 0) {
+    setPvFromKey(activePvKey[0] - 1, 'white');
+  }
+  e.preventDefault();
+
+  return false;
+});
+
+$('#pv-board-previous2').click(function(e) {
+  if (activePvKey[1] > 0) {
+    setPvFromKey(activePvKey[1] - 1, 'black');
+  }
+  e.preventDefault();
+
+  return false;
+});
+
+var isPvAutoplay = [];
+isPvAutoplay[1] = false;
+isPvAutoplay[0] = false;
+
+$('#pv-board-autoplay1').click(function(e) {
+  if (isPvAutoplay[0]) {
+    isPvAutoplay[0] = false;
+    $('#pv-board-autoplay1 i').removeClass('fa-pause');
+    $('#pv-board-autoplay1 i').addClass('fa-play');
   } else {
-    isPvAutoplay = true;
-    $('#pv-board-autoplay i').removeClass('fa-play')
-    $('#pv-board-autoplay i').addClass('fa-pause');
-    pvBoardAutoplay();
+    isPvAutoplay[0] = true;
+    $('#pv-board-autoplay1 i').removeClass('fa-play')
+    $('#pv-board-autoplay1 i').addClass('fa-pause');
+    pvBoardAutoplay(0, 'white', whitePv);
   }
   e.preventDefault();
 
   return false;
 });
 
-function pvBoardAutoplay()
+$('#pv-board-autoplay2').click(function(e) {
+  if (isPvAutoplay[1]) {
+    isPvAutoplay[1] = false;
+    $('#pv-board-autoplay2 i').removeClass('fa-pause');
+    $('#pv-board-autoplay2 i').addClass('fa-play');
+  } else {
+    isPvAutoplay[1] = true;
+    $('#pv-board-autoplay2 i').removeClass('fa-play')
+    $('#pv-board-autoplay2 i').addClass('fa-pause');
+    pvBoardAutoplay(1, 'black', blackPv);
+  }
+  e.preventDefault();
+
+  return false;
+});
+
+//hack
+
+function pvBoardAutoplay(value, color, activePv)
 {
-  if (isPvAutoplay && activePvKey >= 0 && activePvKey < activePv.length) {
-    setPvFromKey(activePvKey + 1);
-    setTimeout(function() { pvBoardAutoplay(); }, 750);
+  if (isPvAutoplay[value] && activePvKey[value] >= 0 && activePvKey[value] < activePv.length - 1) {
+    setPvFromKey(activePvKey[value] + 1, color);
+    setTimeout(function() { pvBoardAutoplay(value, color, activePv); }, 750);
   } else {
-    isPvAutoplay = false;
-    $('#pv-board-autoplay i').removeClass('fa-pause');
-    $('#pv-board-autoplay i').addClass('fa-play');
+    isPvAutoplay[value] = false;
+    if (value == 0)
+    {
+       $('#pv-board-autoplay1 i').removeClass('fa-pause');
+       $('#pv-board-autoplay1 i').addClass('fa-play');
+    }
+    else
+    {
+       $('#pv-board-autoplay2 i').removeClass('fa-pause');
+       $('#pv-board-autoplay2 i').addClass('fa-play');
+    }
   }
 }
 
-$('#pv-board-next').click(function(e) {
-  if (activePvKey < activePv.length) {
-    setPvFromKey(activePvKey + 1);
+$('#pv-board-next1').click(function(e) {
+  if (activePvKey[0] < whitePv.length) {
+    setPvFromKey(activePvKey[0] + 1, 'white');
   }
   e.preventDefault();
 
   return false;
 });
 
-$('#pv-board-to-last').click(function(e) {
-  setPvFromKey(activePv.length - 1);
+$('#pv-board-next2').click(function(e) {
+  if (activePvKey[1] < blackPv.length) {
+    setPvFromKey(activePvKey[1] + 1, 'black');
+  }
   e.preventDefault();
 
   return false;
 });
 
-$('#pv-board-reverse').click(function(e) {
-  pvBoard.flip();
+$('#pv-board-to-last1').click(function(e) {
+  setPvFromKey(whitePv.length - 1, 'white');
   e.preventDefault();
 
+  return false;
+});
+
+$('#pv-board-to-last2').click(function(e) {
+  setPvFromKey(blackPv.length - 1, 'black');
+  e.preventDefault();
+
+  return false;
+});
+
+$('#pv-board-reverse1').click(function(e) {
+  pvBoard2.flip();
+  e.preventDefault();
+  return false;
+});
+
+$('#pv-board-reverse2').click(function(e) {
+  pvBoard.flip();
+  e.preventDefault();
   return false;
 });
 
@@ -1701,11 +1890,12 @@ function setBoardInit()
        });
 
      // illegal move
+     // console.log ("Came here to dragi:" + newLocation + ",strx:" + strx(move)); 
      if (move === null) return 'snapback';
 
-     var pvLen = activePvKey + 1;
+     var pvLen = activePvKey[2] + 1;
      var fen = ChessBoard.objToFen(position);
-     if (activePvKey == 0)
+     if (activePvKey[2] == 0)
      {
          activePv[0] = {};
          activePv[0].fen = fen; 
@@ -1718,23 +1908,22 @@ function setBoardInit()
      }
 
      var str = newLocation + '-' + oldLocation;+ '-' + newLocation;
-     pvBoard.move(str);
-     fen = pvBoard.fen();
+     pvBoard3.move(str);
+     fen = pvBoard3.fen();
      activePv[pvLen] = {};
      activePv[pvLen].fen = fen;
      activePv[pvLen].from = oldLocation;
      activePv[pvLen].to = newLocation;
-     $('.active-pv-move').removeClass('active-pv-move');
      $(this).addClass('active-pv-move');
-     pvBoardEl.find('.' + squareClass).removeClass('highlight-white');
-     pvBoardEl.find('.square-' + moveFrom).addClass('highlight-white');
-     pvBoardEl.find('.square-' + moveTo).addClass('highlight-white');
+     pvBoardEl3.find('.' + squareClass).removeClass('highlight-white');
+     pvBoardEl3.find('.square-' + moveFrom).addClass('highlight-white');
+     pvBoardEl3.find('.square-' + moveTo).addClass('highlight-white');
      pvSquareToHighlight = moveTo;
-     activePvKey = pvLen;
+     activePvKey[2] = pvLen;
      $('#pv-board-fen').html(fen);
    };
 
-   var pvBoard =  ChessBoard('pv-board', {
+   pvBoard3 =  ChessBoard('pv-boarda', {
       pieceTheme: window[ptheme + "_piece_theme"],
       position: 'start',
       onMoveEnd: onMoveEnd,
@@ -1745,11 +1934,19 @@ function setBoardInit()
       onDrop: onDragMove,   
       boardTheme: window[btheme + "_board_theme"]
    });
+
+   pvBoard =  ChessBoard('pv-board', {
+      pieceTheme: window[ptheme + "_piece_theme"],
+      position: 'start',
+      moveSpeed: 1,
+      appearSpeed: 1,
+      boardTheme: window[btheme + "_board_theme"]
+   });
+
    localStorage.setItem('tcec-board-theme', btheme);
    localStorage.setItem('tcec-piece-theme', ptheme);
 
    return {board,pvBoard};
-
 }
 
 function setBoard()
@@ -1774,11 +1971,23 @@ function setBoard()
       pieceTheme: window[ptheme + "_piece_theme"],
       position: 'start',
       onMoveEnd: onMoveEnd,
+      showNotation: false,
       moveSpeed: 1,
       appearSpeed: 1,
       boardTheme: window[btheme + "_board_theme"]
    });
    pvBoard.position(fen, false);
+   pvBoard2 =  ChessBoard('pv-board2', {
+      pieceTheme: window[ptheme + "_piece_theme"],
+      position: 'start',
+      showNotation: false,
+      onMoveEnd: onMoveEnd,
+      moveSpeed: 1,
+      appearSpeed: 1,
+      boardTheme: window[btheme + "_board_theme"]
+   });
+   pvBoard2.position(fen, false);
+
    localStorage.setItem('tcec-board-theme', btheme);
    localStorage.setItem('tcec-piece-theme', ptheme);
 }
@@ -2109,13 +2318,11 @@ function updateLiveEvalData(datum, update, fen, contno)
    if (contno == 1 && !showLivEng1)
    {
       $(container).html(''); 
-      console.log ("Setting 1 to null");
       return;
    }
    if (contno == 2 && !showLivEng2)
    {
       $(container).html(''); 
-      console.log ("Setting 2 to null");
       return;
    }
 

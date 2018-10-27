@@ -371,3 +371,9 @@ canvas {
 {
    /* #007BFF */
 }
+
+#black-engine-pv
+{
+   background-color: #2f2f2f;
+   color: white;
+}
