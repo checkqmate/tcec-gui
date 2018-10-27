@@ -2128,6 +2128,7 @@ function setDefaultThemes()
    {
       setLight();
    }
+   setDefaultEnginecolor();
 }
 
 function drawBoards()
@@ -2161,9 +2162,23 @@ function setPieceDefault(pTheme)
    setBoard();
 }
 
+function setDefaultEnginecolor()
+{
+   var color = localStorage.getItem('tcec-engine-color');
+   if (color == undefined)
+   {
+      color = 0;
+   }
+   $('input[value=engcolor'+color+']').prop('checked', true);
+   engine2colorno = color;
+   drawEval();
+   updateChartData();
+}
+
 function setEngineColor(color)
 {
    engine2colorno = color; 
+   localStorage.setItem('tcec-engine-color', color);
    drawEval();
    updateChartData(); 
 }
