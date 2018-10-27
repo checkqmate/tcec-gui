@@ -42,6 +42,7 @@ var timeDiffRead = 0;
 var prevPgnData = 0;
 var playSound = 1;
 var pvBoard3;
+var pvBoard2;
 
 var liveEngineEval1 = [];
 var liveEngineEval2 = [];
@@ -934,6 +935,10 @@ function updateEnginePv(color, whiteToPlay, moves)
         currentMove++;
       }
       plog ("classhigh: " + classhigh, 1);
+      if (color == 'black')
+      {
+         classhigh += ' blue';
+      }
       $('#' + color + '-engine-pv').append("<a href='#' id='" + color + '-' + key + "' class='set-pv-board " + classhigh + "' move-key='" + key + "' color='" + color + "'>" + move.m + '</a> ');
       });
     if (color == 'white') {
@@ -1271,15 +1276,19 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
   moveTo = activePv[moveKey].to;
   fen = activePv[moveKey].fen;
   game.load(fen);
+  var pvBoardElL = null;
 
    $('.active-pv-move').removeClass('active-pv-move');
    if (pvColor == 'white')
    {
-      pvBoardL = pvBoard2;
-      pvBoardElL = pvBoardEl2;
-      $('#white-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
-      $('#black-engine-pv').find('#black-'+activePvKey[1]).addClass('active-pv-move');
-      scrollDiv('#white-engine-pv', '#'+pvColor+'-'+moveKey);
+      if (pvBoard2 != undefined)
+      {
+         pvBoardL = pvBoard2;
+         pvBoardElL = pvBoardEl2;
+         $('#white-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
+         $('#black-engine-pv').find('#black-'+activePvKey[1]).addClass('active-pv-move');
+         scrollDiv('#white-engine-pv', '#'+pvColor+'-'+moveKey);
+      }
    }
    else if (pvColor == 'black')
    {
@@ -1300,8 +1309,11 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
       //scrollDiv('#black-engine-pv', '#'+pvColor+'-'+moveKey);
    }
 
+  if (pvBoardElL == null)
+  {
+     return;
+  }
   $('#pv-board-fen').html(fen);
-
   pvBoardElL.find('.' + squareClass).removeClass('highlight-white');
   pvBoardElL.find('.square-' + moveFrom).addClass('highlight-white');
   pvBoardElL.find('.square-' + moveTo).addClass('highlight-white');

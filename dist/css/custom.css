@@ -367,13 +367,17 @@ canvas {
    color: #39FF14;
 }
 
-.bluee
+.blue
 {
    /* #007BFF */
+   color:  #4863A0;
+   color: #6698FF;
+   color: #82CAFA;
 }
 
 #black-engine-pv
 {
    background-color: #2f2f2f;
+   background-color: black;
    color: white;
 }
