@@ -48,7 +48,6 @@ var pvBoard2;
 
 var liveEngineEval1 = [];
 var liveEngineEval2 = [];
-var livePVHist = 0;
 var debug = 0;
 var whiteEngineFull = null;
 var blackEngineFull = null;
@@ -56,7 +55,7 @@ var blackEngineFull = null;
 var whitePv = [];
 var blackPv = [];
 var activePv = [];
-var livePVHist = 0;
+var livePVHist = [];
 var debug = 0;
 var whiteEngineFull = null;
 var blackEngineFull = null;
@@ -1224,16 +1223,18 @@ function handlePlyChange(handleclick)
    currentMove = getMoveFromPly(activePly - 1);
 
    var prevMove = getMoveFromPly(activePly - 2);
-   if (livePVHist)
+   for (var yy = 1 ; yy <= livePVHist.length ; yy ++)
    {
-      for (var xx = 0 ; xx < livePVHist.moves.length ; xx ++)
+      if (livePVHist[yy])
       {
-         if (parseInt(livePVHist.moves[xx].ply) == activePly)
+         for (var xx = 0 ; xx < livePVHist[yy].moves.length ; xx ++)
          {
-            livePVHist.moves[xx].engine = livePVHist.engine;
-            updateLiveEvalData(livePVHist.moves[xx], 0, prevMove.fen, 1);
-            updateLiveEvalData(livePVHist.moves[xx], 0, prevMove.fen, 2);
-            break;
+            if (parseInt(livePVHist[yy].moves[xx].ply) == activePly)
+            {
+               livePVHist[yy].moves[xx].engine = livePVHist[yy].engine;
+               updateLiveEvalData(livePVHist[yy].moves[xx], 0, prevMove.fen, yy);
+               break;
+            }
          }
       }
    }
@@ -2599,13 +2600,14 @@ function updateLiveChartData(data, contno)
       if (contno == 1)
       {
          liveEngineEval1 = data.moves;
+         livePVHist[contno] = data;
       }
       else
       {
          liveEngineEval2 = data.moves;
+         livePVHist[contno] = data;
       }
       updateChartData();
-      livePVHist = data;
    } else {
       if (contno == 1)
       {
