@@ -138,6 +138,10 @@ body.dark #v-pills-pv {
 	background: #333 !important;
 }
 
+body.dark #v-pills-pvanalys {
+	background: #333 !important;
+}
+
 .active-move, 
 .active-pv-move {
 	background-color: #1e1e1e !important;
@@ -186,12 +190,31 @@ canvas {
 	width: 100%;
 }
 
+.black-engine-pv,
+.white-engine-pv
+{
+   padding: 3px;
+   overflow-y: scroll;
+   font-size: small;
+   height: 48px;
+   margin-bottom: 5px;
+}
+
 .engine-pv
 {
    padding: 3px;
    overflow-y: scroll;
    font-size: small;
    height: 100px;
+   margin-bottom: 5px;
+}
+
+.engine-pv-live
+{
+   padding: 3px;
+   overflow-y: scroll;
+   font-size: small;
+   height: 48px;
    margin-bottom: 5px;
 }
 
@@ -375,7 +398,8 @@ canvas {
    color: #82CAFA;
 }
 
-#black-engine-pv
+#black-engine-pv,
+.black-engine-pv
 {
    background-color: #2f2f2f;
    background-color: black;
