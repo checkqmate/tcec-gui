@@ -32,6 +32,8 @@ var loadedPgn = '';
 var activeFen = '';
 var lastMove = '';
 var currentPosition = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+var currentPositionWhite = currentPosition;
+var currentPositionBlack = currentPosition;
 var bookmove = 0;
 
 var darkMode = 0;
@@ -55,7 +57,6 @@ var whitePv = [];
 var blackPv = [];
 var livePvs = [];
 var activePv = [];
-var highlightpv = 0;
 var livePVHist = 0;
 var debug = 0;
 var whiteEngineFull = null;
@@ -70,6 +71,7 @@ var showLivEng1 = 1;
 var showLivEng2 = 1;
 var activePvKey = [];
 var activePvColor = '';
+var plyDiff = 0;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -626,6 +628,26 @@ function setPgn(pgn)
   }
 }
 
+function copyFenWhite()
+{
+   var clip = new ClipboardJS('.btn', {
+      text: function(trigger) {
+         return currentPositionWhite;
+      }
+   });
+   return false;
+}
+
+function copyFenBlack()
+{
+   var clip = new ClipboardJS('.btn', {
+      text: function(trigger) {
+         return currentPositionBlack;
+      }
+   });
+   return false;
+}
+
 function copyFen()
 {
    var clip = new ClipboardJS('.btn', {
@@ -633,12 +655,6 @@ function copyFen()
          return currentPosition;
       }
    });
-/*
-   clip.on('success', function(e) {
-      $('.copied').show();
-      $('.copied').fadeOut(1000);
-   });
-*/
    return false;
 }
 
@@ -888,7 +904,7 @@ function updateEnginePv(color, whiteToPlay, moves)
       pvMoveNofloor = currentMove + effectiveKey;
       if (whiteToPlay)
       {
-         if (color == "white" && (highlightpv == pvMoveNofloor))
+         if (color == "white" && (highlightpv == key))
          {
             plog ("Need to highlight:" + pvMove + ", move is :" + move.m, 1);
             classhigh = "active-pv-move";
@@ -896,25 +912,24 @@ function updateEnginePv(color, whiteToPlay, moves)
          }
          if (color == "black" && key == 0) 
          {
-            plog ("Need to highlight:" + pvMove + ", move is :" + move.m + ",highlightpv:" + highlightpv + ",pvMoveNofloor:" + pvMoveNofloor, 1);
             pvMoveNofloor = pvMoveNofloor + 1;
          }
-         if (color == "black" && (highlightpv == pvMoveNofloor))
+         if (color == "black" && (highlightpv == key + 1))
          {
-            plog ("Need to highlight:" + pvMove + ", move is :" + move.m, 0);
+            plog ("Need to highlight:" + pvMove + ", move is :" + move.m, 1);
             classhigh = "active-pv-move";
             setpvmove = effectiveKey;
          }
       }
       else
       {
-         if (color == "white" && (highlightpv == pvMoveNofloor))
+         if (color == "white" && (highlightpv - 1 == key))
          {
             plog ("Need to highlight:" + pvMove + ", move is :" + move.m, 1);
             classhigh = "active-pv-move";
             setpvmove = effectiveKey;
          }
-         if (color == "black" && (highlightpv + 1 == pvMoveNofloor))
+         if (color == "black" && (highlightpv == key))
          {
             plog ("Need to highlight:" + pvMove + ", move is :" + move.m, 1);
             classhigh = "active-pv-move";
@@ -941,29 +956,76 @@ function updateEnginePv(color, whiteToPlay, moves)
       }
       $('#' + color + '-engine-pv').append("<a href='#' id='" + color + '-' + key + "' class='set-pv-board " + classhigh + "' move-key='" + key + "' color='" + color + "'>" + move.m + '</a> ');
       });
-    if (color == 'white') {
+
+    plog ("highlightpv is :" + highlightpv);
+    if (highlightpv == 0)
+    {
+       setpvmove = 0;
+    }
+   if (color == 'white') 
+   {
       whitePv = moves;
       if (whitePv.length > 0)
       {
+         if (plyDiff == 2)
+         {
+            setpvmove = whitePv.length - 1;
+            plog ("plyDiff in white:" + whitePv.length);
+         }
          activePv = whitePv.slice();
          setPvFromKey(setpvmove, 'white');
       }
-    } else {
+   } 
+   else 
+   {
       blackPv = moves;
       if (blackPv.length > 0)
       {
          activePv = blackPv.slice();
+         if (plyDiff == 2)
+         {
+            setpvmove = blackPv.length - 1; 
+         }
          setPvFromKey(setpvmove, 'black');
       }
-    }
+   }
   } else {
     $('#' + color + '-engine-pv').html('');
   }
 }
 
+function setPlyDiv(plyDiffL)
+{
+   plyDiff = plyDiffL;
+   findDiffPv(whitePv, blackPv);
+   updateEnginePv('white', whiteToPlay, whitePv);
+   updateEnginePv('black', whiteToPlay, blackPv);
+   localStorage.setItem('tcec-ply-div', plyDiff);
+   $('input[value=ply'+plyDiffL+']').prop('checked', true);
+}
+
+function getPlyDivDefault()
+{
+   var plyDiffL = localStorage.getItem('tcec-ply-div');
+   plyDiff = 0;
+   if (plyDiffL != 'undefined')
+   {
+      plyDiff = plyDiffL;
+   }
+   plyDiff = parseInt(plyDiff);
+   $('input[value=ply'+plyDiff+']').prop('checked', true);
+}
+
 function findDiffPv(whitemoves, blackmoves)
 {
    highlightpv = 0;
+
+   if (plyDiff == 0)
+   {
+      highlightpv = 0;
+      plog ("returning here:" + plyDiff);
+      return;
+   }
 
    if (typeof whitemoves != 'undefined') 
    {
@@ -981,16 +1043,16 @@ function findDiffPv(whitemoves, blackmoves)
          {
             if (!highlightpv && blackmoves && blackmoves[key - 1] && (blackmoves[key - 1].m != whitemoves[key].m))
             {
-               plog ("Need to color this pvmove is :" + pvMove + ", pv:" + whitemoves[key].m + ", black: " + blackmoves[key - 1].m, 1);
-               highlightpv = pvMove;
+               plog ("Need to color this pvmove is :" + key + ", pv:" + whitemoves[key].m + ", black: " + blackmoves[key - 1].m, 1);
+               highlightpv = key;
             }
          }
          else
          {
             if (!highlightpv && blackmoves && blackmoves[key + 1] && (blackmoves[key + 1].m != whitemoves[key].m))
             {
-               plog ("Need to color this pvmove is :" + pvMove + ", pv:" + whitemoves[key].m + ", black: " + blackmoves[key + 1].m, 1);
-               highlightpv = pvMove;
+               plog ("Need to color this pvmove is :" + key + ", pv:" + whitemoves[key].m + ", black: " + blackmoves[key + 1].m, 1);
+               highlightpv = key + 1;
             }
          }
       });
@@ -1288,6 +1350,7 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
          $('#white-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
          $('#black-engine-pv').find('#black-'+activePvKey[1]).addClass('active-pv-move');
          scrollDiv('#white-engine-pv', '#'+pvColor+'-'+moveKey);
+         currentPositionWhite = fen;
       }
    }
    else if (pvColor == 'black')
@@ -1298,6 +1361,7 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
       $('#black-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
       $('#white-engine-pv').find('#white-'+activePvKey[0]).addClass('active-pv-move');
       scrollDiv('#black-engine-pv', '#'+pvColor+'-'+moveKey);
+      currentPositionBlack = fen;
    }
    else if (pvColor == 'live')
    {
@@ -2129,6 +2193,7 @@ function setDefaultThemes()
       setLight();
    }
    setDefaultEnginecolor();
+   getPlyDivDefault();
 }
 
 function drawBoards()

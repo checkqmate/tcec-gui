@@ -300,6 +300,30 @@
                   </ul>
                 </li>
                 <div class="dropdown-divider"></div>
+                <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">PV Board</a>
+                  <ul class="dropdown-menu bg-dark whitefont">
+                    <li class="radio">
+                      <div class="form-check classpad">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="ply0" value="ply0" checked="checked" onclick="setPlyDiv(0);">
+                        <label class="form-check-label" for="exampleRadios1">
+                          First ply
+                      </div>
+                      <div class="form-check classpad">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="ply1" value="ply1" onclick="setPlyDiv(1);">
+                        <label class="form-check-label" for="exampleRadios2">
+                          Diverging ply
+                        </label>
+                      </div>
+                      <div class="form-check classpad">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="ply2" value="ply2" onclick="setPlyDiv(2);">
+                        <label class="form-check-label" for="exampleRadios3">
+                          Last Ply 
+                        </label>
+                      </div>
+                    </li>
+                    </ul>
+                </li>
+                <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Twitch Theme</a>
                   <ul class="dropdown-menu bg-dark whitefont">
                       <div class="form-check classpad">
@@ -746,6 +770,9 @@
                         <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-reverse1">
                           <i class="fa fa-random"></i>
                         </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100 rightborder fen" id="fen" onClick="copyFenWhite()" title="Copy FEN">
+                          <i class="fa fa-copy"></i>
+                        </a>
                        </div>
                        <div class="btn-group d-flex navigation-buttons" style="width: 196px; margin-left: auto; margin-right:auto;" id="nav2" role="group">
                         <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-to-first2">
@@ -766,6 +793,9 @@
                         <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-reverse2">
                           <i class="fa fa-random"></i>
                         </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100 rightborder fen" id="fen" onClick="copyFenBlack()" title="Copy FEN">
+                          <i class="fa fa-copy"></i>
+                        </a>
                        </div>
                     </div>
                   </div>
@@ -776,7 +806,7 @@
 
           <div class="text-center">
             <!-- Automatic -->
-            <ins class="adsbygoogle" style="display:inline-block;width:300px;height:250px"
+            <ins class="adsbygoogle" style="display:inline-block;width:300px;height:150px"
                  data-full-width-responsive="true" data-ad-client="ca-pub-6544406400639567" data-ad-slot="2712361177"></ins>
             <script>
               (adsbygoogle = window.adsbygoogle || []).push({});
