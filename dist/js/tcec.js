@@ -1432,15 +1432,13 @@ $('#pv-board-white').click(function(e) {
 });
 
 $('#pv-board-live1').click(function(e) {
-  activePv = whitePv;
-  setPvFromKey(0, 'live', whitePv);
+  setPvFromKey(0, 'live', livePv[1]);
   e.preventDefault();
   return false;
 });
 
 $('#pv-board-live2').click(function(e) {
-  activePv = whitePv;
-  setPvFromKey(0, 'live', whitePv);
+  setPvFromKey(0, 'live', livePv[2]);
   e.preventDefault();
   return false;
 });
