@@ -1310,7 +1310,7 @@ function setActiveKey(pvColor, value)
 function scrollDiv(container, element)
 {
    $(container).scrollTop(
-      $(element).offset().top - $(container).offset().top + $(container).scrollTop()
+         $(element).offset().top - $(container).offset().top + $(container).scrollTop()
       );
 }
 
