@@ -34,6 +34,7 @@ var lastMove = '';
 var currentPosition = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 var currentPositionWhite = currentPosition;
 var currentPositionBlack = currentPosition;
+var analysFen = currentPosition;
 var bookmove = 0;
 
 var darkMode = 0;
@@ -625,6 +626,16 @@ function setPgn(pgn)
   {
      plog ("Came to setpgn need to reread dataa at end", 1);
   }
+}
+
+function copyFenAnalysis()
+{
+   var clip = new ClipboardJS('.btn', {
+      text: function(trigger) {
+         return analysFen;
+      }
+   });
+   return false;
 }
 
 function copyFenWhite()
@@ -1403,7 +1414,7 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
   {
      return;
   }
-  $('#pv-board-fen').html(fen);
+  analysFen = fen;
   pvBoardElL.find('.' + squareClass).removeClass('highlight-white');
   pvBoardElL.find('.square-' + moveFrom).addClass('highlight-white');
   pvBoardElL.find('.square-' + moveTo).addClass('highlight-white');
@@ -1411,11 +1422,6 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
 
   pvBoardL.position(fen, false);
 }
-
-$('#pv-board-fen').click(function(e) {
-  Clipboard.copy($(this).html());
-  return false;
-});
 
 $('#pv-board-black').click(function(e) {
   activePv = blackPv;
@@ -2028,7 +2034,7 @@ function setBoardInit()
      pvBoardEl3.find('.square-' + moveTo).addClass('highlight-white');
      pvSquareToHighlight = moveTo;
      activePvKey[2] = pvLen;
-     $('#pv-board-fen').html(fen);
+     analysFen = fen;
    };
 
    pvBoard3 =  ChessBoard('pv-boarda', {
