@@ -2086,7 +2086,7 @@ function setBoard()
       pieceTheme: window[ptheme + "_piece_theme"],
       position: 'start',
       onMoveEnd: onMoveEnd,
-      showNotation: false,
+      showNotation: true,
       moveSpeed: 1,
       appearSpeed: 1,
       boardTheme: window[btheme + "_board_theme"]
@@ -2095,7 +2095,7 @@ function setBoard()
    pvBoard2 =  ChessBoard('pv-board2', {
       pieceTheme: window[ptheme + "_piece_theme"],
       position: 'start',
-      showNotation: false,
+      showNotation: true,
       onMoveEnd: onMoveEnd,
       moveSpeed: 1,
       appearSpeed: 1,
