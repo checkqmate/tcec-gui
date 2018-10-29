@@ -895,6 +895,7 @@ function updateEnginePv(color, whiteToPlay, moves)
     }
     setpvmove = 0;
     $('#' + color + '-engine-pv').html('');
+    $('.' + color + '-engine-pv').html('');
     _.each(moves, function(move, key) {
       classhigh = "";
       effectiveKey = key + keyOffset;
@@ -957,7 +958,7 @@ function updateEnginePv(color, whiteToPlay, moves)
          classhigh += ' blue';
       }
       $('#' + color + '-engine-pv').append("<a href='#' id='" + color + '-' + key + "' class='set-pv-board " + classhigh + "' move-key='" + key + "' color='" + color + "'>" + move.m + '</a> ');
-      $('.' + color + '-engine-pv').append("<a href='#' id='" + color + '-' + key + "' class='set-pv-board " + classhigh + "' move-key='" + key + "' color='" + color + "'>" + move.m + '</a> ');
+      $('.' + color + '-engine-pv').append("<a href='#' id='c" + color + '-' + key + "' class='set-pv-board " + classhigh + "' move-key='" + key + "' color='" + color + "'>" + move.m + '</a> ');
       });
 
     plog ("highlightpv is :" + highlightpv);
@@ -1365,9 +1366,9 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
          $('#white-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
          $('#black-engine-pv').find('#black-'+activePvKey[1]).addClass('active-pv-move');
          scrollDiv('#white-engine-pv', '#'+pvColor+'-'+moveKey);
-         $('.white-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
-         $('.black-engine-pv').find('#black-'+activePvKey[1]).addClass('active-pv-move');
-         scrollDiv('.white-engine-pv', '#'+pvColor+'-'+moveKey);
+         $('.white-engine-pv').find('#c'+pvColor+'-'+moveKey).addClass('active-pv-move');
+         $('.black-engine-pv').find('#cblack-'+activePvKey[1]).addClass('active-pv-move');
+         scrollDiv('.white-engine-pv', '#c'+pvColor+'-'+moveKey);
          currentPositionWhite = fen;
       }
    }
@@ -1379,9 +1380,9 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
       $('#black-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
       $('#white-engine-pv').find('#white-'+activePvKey[0]).addClass('active-pv-move');
       scrollDiv('#black-engine-pv', '#'+pvColor+'-'+moveKey);
-      $('.black-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
-      $('.white-engine-pv').find('#white-'+activePvKey[0]).addClass('active-pv-move');
-      scrollDiv('.black-engine-pv', '#'+pvColor+'-'+moveKey);
+      $('.black-engine-pv').find('#c'+pvColor+'-'+moveKey).addClass('active-pv-move');
+      $('.white-engine-pv').find('#cwhite-'+activePvKey[0]).addClass('active-pv-move');
+      scrollDiv('.black-engine-pv', '#c'+pvColor+'-'+moveKey);
       currentPositionBlack = fen;
    }
    else if (pvColor == 'live')
@@ -1545,7 +1546,6 @@ $('#pv-board-next1').click(function(e) {
     setPvFromKey(activePvKey[0] + 1, 'white');
   }
   e.preventDefault();
-
   return false;
 });
 
@@ -1554,21 +1554,18 @@ $('#pv-board-next2').click(function(e) {
     setPvFromKey(activePvKey[1] + 1, 'black');
   }
   e.preventDefault();
-
   return false;
 });
 
 $('#pv-board-to-last1').click(function(e) {
   setPvFromKey(whitePv.length - 1, 'white');
   e.preventDefault();
-
   return false;
 });
 
 $('#pv-board-to-last2').click(function(e) {
   setPvFromKey(blackPv.length - 1, 'black');
   e.preventDefault();
-
   return false;
 });
 
