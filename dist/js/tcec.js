@@ -1438,13 +1438,13 @@ $('#pv-board-white').click(function(e) {
 });
 
 $('#pv-board-live1').click(function(e) {
-  setPvFromKey(0, 'live', livePv[1]);
+  setPvFromKey(0, 'live', livePvs[1]);
   e.preventDefault();
   return false;
 });
 
 $('#pv-board-live2').click(function(e) {
-  setPvFromKey(0, 'live', livePv[2]);
+  setPvFromKey(0, 'live', livePvs[2]);
   e.preventDefault();
   return false;
 });
