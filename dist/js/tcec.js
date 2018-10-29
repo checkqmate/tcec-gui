@@ -2942,6 +2942,37 @@ function setSound()
    }
 }
 
+function setHighlightDefault()
+{
+   var getHighL = localStorage.getItem('tcec-highlight');        
+   var cont = '#highcheck';
+
+   if (getHighL == undefined || getHighL == 0)
+   {
+      highlightClass = 'highlight-white';
+      $(cont).prop('checked', false);
+    }
+   else
+   {
+      highlightClass = 'highlight-white highlight-none';
+      $(cont).prop('checked', true);
+   }
+}
+
+function setHighlight(checkbox)
+{
+   if (checkbox.checked)
+   {
+      localStorage.setItem('tcec-highlight', 1);
+      highlightClass = 'highlight-white highlight-none';
+   }
+   else
+   {
+      localStorage.setItem('tcec-highlight', 0);
+      highlightClass = 'highlight-white';
+   }
+}
+
 function goMoveFromChart(chartx, evt)
 {
    var activePoints = chartx.getElementAtEvent(evt);
