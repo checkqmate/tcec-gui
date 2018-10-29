@@ -70,6 +70,7 @@ var showLivEng2 = 1;
 var activePvKey = [];
 var activePvColor = '';
 var plyDiff = 0;
+var selectedId = 0;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -1202,6 +1203,7 @@ $(document).on('click', '#board-reverse', function(e) {
 
 function handlePlyChange(handleclick) 
 {
+   selectedId = 0;
    if (typeof handleclick == 'undefined')
    {
       handleclick = true;
@@ -1254,8 +1256,10 @@ function handlePlyChange(handleclick)
 }
 
 $(document).on('click', '.set-pv-board', function(e) {
-  moveKey = $(this).attr('move-key') * 1;
-  pvColor = $(this).attr('color');
+   selectedId = $(this).closest('div').attr('id')
+   console.log ("selectedId is :" + selectedId);
+   moveKey = $(this).attr('move-key') * 1;
+   pvColor = $(this).attr('color');
    if (pvColor == 'live')
    {
       $('#v-pills-pv-analys-tab').click();
@@ -3031,13 +3035,32 @@ function stopEvProp(e) {
     return !1
 }
 
-function firstButton()
+function firstButtonMain()
 {
   activePly = 1;
   handlePlyChange();
 };
 
-function backButton()
+function firstButton()
+{
+   if (selectedId == 0)
+   {
+      firstButtonMain();
+   }
+   else
+   {
+      if (selectedId == 'white-engine-pv')
+      {
+         $('#pv-board-to-first1').click();
+      }
+      else if (selectedId == 'black-engine-pv')
+      {
+         $('#pv-board-to-first2').click();
+      }
+   }
+};
+
+function backButtonMain()
 {
   if (activePly > 1) {
     activePly--;
@@ -3047,7 +3070,26 @@ function backButton()
   return false;
 };
 
-function forwardButton()
+function backButton()
+{
+   if (selectedId == 0)
+   {
+      backButtonMain();
+   }
+   else
+   {
+      if (selectedId == 'white-engine-pv')
+      {
+         $('#pv-board-previous1').click();
+      }
+      else if (selectedId == 'black-engine-pv')
+      {
+         $('#pv-board-previous2').click();
+      }
+   }
+}
+
+function forwardButtonMain()
 {
   if (activePly < loadedPlies) {
     activePly++;
@@ -3059,10 +3101,48 @@ function forwardButton()
   return false;
 }
 
-function endButton()
+function forwardButton()
+{
+   if (selectedId == 0)
+   {
+      forwardButtonMain();
+   }
+   else
+   {
+      if (selectedId == 'white-engine-pv')
+      {
+         $('#pv-board-next1').click();
+      }
+      else if (selectedId == 'black-engine-pv')
+      {
+         $('#pv-board-next2').click();
+      }
+   }
+}
+
+function endButtonMain()
 {
   onLastMove();
 }
+
+function endButton()
+{
+   if (selectedId == 0)
+   {
+      endButtonMain();
+   }
+   else
+   {
+      if (selectedId == 'white-engine-pv')
+      {
+         $('#pv-board-to-last1').click();
+      }
+      else if (selectedId == 'black-engine-pv')
+      {
+         $('#pv-board-to-last2').click();
+      }
+   }
+};
 
 function tcecHandleKey(e) 
 {
