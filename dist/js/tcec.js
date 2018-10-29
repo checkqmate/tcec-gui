@@ -1421,7 +1421,6 @@ $('#pv-board-black').click(function(e) {
   activePv = blackPv;
   setPvFromKey(0, 'live', blackPv);
   e.preventDefault();
-
   return false;
 });
 
@@ -1429,7 +1428,20 @@ $('#pv-board-white').click(function(e) {
   activePv = whitePv;
   setPvFromKey(0, 'live', whitePv);
   e.preventDefault();
+  return false;
+});
 
+$('#pv-board-live1').click(function(e) {
+  activePv = whitePv;
+  setPvFromKey(0, 'live', whitePv);
+  e.preventDefault();
+  return false;
+});
+
+$('#pv-board-live2').click(function(e) {
+  activePv = whitePv;
+  setPvFromKey(0, 'live', whitePv);
+  e.preventDefault();
   return false;
 });
 
