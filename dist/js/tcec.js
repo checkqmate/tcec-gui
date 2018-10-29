@@ -72,15 +72,16 @@ var activePvKey = [];
 var activePvColor = '';
 var plyDiff = 0;
 var selectedId = 0;
+var highlightClass = 'highlight-white highlight-none';
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
-    .addClass('highlight-white');
+    .addClass(highlightClass);
 };
 
 var onMoveEndPv = function() {
   pvBoardEl.find('.square-' + pvSquareToHighlight)
-    .addClass('highlight-white');
+    .addClass(highlightClass);
 }
 
 function updateAll(refresh)
@@ -509,9 +510,9 @@ function setPgn(pgn)
 
   if (viewingActiveMove) {
     if (pgn.Moves.length > 0) {
-      boardEl.find('.' + squareClass).removeClass('highlight-white');
-      boardEl.find('.square-' + moveFrom).addClass('highlight-white');
-      boardEl.find('.square-' + moveTo).addClass('highlight-white');
+      boardEl.find('.' + squareClass).removeClass(highlightClass);
+      boardEl.find('.square-' + moveFrom).addClass(highlightClass);
+      boardEl.find('.square-' + moveTo).addClass(highlightClass);
       squareToHighlight = moveTo;
     }
     board.position(currentPosition, false);
@@ -1087,9 +1088,9 @@ $(document).on('click', '.change-move', function(e) {
   $('.active-move').removeClass('active-move');
   $(this).addClass('active-move');
 
-  boardEl.find('.' + squareClass).removeClass('highlight-white');
-  boardEl.find('.square-' + moveFrom).addClass('highlight-white');
-  boardEl.find('.square-' + moveTo).addClass('highlight-white');
+  boardEl.find('.' + squareClass).removeClass(highlightClass);
+  boardEl.find('.square-' + moveFrom).addClass(highlightClass);
+  boardEl.find('.square-' + moveTo).addClass(highlightClass);
   squareToHighlight = moveTo;
 
   board.position(clickedFen, false);
@@ -1415,9 +1416,9 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
      return;
   }
   analysFen = fen;
-  pvBoardElL.find('.' + squareClass).removeClass('highlight-white');
-  pvBoardElL.find('.square-' + moveFrom).addClass('highlight-white');
-  pvBoardElL.find('.square-' + moveTo).addClass('highlight-white');
+  pvBoardElL.find('.' + squareClass).removeClass(highlightClass);
+  pvBoardElL.find('.square-' + moveFrom).addClass(highlightClass);
+  pvBoardElL.find('.square-' + moveTo).addClass(highlightClass);
   pvSquareToHighlight = moveTo;
 
   pvBoardL.position(fen, false);
@@ -2029,9 +2030,9 @@ function setBoardInit()
      activePv[pvLen].from = oldLocation;
      activePv[pvLen].to = newLocation;
      $(this).addClass('active-pv-move');
-     pvBoardEl3.find('.' + squareClass).removeClass('highlight-white');
-     pvBoardEl3.find('.square-' + moveFrom).addClass('highlight-white');
-     pvBoardEl3.find('.square-' + moveTo).addClass('highlight-white');
+     pvBoardEl3.find('.' + squareClass).removeClass(highlightClass);
+     pvBoardEl3.find('.square-' + moveFrom).addClass(highlightClass);
+     pvBoardEl3.find('.square-' + moveTo).addClass(highlightClass);
      pvSquareToHighlight = moveTo;
      activePvKey[2] = pvLen;
      analysFen = fen;
