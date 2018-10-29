@@ -2971,6 +2971,7 @@ function setHighlight(checkbox)
       localStorage.setItem('tcec-highlight', 0);
       highlightClass = 'highlight-white';
    }
+   setBoard();
 }
 
 function goMoveFromChart(chartx, evt)
