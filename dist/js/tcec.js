@@ -585,8 +585,6 @@ function setPgn(pgn)
   $('#event-overview').bootstrapTable('load', [pgn.Headers]);
   $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: userCount});
   $('#event-name').html(pgn.Headers.Event);
-  $('#white-engine-elo').html(pgn.Headers.WhiteElo);
-  $('#black-engine-elo').html(pgn.Headers.BlackElo);
 
   if (viewingActiveMove) {
     setInfoFromCurrentHeaders();
@@ -1806,6 +1804,8 @@ function updateCrosstableData(data)
       {
          if (whiteEngineFull != null && key == whiteEngineFull)
          {
+            $('#white-engine-elo').html(data.Table[key].Rating);
+            $('#black-engine-elo').html(data.Table[oppkey].Rating);
             if (oppkey == blackEngineFull)
             {
                var strText = oppEngine.Text;
