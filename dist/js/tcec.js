@@ -1709,6 +1709,54 @@ function cellformatter(value, row, index, field) {
 
 var engineScores = [];
 
+function findEloDiff (whiteEngine, blackEngine, score)
+{
+   var k = 10;
+   var b_rating = blackEngine.Rating;
+   var w_rating = whiteEngine.Rating;
+   var expected_score = 1 / (1 + Math.pow(10, (b_rating - w_rating) / 400 )); 
+   var rating_diff = k * (score - expected_score);
+   plog ("rating_diff is :" + rating_diff, 1);
+   return rating_diff;
+}
+
+function getOverallElo(data)
+{
+   var crosstableData = data;
+   var eloDiff = 0;
+
+   _.each(crosstableData.Table, function(engine, key) {
+      eloDiff = 0;
+      _.each(engine.Results, function(oppEngine, oppkey)
+      {
+         plog ("Opp engine is " + oppkey + " ,oppEngine is " + crosstableData.Table[oppkey].Rating, 1);
+         var blackEngine = crosstableData.Table[oppkey];
+         var strText = oppEngine.Text;
+         for (var i = 0; i < strText.length; i++) 
+         {
+            plog ("strText.charAt(i): " + strText.charAt(i));
+            if (strText.charAt(i) == '0')
+            {
+               blackScore = blackScore + 1;
+               eloDiff += findEloDiff (engine, blackEngine, 0);
+            }
+            else if (strText.charAt(i) == '1')
+            {
+               eloDiff += findEloDiff (engine, blackEngine, 1);
+            }
+            else if (strText.charAt(i) == '=')
+            {
+               eloDiff += findEloDiff (engine, blackEngine, 0.5);
+            }
+         }
+      }); 
+      engine.eloDiff = eloDiff;
+      plog ("Final eloDiff: " + eloDiff + " ,fscore: " + parseInt(engine.Rating + eloDiff), 1);
+   });
+}
+
+var tcecElo = 1;
+
 function updateCrosstableData(data) 
 {
    var crosstableData = data;
@@ -1718,64 +1766,76 @@ function updateCrosstableData(data)
    whiteScore = 0;
    blackScore = 0;
 
+   if (tcecElo)
+   {
+      getOverallElo(data);
+   }
+
    _.each(crosstableData.Table, function(engine, key) {
-     abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
-     _.each(engine.Results, function(oppEngine, oppkey)
-     {
-        plog ("Opp engine is " + oppkey);  
-        if (whiteEngineFull != null && key == whiteEngineFull)
-        {
-           if (oppkey == blackEngineFull)
-           {
-              var strText = oppEngine.Text;
-              for (var i = 0; i < strText.length; i++) 
-              {
-                 plog ("strText.charAt(i): " + strText.charAt(i));
-                 if (strText.charAt(i) == '0')
-                 {
-                    blackScore = blackScore + 1;
-                    plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore + ",oppEngine.Text:" + oppEngine.Text, 1);
-                 }
-                 else if (strText.charAt(i) == '1')
-                 {
-                    whiteScore = whiteScore + 1;
-                    plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore + ",oppEngine.Text:" + oppEngine.Text, 1);
-                 }
-                 else if (strText.charAt(i) == '=')
-                 {
-                    blackScore = blackScore + 0.5;
-                    whiteScore = whiteScore + 0.5;
-                 }
-              } 
-           }
-        }
-     }); 
+      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
+      _.each(engine.Results, function(oppEngine, oppkey)
+      {
+         if (whiteEngineFull != null && key == whiteEngineFull)
+         {
+            if (oppkey == blackEngineFull)
+            {
+               var strText = oppEngine.Text;
+               for (var i = 0; i < strText.length; i++) 
+               {
+                  plog ("strText.charAt(i): " + strText.charAt(i));
+                  if (strText.charAt(i) == '0')
+                  {
+                     blackScore = blackScore + 1;
+                     plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore + ",oppEngine.Text:" + oppEngine.Text, 1);
+                  }
+                  else if (strText.charAt(i) == '1')
+                  {
+                     whiteScore = whiteScore + 1;
+                     plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore + ",oppEngine.Text:" + oppEngine.Text, 1);
+                  }
+                  else if (strText.charAt(i) == '=')
+                  {
+                     blackScore = blackScore + 0.5;
+                     whiteScore = whiteScore + 0.5;
+                  }
+               } 
+            }
+         }
+      }); 
    });
+
    $('.white-engine-score').html(whiteScore);
    $('.black-engine-score').html(blackScore);
 
    _.each(crosstableData.Order, function(engine, key) {
-     engineDetails = _.get(crosstableData.Table, engine);
+      engineDetails = _.get(crosstableData.Table, engine);
+      wins = (engineDetails.WinsAsBlack + engineDetails.WinsAsWhite);
+      //elo = calcElo (engineDetails.Elo, 
+      if (engineDetails.eloDiff)
+      {
+         plog ("engine.eloDiff is defined:" + engineDetails.eloDiff);
+         elo = Math.round(engineDetails.eloDiff);
+      }
+      else
+      {
+         elo = Math.round(engineDetails.Elo);
+      }
+      eloDiff = engineDetails.Rating + elo;
+      engine = '<div class="right-align"><img class="right-align-pic" src="img/engines/'+ getShortEngineName(engine) +'.jpg" />' + '<a class="right-align-name">' + engine + '</a></div>';
 
-     wins = (engineDetails.WinsAsBlack + engineDetails.WinsAsWhite);
-     elo = Math.round(engineDetails.Elo);
-     eloDiff = engineDetails.Rating + elo;
-     engine = '<div class="right-align"><img class="right-align-pic" src="img/engines/'+ getShortEngineName(engine) +'.jpg" />' + '<a class="right-align-name">' + engine + '</a></div>';
-
-     var entry = {
-       rank: engineDetails.Rank,
-       name: engine,
-       games: engineDetails.Games,
-       points: engineDetails.Score,
-       wins: wins + '[' + engineDetails.WinsAsWhite + '/' + engineDetails.WinsAsBlack + ']',
-       crashes: engineDetails.Strikes,
-       sb: Math.round(engineDetails.Neustadtl* 100) / 100,
-       elo: engineDetails.Rating,
-       elo_diff: elo + ' [' + eloDiff + ']'
-     };
-
-     standings = _.union(standings, [entry]);
-   });
+      var entry = {
+         rank: engineDetails.Rank,
+         name: engine,
+         games: engineDetails.Games,
+         points: engineDetails.Score,
+         wins: wins + '[' + engineDetails.WinsAsWhite + '/' + engineDetails.WinsAsBlack + ']',
+         crashes: engineDetails.Strikes,
+         sb: Math.round(engineDetails.Neustadtl* 100) / 100,
+         elo: engineDetails.Rating,
+         elo_diff: elo + ' [' + eloDiff + ']'
+         };
+        standings = _.union(standings, [entry]);
+      });
 
    if (!crossTableInitialized) {
 
