@@ -73,6 +73,7 @@ var activePvColor = '';
 var plyDiff = 0;
 var selectedId = 0;
 var highlightClass = 'highlight-white highlight-none';
+var tcecElo = 1;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -1754,8 +1755,6 @@ function getOverallElo(data)
       plog ("Final eloDiff: " + eloDiff + " ,fscore: " + parseInt(engine.Rating + eloDiff), 1);
    });
 }
-
-var tcecElo = 1;
 
 function updateCrosstableData(data) 
 {
