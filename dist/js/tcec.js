@@ -74,6 +74,7 @@ var plyDiff = 0;
 var selectedId = 0;
 var highlightClass = 'highlight-white highlight-none';
 var tcecElo = 1;
+var engGlobData = {};
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -1710,14 +1711,39 @@ function cellformatter(value, row, index, field) {
 
 var engineScores = [];
 
-function findEloDiff (whiteEngine, blackEngine, score)
+function getRating(engine, engName)
+{
+   var elo = 0;
+   var engNameL = null;
+
+   if (engName != undefined)
+   {
+      engNameL = engName;
+   }
+
+   _.each(engGlobData.ratings, function(engine, key) {
+      if (getShortEngineName(engNameL) == getShortEngineName(engine.name))
+      {
+         elo = engine.elo;
+         return true;
+      }
+   });
+
+   if (elo == 0)
+   {
+      elo = engine.Rating;
+   }
+   
+   return elo;
+}
+
+function findEloDiff (whiteEngine, blackEngine, whiteEngName, blackEngName, score)
 {
    var k = 10;
    var b_rating = blackEngine.Rating;
    var w_rating = whiteEngine.Rating;
    var expected_score = 1 / (1 + Math.pow(10, (b_rating - w_rating) / 400 )); 
    var rating_diff = k * (score - expected_score);
-   plog ("rating_diff is :" + rating_diff, 1);
    return rating_diff;
 }
 
@@ -1725,6 +1751,10 @@ function getOverallElo(data)
 {
    var crosstableData = data;
    var eloDiff = 0;
+
+   _.each(crosstableData.Table, function(engine, key) {
+      engine.Rating = getRating(engine, key); 
+      });
 
    _.each(crosstableData.Table, function(engine, key) {
       eloDiff = 0;
@@ -1739,15 +1769,15 @@ function getOverallElo(data)
             if (strText.charAt(i) == '0')
             {
                blackScore = blackScore + 1;
-               eloDiff += findEloDiff (engine, blackEngine, 0);
+               eloDiff += findEloDiff (engine, blackEngine, key, oppkey, 0);
             }
             else if (strText.charAt(i) == '1')
             {
-               eloDiff += findEloDiff (engine, blackEngine, 1);
+               eloDiff += findEloDiff (engine, blackEngine, key, oppkey, 1);
             }
             else if (strText.charAt(i) == '=')
             {
-               eloDiff += findEloDiff (engine, blackEngine, 0.5);
+               eloDiff += findEloDiff (engine, blackEngine, key, oppkey, 0.5);
             }
          }
       }); 
@@ -1900,6 +1930,24 @@ function updateCrosstableData(data)
      crossTableInitialized = true;
    }
    $('#crosstable').bootstrapTable('load', standings);
+}
+
+function updateEngRatingData(data)
+{
+   engGlobData = data;
+}
+
+function updateEngRating()
+{
+   axios.get('enginerating.json')
+   .then(function (response)
+   {
+      updateEngRatingData(response.data);
+   })
+   .catch(function (error) 
+   {
+      console.log(error);
+   });
 }
 
 function updateCrosstable() 
@@ -2168,6 +2216,7 @@ function setBoard()
 
 function updateTables()
 {
+  updateEngRating();
   updateSchedule();
   updateCrosstable();
   updateStandtable();
