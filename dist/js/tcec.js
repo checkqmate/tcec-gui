@@ -1801,9 +1801,9 @@ function updateCrosstableData(data)
       abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
       _.each(engine.Results, function(oppEngine, oppkey)
       {
-         if (whiteEngineFull != null && key == whiteEngineFull)
+         if (whiteEngineFull != null && getShortEngineName(key) == getShortEngineName(whiteEngineFull))
          {
-            if (oppkey == blackEngineFull)
+            if (getShortEngineName(oppkey) == getShortEngineName(blackEngineFull))
             {
                $('#white-engine-elo').html(data.Table[key].Rating);
                $('#black-engine-elo').html(data.Table[oppkey].Rating);
