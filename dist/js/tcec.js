@@ -1766,7 +1766,6 @@ function getOverallElo(data)
             plog ("strText.charAt(i): " + strText.charAt(i));
             if (strText.charAt(i) == '0')
             {
-               blackScore = blackScore + 1;
                eloDiff += findEloDiff (engine, blackEngine, key, oppkey, 0);
             }
             else if (strText.charAt(i) == '1')
@@ -1804,23 +1803,22 @@ function updateCrosstableData(data)
       {
          if (whiteEngineFull != null && key == whiteEngineFull)
          {
-            $('#white-engine-elo').html(data.Table[key].Rating);
-            $('#black-engine-elo').html(data.Table[oppkey].Rating);
             if (oppkey == blackEngineFull)
             {
+               $('#white-engine-elo').html(data.Table[key].Rating);
+               $('#black-engine-elo').html(data.Table[oppkey].Rating);
                var strText = oppEngine.Text;
                for (var i = 0; i < strText.length; i++) 
                {
-                  plog ("strText.charAt(i): " + strText.charAt(i));
+                  plog ("strText.charAt(i): " + strText.charAt(i), 1);
+                  plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore + ",oppEngine.Text:" + oppEngine.Text, 1);
                   if (strText.charAt(i) == '0')
                   {
                      blackScore = blackScore + 1;
-                     plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore + ",oppEngine.Text:" + oppEngine.Text, 1);
                   }
                   else if (strText.charAt(i) == '1')
                   {
                      whiteScore = whiteScore + 1;
-                     plog ("Whitescore: " + whiteScore + ", blakcScore:" + blackScore + ",oppEngine.Text:" + oppEngine.Text, 1);
                   }
                   else if (strText.charAt(i) == '=')
                   {
@@ -1828,13 +1826,12 @@ function updateCrosstableData(data)
                      whiteScore = whiteScore + 0.5;
                   }
                } 
+               $('.white-engine-score').html(whiteScore);
+               $('.black-engine-score').html(blackScore);
             }
          }
       }); 
    });
-
-   $('.white-engine-score').html(whiteScore);
-   $('.black-engine-score').html(blackScore);
 
    _.each(crosstableData.Order, function(engine, key) {
       engineDetails = _.get(crosstableData.Table, engine);
