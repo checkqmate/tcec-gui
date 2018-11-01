@@ -1,7 +1,7 @@
 boardEl = $('#board');
-pvBoardEl = $('#pv-board');
-pvBoardEl2 = $('#pv-board2');
-pvBoardEl3 = $('#pv-boarda');
+pvBoardElb = $('#pv-boardb');
+pvBoardElw = $('#pv-boardw');
+pvBoardEla = $('#pv-boarda');
 
 var squareToHighlight = '';
 var pvSquareToHighlight = '';
@@ -44,8 +44,6 @@ var timeDiff = 0;
 var timeDiffRead = 0;
 var prevPgnData = 0;
 var playSound = 1;
-var pvBoard3;
-var pvBoard2;
 
 var liveEngineEval1 = [];
 var liveEngineEval2 = [];
@@ -73,8 +71,11 @@ var activePvColor = '';
 var plyDiff = 0;
 var selectedId = 0;
 var highlightClass = 'highlight-white highlight-none';
+var boardNotation = true;
 var tcecElo = 1;
 var engGlobData = {};
+var btheme = "chess24";
+var ptheme = "chess24";
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -82,7 +83,7 @@ var onMoveEnd = function() {
 };
 
 var onMoveEndPv = function() {
-  pvBoardEl.find('.square-' + pvSquareToHighlight)
+  pvBoardElb.find('.square-' + pvSquareToHighlight)
     .addClass(highlightClass);
 }
 
@@ -1022,7 +1023,7 @@ function setPlyDiv(plyDiffL)
    $('input[value=ply'+plyDiffL+']').prop('checked', true);
 }
 
-function getPlyDivDefault()
+function setPlyDivDefault()
 {
    var plyDiffL = localStorage.getItem('tcec-ply-div');
    plyDiff = 0;
@@ -1269,7 +1270,6 @@ function handlePlyChange(handleclick)
 
 $(document).on('click', '.set-pv-board', function(e) {
    selectedId = $(this).closest('div').attr('id')
-   console.log ("selectedId is :" + selectedId);
    moveKey = $(this).attr('move-key') * 1;
    pvColor = $(this).attr('color');
    if (pvColor == 'live')
@@ -1370,15 +1370,15 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
   moveTo = activePv[moveKey].to;
   fen = activePv[moveKey].fen;
   game.load(fen);
-  var pvBoardElL = null;
+  var pvBoardElbL = null;
 
    $('.active-pv-move').removeClass('active-pv-move');
    if (pvColor == 'white')
    {
-      if (pvBoard2 != undefined)
+      if (pvBoardw != undefined)
       {
-         pvBoardL = pvBoard2;
-         pvBoardElL = pvBoardEl2;
+         pvBoardL = pvBoardw;
+         pvBoardElbL = pvBoardElw;
          $('#white-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
          $('#black-engine-pv').find('#black-'+activePvKey[1]).addClass('active-pv-move');
          scrollDiv('#white-engine-pv', '#'+pvColor+'-'+moveKey);
@@ -1390,8 +1390,8 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
    }
    else if (pvColor == 'black')
    {
-      pvBoardL = pvBoard;
-      pvBoardElL = pvBoardEl;
+      pvBoardL = pvBoardb;
+      pvBoardElbL = pvBoardElb;
       //$('#black-engine-pv').addClass('active-pv-move');
       $('#black-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
       $('#white-engine-pv').find('#white-'+activePvKey[0]).addClass('active-pv-move');
@@ -1403,22 +1403,22 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
    }
    else if (pvColor == 'live')
    {
-      pvBoardL = pvBoard3;
-      pvBoardElL = pvBoardEl3;
+      pvBoardL = pvBoarda;
+      pvBoardElbL = pvBoardEla;
       //$('#black-engine-pv').addClass('active-pv-move');
       //$('#black-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
       //$('#white-engine-pv').find('#white-'+activePvKey[0]).addClass('active-pv-move');
       //scrollDiv('#black-engine-pv', '#'+pvColor+'-'+moveKey);
    }
 
-  if (pvBoardElL == null)
+  if (pvBoardElbL == null)
   {
      return;
   }
   analysFen = fen;
-  pvBoardElL.find('.' + squareClass).removeClass(highlightClass);
-  pvBoardElL.find('.square-' + moveFrom).addClass(highlightClass);
-  pvBoardElL.find('.square-' + moveTo).addClass(highlightClass);
+  pvBoardElbL.find('.' + squareClass).removeClass(highlightClass);
+  pvBoardElbL.find('.square-' + moveFrom).addClass(highlightClass);
+  pvBoardElbL.find('.square-' + moveTo).addClass(highlightClass);
   pvSquareToHighlight = moveTo;
 
   pvBoardL.position(fen, false);
@@ -1517,7 +1517,7 @@ $('#pv-board-autoplay1').click(function(e) {
     isPvAutoplay[0] = true;
     $('#pv-board-autoplay1 i').removeClass('fa-play')
     $('#pv-board-autoplay1 i').addClass('fa-pause');
-    pvBoardAutoplay(0, 'white', whitePv);
+    pvBoardautoplay(0, 'white', whitePv);
   }
   e.preventDefault();
 
@@ -1533,7 +1533,7 @@ $('#pv-board-autoplay2').click(function(e) {
     isPvAutoplay[1] = true;
     $('#pv-board-autoplay2 i').removeClass('fa-play')
     $('#pv-board-autoplay2 i').addClass('fa-pause');
-    pvBoardAutoplay(1, 'black', blackPv);
+    pvBoardautoplay(1, 'black', blackPv);
   }
   e.preventDefault();
 
@@ -1542,11 +1542,11 @@ $('#pv-board-autoplay2').click(function(e) {
 
 //hack
 
-function pvBoardAutoplay(value, color, activePv)
+function pvBoardautoplay(value, color, activePv)
 {
   if (isPvAutoplay[value] && activePvKey[value] >= 0 && activePvKey[value] < activePv.length - 1) {
     setPvFromKey(activePvKey[value] + 1, color);
-    setTimeout(function() { pvBoardAutoplay(value, color, activePv); }, 750);
+    setTimeout(function() { pvBoardautoplay(value, color, activePv); }, 750);
   } else {
     isPvAutoplay[value] = false;
     if (value == 0)
@@ -1591,7 +1591,7 @@ $('#pv-board-to-last2').click(function(e) {
 });
 
 $('#pv-board-reverse1').click(function(e) {
-  pvBoard2.flip();
+  pvBoardw.flip();
   e.preventDefault();
   return false;
 });
@@ -2062,88 +2062,66 @@ function pad(pad, str) {
   return (pad + str).slice(-pad.length);
 }
 
-var btheme = "chess24";
-var ptheme = "chess24";
 var game = new Chess();
 
-function setBoardInit()
+var onDragStart = function(source, piece, position, orientation) 
 {
-   var boardTheme = localStorage.getItem('tcec-board-theme');
-   var pieceTheme = localStorage.getItem('tcec-piece-theme');
-
-   if (boardTheme != undefined)
+   if (game.game_over() === true ||
+         (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+         (game.turn() === 'b' && piece.search(/^w/) !== -1)) 
    {
-      btheme = boardTheme;
-      ptheme = pieceTheme;
+      return false;
    }
-
-   var board =  ChessBoard('board', {
-         pieceTheme: window[ptheme + "_piece_theme"],
-         position: 'start',
-         onMoveEnd: onMoveEnd,
-         moveSpeed: 1,
-         appearSpeed: 1,
-         boardTheme: window[btheme + "_board_theme"]
+};
+  
+var onDragMove = function(newLocation, oldLocation, source,
+                          piece, position, orientation) 
+{
+   var move = game.move({
+      from: newLocation,
+      to: oldLocation,
+      promotion: 'q' // NOTE: always promote to a queen for example simplicity
    });
 
-   $('input[value='+ptheme+']').prop('checked', true);
-   $('input[value='+btheme+'b]').prop('checked', true);
+   // illegal move
+   // console.log ("Came here to dragi:" + newLocation + ",strx:" + strx(move)); 
+   if (move === null) return 'snapback';
 
-   var onDragStart = function(source, piece, position, orientation) {
-     //console.log ("game.turn() is " + game.turn());
-     //console.log ("game.turn() is " + game.fen());
-     if (game.game_over() === true ||
-         (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-         (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-       //console.log ("returning false");
-       return false;
-     }
-   };
-  
-   var onDragMove = function(newLocation, oldLocation, source,
-                             piece, position, orientation) {
-    var move = game.move({
-       from: newLocation,
-       to: oldLocation,
-       promotion: 'q' // NOTE: always promote to a queen for example simplicity
-       });
+   var pvLen = activePvKey[2] + 1;
+   var fen = ChessBoard.objToFen(position);
+   if (activePvKey[2] == 0)
+   {
+      activePv[0] = {};
+      activePv[0].fen = fen; 
+   }
+   var moveFrom = oldLocation;
+   var moveTo = newLocation;
+   if (newLocation == oldLocation)
+   {
+      return;
+   }
 
-     // illegal move
-     // console.log ("Came here to dragi:" + newLocation + ",strx:" + strx(move)); 
-     if (move === null) return 'snapback';
+   var str = newLocation + '-' + oldLocation;+ '-' + newLocation;
+   pvBoarda.move(str);
+   fen = pvBoarda.fen();
+   activePv[pvLen] = {};
+   activePv[pvLen].fen = fen;
+   activePv[pvLen].from = oldLocation;
+   activePv[pvLen].to = newLocation;
+   $(this).addClass('active-pv-move');
+   pvBoardEla.find('.' + squareClass).removeClass(highlightClass);
+   pvBoardEla.find('.square-' + moveFrom).addClass(highlightClass);
+   pvBoardEla.find('.square-' + moveTo).addClass(highlightClass);
+   pvSquareToHighlight = moveTo;
+   activePvKey[2] = pvLen;
+   analysFen = fen;
+};
 
-     var pvLen = activePvKey[2] + 1;
-     var fen = ChessBoard.objToFen(position);
-     if (activePvKey[2] == 0)
-     {
-         activePv[0] = {};
-         activePv[0].fen = fen; 
-     }
-     var moveFrom = oldLocation;
-     var moveTo = newLocation;
-     if (newLocation == oldLocation)
-     {
-        return;
-     }
-
-     var str = newLocation + '-' + oldLocation;+ '-' + newLocation;
-     pvBoard3.move(str);
-     fen = pvBoard3.fen();
-     activePv[pvLen] = {};
-     activePv[pvLen].fen = fen;
-     activePv[pvLen].from = oldLocation;
-     activePv[pvLen].to = newLocation;
-     $(this).addClass('active-pv-move');
-     pvBoardEl3.find('.' + squareClass).removeClass(highlightClass);
-     pvBoardEl3.find('.square-' + moveFrom).addClass(highlightClass);
-     pvBoardEl3.find('.square-' + moveTo).addClass(highlightClass);
-     pvSquareToHighlight = moveTo;
-     activePvKey[2] = pvLen;
-     analysFen = fen;
-   };
-
-   pvBoard3 =  ChessBoard('pv-boarda', {
+function drawGivenBoardDrag(cont)
+{
+   var newBoard =  ChessBoard(cont, {
       pieceTheme: window[ptheme + "_piece_theme"],
+      showNotation: boardNotation,
       position: 'start',
       onMoveEnd: onMoveEnd,
       moveSpeed: 1,
@@ -2153,62 +2131,74 @@ function setBoardInit()
       onDrop: onDragMove,   
       boardTheme: window[btheme + "_board_theme"]
    });
+   return newBoard;
+}
 
-   pvBoard =  ChessBoard('pv-board', {
+function drawGivenBoard(cont)
+{
+   var newBoard =  ChessBoard(cont, {
       pieceTheme: window[ptheme + "_piece_theme"],
+      showNotation: boardNotation,
       position: 'start',
+      onMoveEnd: onMoveEnd,
       moveSpeed: 1,
       appearSpeed: 1,
       boardTheme: window[btheme + "_board_theme"]
    });
+   return newBoard;
+}
+
+function setBoardInit()
+{
+   var boardTheme = localStorage.getItem('tcec-board-theme');
+   var pieceTheme = localStorage.getItem('tcec-piece-theme');
+
+   if (boardTheme != undefined)
+   {
+      btheme = boardTheme;
+   }
+
+   if (pieceTheme != undefined)
+   {
+      ptheme = pieceTheme;
+   }
+
+   pvBoarda = drawGivenBoardDrag('pv-boarda', 1);
+   board = drawGivenBoard('board', 0);
+   pvBoardw = drawGivenBoard('pv-boardw', 0);
+   pvBoardb = drawGivenBoard('pv-boardb', 0);
 
    localStorage.setItem('tcec-board-theme', btheme);
    localStorage.setItem('tcec-piece-theme', ptheme);
+   $('input[value='+btheme+'b]').prop('checked', true);
+   $('input[value='+ptheme+'p]').prop('checked', true);
 
-   return {board,pvBoard};
+   return {board, pvBoardw, pvBoardb, pvBoarda};
 }
 
 function setBoard()
 {
    var fen = board.fen();
-   board =  ChessBoard('board', {
-      pieceTheme: window[ptheme + "_piece_theme"],
-      position: 'start',
-      onMoveEnd: onMoveEnd,
-      moveSpeed: 1,
-      appearSpeed: 1,
-      boardTheme: window[btheme + "_board_theme"]
-   });
+   board = drawGivenBoard('board', 0);
    board.position(fen, false);
+
+   fen = pvBoardb.fen();
+   pvBoardb = drawGivenBoard('pv-boardb', 0);
+   pvBoardb.position(fen, false);
+
+   fen = pvBoardw.fen();
+   pvBoardw = drawGivenBoard('pv-boardw', 0);
+   pvBoardw.position(fen, false);
+
+   fen = pvBoarda.fen();
+   pvBoarda = drawGivenBoardDrag('pv-boarda', 0);
+   pvBoarda.position(fen, false);
+
    localStorage.setItem('tcec-board-theme', btheme);
    localStorage.setItem('tcec-piece-theme', ptheme);
-   $('input[value='+ptheme+']').prop('checked', true);
+
    $('input[value='+btheme+'b]').prop('checked', true);
-
-   var fen = pvBoard.fen();
-   pvBoard =  ChessBoard('pv-board', {
-      pieceTheme: window[ptheme + "_piece_theme"],
-      position: 'start',
-      onMoveEnd: onMoveEnd,
-      showNotation: true,
-      moveSpeed: 1,
-      appearSpeed: 1,
-      boardTheme: window[btheme + "_board_theme"]
-   });
-   pvBoard.position(fen, false);
-   pvBoard2 =  ChessBoard('pv-board2', {
-      pieceTheme: window[ptheme + "_piece_theme"],
-      position: 'start',
-      showNotation: true,
-      onMoveEnd: onMoveEnd,
-      moveSpeed: 1,
-      appearSpeed: 1,
-      boardTheme: window[btheme + "_board_theme"]
-   });
-   pvBoard2.position(fen, false);
-
-   localStorage.setItem('tcec-board-theme', btheme);
-   localStorage.setItem('tcec-piece-theme', ptheme);
+   $('input[value='+ptheme+'p]').prop('checked', true);
 }
 
 function updateTables()
@@ -2324,6 +2314,17 @@ function setLight()
   setDarkMode(0);
 }
 
+function setDefaults()
+{
+   setSound();
+   setHighlightDefault();
+   setDefaultThemes();
+   setliveEngine();
+   setDefaultEnginecolor();
+   setNotationDefault();
+   setBoard();
+}
+
 function setDefaultThemes()
 {
    var darkMode = localStorage.getItem('tcec-dark-mode');
@@ -2336,24 +2337,10 @@ function setDefaultThemes()
    {
       setLight();
    }
-   setDefaultEnginecolor();
-   getPlyDivDefault();
+   setPlyDivDefault();
 }
 
-function drawBoards()
-{
-   var boardTheme = localStorage.getItem('tcec-board-theme');
-   var pieceTheme = localStorage.getItem('tcec-piece-theme');
-
-   if (boardTheme != undefined)
-   {
-      btheme = boardTheme;
-      ptheme = pieceTheme;
-   } 
-   setBoard();
-}
-
-function setBoardDefault(boardTheme)
+function setBoardUser(boardTheme)
 {
    if (boardTheme != undefined)
    {
@@ -2362,7 +2349,7 @@ function setBoardDefault(boardTheme)
    setBoard();
 }
 
-function setPieceDefault(pTheme)
+function setPieceUser(pTheme)
 {
    if (pTheme != undefined)
    {
@@ -2378,8 +2365,9 @@ function setDefaultEnginecolor()
    {
       color = 0;
    }
-   $('input[value=engcolor'+color+']').prop('checked', true);
    engine2colorno = color;
+   color = 'engcolor'+color;
+   $('input[value='+color+']').prop('checked', true);
    drawEval();
    updateChartData();
 }
@@ -3037,14 +3025,49 @@ function checkSound(checkbox)
 function setSound()
 {
    var getSound = localStorage.getItem('tcec-sound-video');        
+   var cont = '#soundcheck';
    if (getSound == undefined || getSound == 0)
    {
       playSound = 1;
+      $(cont).prop('checked', false);
    }
    else
    {
       playSound = 0;
+      $(cont).prop('checked', true);
    }
+}
+
+function setNotationDefault()
+{
+   var getHighL = localStorage.getItem('tcec-notation');        
+   var cont = '#nottcheck';
+
+   if (getHighL == undefined || getHighL == 0)
+   {
+      boardNotation = true;
+      $(cont).prop('checked', false);
+    }
+   else
+   {
+      boardNotation = false;
+      $(cont).prop('checked', true);
+   }
+}
+
+function setNotation(checkbox)
+{
+   if (!checkbox.checked)
+   {
+      localStorage.setItem('tcec-notation', 1);
+      boardNotation = true;
+   }
+   else
+   {
+      localStorage.setItem('tcec-notation', 0);
+      boardNotation = false;
+   }
+   setBoard();
 }
 
 function setHighlightDefault()
