@@ -1,4 +1,4 @@
-var http = require("http");
+var https = require("https");
 var url = require('url');
 var fs = require('fs');
 var io = require('socket.io');
@@ -27,7 +27,10 @@ console.log ("Port is " + portnum);
 // first parameter is the mount point, second is the location in the file system
 var app = express();
 app.use(express.static(__dirname));
-var server = require('http').createServer(app);  
+var server = https.createServer({
+  key: fs.readFileSync('/etc/letsencrypt/live/tcecbonus.club/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/tcecbonus.club/fullchain.pem')
+},app); 
 server.listen(parseInt(portnum));
 var listener = io.listen(server);                                                                                                                                                                                                             
 
