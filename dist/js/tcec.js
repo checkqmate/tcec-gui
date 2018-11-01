@@ -2005,10 +2005,10 @@ function updateScheduleData(data)
          gamesDone = engine.Game;
          engine.Game = '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass[3] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Game + '</a>';
       }
+      scdata = _.union(scdata, [engine]);
       if ((engine.Black == blackEngineFull && engine.White == whiteEngineFull) ||
           (engine.Black == whiteEngineFull && engine.White == blackEngineFull))
       {
-         scdata = _.union(scdata, [engine]);
          var engineX = engine;
          engine.h2hrank = engine.Game;
          if (engine.Result != undefined)
