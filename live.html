@@ -57,6 +57,9 @@
                <a class="dropdown-item" href="http://legacy-tcec.chessdom.com/live_big.php" target="_blank">
                  Legacy big board
                </a>
+               <a class="dropdown-item" href="https://www.twitch.tv/tcec_chess_tv" target="_blank">
+                 Twitch Stream
+               </a>
             </div>
           </li>
           <li class="nav-item">
@@ -254,42 +257,42 @@
                       <ul class="dropdown-menu bg-dark whitefont">
                         <li class="radio">
                           <div class="form-check classpad">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="0" checked="checked" onclick="setEngineColor(0);">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="engcolor0" checked="checked" onclick="setEngineColor(0);">
                             <label class="form-check-label" for="exampleRadios1">
                               Dark Red 
                           </div>
                           <div class="form-check classpad">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="1" onclick="setEngineColor(1);">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="engcolor1" onclick="setEngineColor(1);">
                             <label class="form-check-label" for="exampleRadios2">
                               Red
                             </label>
                           </div>
                           <div class="form-check classpad">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="2" onclick="setEngineColor(2);">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="engcolor2" onclick="setEngineColor(2);">
                             <label class="form-check-label" for="exampleRadios2">
                               Green
                             </label>
                           </div>
                           <div class="form-check classpad">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios4" value="3" onclick="setEngineColor(3);">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios4" value="engcolor3" onclick="setEngineColor(3);">
                             <label class="form-check-label" for="exampleRadios2">
                               Dark Green
                             </label>
                           </div>
                           <div class="form-check classpad">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios5" value="4" onclick="setEngineColor(4);">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios5" value="engcolor4" onclick="setEngineColor(4);">
                             <label class="form-check-label" for="exampleRadios2">
                               Yellow
                             </label>
                           </div>
                           <div class="form-check classpad">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios6" value="5" onclick="setEngineColor(5);">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios6" value="engcolor5" onclick="setEngineColor(5);">
                             <label class="form-check-label" for="exampleRadios2">
                               Purple
                             </label>
                           </div>
                           <div class="form-check classpad">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios6" value="6" onclick="setEngineColor(6);">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios6" value="engcolor6" onclick="setEngineColor(6);">
                             <label class="form-check-label" for="exampleRadios2">
                               Orange
                             </label>
@@ -298,6 +301,30 @@
                         </ul>
                     </li>
                   </ul>
+                </li>
+                <div class="dropdown-divider"></div>
+                <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">PV Board</a>
+                  <ul class="dropdown-menu bg-dark whitefont">
+                    <li class="radio">
+                      <div class="form-check classpad">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="ply0" value="ply0" checked="checked" onclick="setPlyDiv(0);">
+                        <label class="form-check-label" for="exampleRadios1">
+                          First ply
+                      </div>
+                      <div class="form-check classpad">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="ply1" value="ply1" onclick="setPlyDiv(1);">
+                        <label class="form-check-label" for="exampleRadios2">
+                          Diverging ply
+                        </label>
+                      </div>
+                      <div class="form-check classpad">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="ply2" value="ply2" onclick="setPlyDiv(2);">
+                        <label class="form-check-label" for="exampleRadios3">
+                          Last Ply 
+                        </label>
+                      </div>
+                    </li>
+                    </ul>
                 </li>
                 <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Twitch Theme</a>
@@ -320,6 +347,17 @@
                           Light
                         </label>
                       </div>
+                  </ul>
+                </li>
+                <div class="dropdown-divider"></div>
+                <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Move Highlight</a>
+                  <ul class="dropdown-menu bg-dark whitefont">
+                    <div class="form-check" style="margin-left: 10px">
+                      <input class="form-check-input" type="checkbox" onclick="setHighlight(this)" value="" id="highcheck">
+                      <label class="form-check-label" for="defaultCheck1">
+                        Off
+                      </label>
+                    </div>
                   </ul>
                 </li>
               </ul>
@@ -455,31 +493,31 @@
           <hr />
 
           <div id="evalcont" style="display:none">
-          <ul class="nav nav-pills mb-3 nav-justified" id="pills-tab" role="tablist">
-             <li class="nav-item">
-                <a class="nav-link active" id="pills-eval-tab1" data-toggle="tab" href="#pills-eval1" role="tab" aria-controls="pills-eval" aria-selected="true">
-                   <span id="engine1name">176Th 7Men TB</span>
-                </a>
-            </li>
-             <li class="nav-item">
-                <a class="nav-link" id="pills-eval-tab2" data-toggle="tab" href="#pills-eval2" role="tab" aria-controls="pills-eval" aria-selected="false">
-                   <span id="engine2name">128C 6Men TB</span>
-                </a>
-            </li>
-         </ul>
-         <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane show active" id="pills-eval1" role="tabpanel" aria-labelledby="pills-eval-tab1">
-               <div id="live-eval-cont1"></div>
-            </div>
-            <div class="tab-pane fade" id="pills-eval2" role="tabpanel" aria-labelledby="pills-eval-tab2">
-               <div id="live-eval-cont2"></div>
+            <ul class="nav nav-pills mb-3 nav-justified" id="pills-tab" role="tablist">
+               <li class="nav-item">
+                  <a class="nav-link active" id="pills-eval-tab1" data-toggle="tab" href="#pills-eval1" role="tab" aria-controls="pills-eval" aria-selected="true">
+                     <span id="engine1name">176Th 7Men TB</span>
+                  </a>
+              </li>
+               <li class="nav-item">
+                  <a class="nav-link" id="pills-eval-tab2" data-toggle="tab" href="#pills-eval2" role="tab" aria-controls="pills-eval" aria-selected="false">
+                     <span id="engine2name">128C 6Men TB</span>
+                  </a>
+              </li>
+           </ul>
+            <div class="tab-content" id="pills-tabContent">
+               <div class="tab-pane show active" id="pills-eval1" role="tabpanel" aria-labelledby="pills-eval-tab1">
+                  <div id="live-eval-cont1"></div>
+               </div>
+               <div class="tab-pane fade" id="pills-eval2" role="tabpanel" aria-labelledby="pills-eval-tab2">
+                  <div id="live-eval-cont2"></div>
+               </div>
             </div>
          </div>
-         </div>
-          <h5><span class="black-engine-name-full"></span> PV (Black)</h5>
-          <div class="engine-pv alert alert-dark" id="black-engine-pv"></div>
-          <h5><span class="white-engine-name-full"></span> PV (White)</h5>
-          <div class="engine-pv alert alert-dark" id="white-engine-pv"></div>
+         <h6><span class="white-engine-name-full"></span> PV (White)</h6>
+         <div class="white-engine-pv alert alert-dark" id="white-engine-pv1"></div>
+         <h6><span class="black-engine-name-full"></span> PV (Black)</h6>
+         <div class="black-engine-pv alert alert-dark" id="black-engine-pv1"></div>
         </div>
 
         <div class="col-md-4 col-sm-5 col-12" id="middle-data-column">
@@ -562,20 +600,11 @@
               </tr>
               <tr>
                 <td>
-                  <span id="white-engine-elo"></span>
+                  <span id="white-engine-elo"></span> / <span class="white-engine-score"></span>
                 </td>
-                <td>ELO</td>
+                <td>Elo/Score</td>
                 <td>
-                  <span id="black-engine-elo"></span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <span class="white-engine-score"></span>
-                </td>
-                <td>Score</td>
-                <td>
-                  <span class="black-engine-score"></span>
+                  <span id="black-engine-elo"></span> / <span class="black-engine-score"></span>
                 </td>
               </tr>
               <tr>
@@ -659,6 +688,11 @@
                         PV
                       </a>
                     </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="v-pills-pv-analys-tab" data-toggle="pill" href="#v-pills-pvanalys" role="tab" aria-controls="v-pills-pvanalys" aria-selected="false">
+                        PV(A)
+                      </a>
+                    </li>
                   </ul>
               </div>
               <div class="col-12">
@@ -678,46 +712,120 @@
                   <div class="tab-pane fade" id="v-pills-tbhits" role="tabpanel" aria-labelledby="v-pills-tbhits-tab">
                     <canvas style="height: 250px;" id="tbhits-graph"></canvas>
                   </div>
+
+                  <div class="tab-pane fade" id="v-pills-pvanalys" role="tabpanel" aria-labelledby="v-pills-pv-analys-tab">
+                     <div class="row">
+                        <div class="col-10 col-md-10">
+                           <div id="pv-boarda" style="width: 250px; margin-left: auto; margin-right: auto;"></div>
+                        </div>
+                        <div class="col-2 col-md-2">
+                           <div class="btn-group-vertical d-flex navigation-buttons" style="width: 50px;align-items: center;margin-top:50px;" role="group">
+                              <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-white">
+                                 <img src="img/chesspieces/wikipedia/wP.png" style="height: 16px" />
+                              </a>
+                              <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-black">
+                                 <img src="img/chesspieces/wikipedia/bP.png" style="height: 16px" />
+                              </a>
+                              <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-live1">
+                                 Eng1
+                              </a>
+                              <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-live2">
+                                 Eng2
+                              </a>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-10 col-md-10">
+                           <div class="btn-group d-flex navigation-buttons" style="width: 250px; margin-left: auto; margin-right:auto;" role="group">
+                              <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-to-first">
+                                 <i class="fa fa-angle-double-left"></i>
+                              </a>
+                              <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-previous">
+                                 <i class="fa fa-angle-left"></i>
+                              </a>
+                              <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-autoplay">
+                                 <i class="fa fa-play"></i>
+                              </a>
+                              <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-next">
+                                 <i class="fa fa-angle-right"></i>
+                              </a>
+                              <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-to-last">
+                                 <i class="fa fa-angle-double-right"></i>
+                              </a>
+                              <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-reverse">
+                                 <i class="fa fa-random"></i>
+                              </a>
+                              <a href="#/" class="btn btn-primary btn-sm w-100 rightborder fen" id="fen" onClick="copyFenAnalysis()" title="Copy FEN">
+                                <i class="fa fa-copy"></i>
+                              </a>
+                           </div>
+                        </div>
+                     </div>
+                    </div>
+
                   <div class="tab-pane fade" id="v-pills-pv" role="tabpanel" aria-labelledby="v-pills-pv-tab">
                     <div class="row">
                       <div class="col-12 col-md-12">
-                        <div id="pv-board" style="width: 250px; margin-left: auto; margin-right: auto;"></div>
-                      </div>
-                    </div>
-                     <div class="btn-group d-flex navigation-buttons" style="width: 250px; margin-left: auto; margin-right:auto;" role="group">
-                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-black">
-                          <img src="img/chesspieces/wikipedia/bP.png" style="height: 16px" />
-                        </a>
-                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-to-first">
-                          <i class="fa fa-angle-double-left"></i>
-                        </a>
-                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-previous">
-                          <i class="fa fa-angle-left"></i>
-                        </a>
-                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-autoplay">
-                          <i class="fa fa-play"></i>
-                        </a>
-                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-next">
-                          <i class="fa fa-angle-right"></i>
-                        </a>
-                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-to-last">
-                          <i class="fa fa-angle-double-right"></i>
-                        </a>
-                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-reverse">
-                          <i class="fa fa-random"></i>
-                        </a>
-                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-white">
-                          <img src="img/chesspieces/wikipedia/wP.png" style="height: 16px" />
-                        </a>
-                      </div>
-                      <div class="row">
-                        <div class="col-12 text-center">
-                          <small>
-                            <code id="pv-board-fen"></code>
-                          </small>
+                        <div style="width:402px; border:0px solid yellow ; margin-left: auto; margin-right:auto;">
+                        <div id="pv-board2" style="width: 200px;float:left; margin-left: auto; margin-right:auto;"></div>
+                        <div id="pv-board" style="width: 200px;float:left; margin-left: auto; margin-right:auto;"></div>
+                        <div style="width:201px; margin-left: auto; margin-right:auto; float:left">
+                        <div class="engine-pv alert alert-dark" style="width: 195px;float:left; margin-left: auto; margin-right:auto;" id="white-engine-pv"></div>
+                        </div>
+                        <div class="engine-pv alert alert-dark" style="width: 195px;float:left; margin-left: auto; margin-right:auto;" id="black-engine-pv"></div>
                         </div>
                       </div>
                     </div>
+                    <div style="width:402px; margin-left: auto; margin-right:auto;">
+                       <div class="btn-group d-flex navigation-buttons" style="float:left; width: 196px; margin-left: auto; margin-right:auto;" id="nav1" role="group">
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-to-first1">
+                          <i class="fa fa-angle-double-left"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-previous1">
+                          <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-autoplay1">
+                          <i class="fa fa-play"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-next1">
+                          <i class="fa fa-angle-right"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-to-last1">
+                          <i class="fa fa-angle-double-right"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-reverse1">
+                          <i class="fa fa-random"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100 rightborder fen" id="fen" onClick="copyFenWhite()" title="Copy FEN">
+                          <i class="fa fa-copy"></i>
+                        </a>
+                       </div>
+                       <div class="btn-group d-flex navigation-buttons" style="width: 196px; margin-left: auto; margin-right:auto;" id="nav2" role="group">
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-to-first2">
+                          <i class="fa fa-angle-double-left"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-previous2">
+                          <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-autoplay2">
+                          <i class="fa fa-play"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-next2">
+                          <i class="fa fa-angle-right"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-to-last2">
+                          <i class="fa fa-angle-double-right"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100" id="pv-board-reverse2">
+                          <i class="fa fa-random"></i>
+                        </a>
+                        <a href="#/" class="btn btn-primary btn-sm w-100 rightborder fen" id="fen" onClick="copyFenBlack()" title="Copy FEN">
+                          <i class="fa fa-copy"></i>
+                        </a>
+                       </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -725,7 +833,7 @@
 
           <div class="text-center">
             <!-- Automatic -->
-            <ins class="adsbygoogle" style="display:inline-block;width:300px;height:250px"
+            <ins class="adsbygoogle" style="display:inline-block;width:300px;height:150px"
                  data-full-width-responsive="true" data-ad-client="ca-pub-6544406400639567" data-ad-slot="2712361177"></ins>
             <script>
               (adsbygoogle = window.adsbygoogle || []).push({});
@@ -1157,8 +1265,8 @@
           striped: true,
           smartDisplay: true,
           sortable: true,
-          pageList: [14,28,56,112,224],
-          pageSize:14,
+          pageList: [10,20,50,100],
+          pageSize:10,
           rememberOrder: true,
           columns: [
           {
@@ -1244,8 +1352,8 @@
           striped: true,
           smartDisplay: true,
           sortable: true,
-          pageList: [14,28,56,112,224],
-          pageSize:14,
+          pageList: [10,20,50,100],
+          pageSize:10,
           rememberOrder: true,
           search: true,   
           columns: [
@@ -1346,11 +1454,13 @@
           $('#chatright').width('100%');
         });
 
-        setSound();  
+        setSound();
+        setHighlightDefault();
         setliveEngine();
         initToolTip();
         updatePgn();
         updateLiveEvalInit();
+        setBoard();
         $(document).ready(function () {
         	 setDefaultThemes();
           window.setTimeout(function() 
