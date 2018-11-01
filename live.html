@@ -37,18 +37,18 @@
             <a class="nav-link py-0" href="#/" data-toggle="modal" data-target="#rules-modal">Rules</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle py-0" href="http://tcecbeta.com" id="dd-download" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Navigate</a>
+            <a class="nav-link dropdown-toggle py-0" href="/" id="dd-download" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Navigate</a>
             <div class="dropdown-menu" aria-labelledby="dd-download">
-               <a class="dropdown-item" href="http://tcec.chessdom.com/live.html" target="_blank">
+               <a class="dropdown-item" href="https://tcec.chessdom.com/live.html" target="_blank">
                  Main live
                </a>
                <a class="dropdown-item" href="http://legacy-tcec.chessdom.com/archive.php" target="_blank">
                  Archive
                </a>
-               <a class="dropdown-item" href="http://tcecbeta.club/live.html" target="_blank">
+               <a class="dropdown-item" href="https://tcecbeta.club/live.html" target="_blank">
                  Betadev
                </a>
-               <a class="dropdown-item" href="http://bonus.tcecbeta.club/" target="_blank">
+               <a class="dropdown-item" href="https://tcecbonus.club/" target="_blank">
                  Bonus
                </a>
                <a class="dropdown-item" href="http://legacy-tcec.chessdom.com/live.php" target="_blank">
@@ -62,7 +62,7 @@
           <li class="nav-item">
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle py-0" href="http://tcecbeta.com" id="dd-download" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download</a>
+            <a class="nav-link dropdown-toggle py-0" href="/" id="dd-download" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download</a>
             <div class="dropdown-menu" aria-labelledby="dd-download">
               <a class="dropdown-item" href="http://legacy-tcec.chessdom.com/archive/crosstable.json" target="_blank">Crosstable</a>
               <a class="dropdown-item" href="http://legacy-tcec.chessdom.com/archive/schedule.json" target="_blank">Schedule</a>
@@ -71,7 +71,7 @@
             </div>
           </li>
           <li class="nav-item dropdown">
-            <a class="py-0 nav-link dropdown-toggle" href="http://tcecbeta.com" id="dd-themes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="py-0 nav-link dropdown-toggle" href="/" id="dd-themes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Options
             </a>
             <ul class="bg-dark dropdown-menu" aria-labelledby="dd-themes">
@@ -353,7 +353,7 @@
             </script>
           </div>
           <div class="encouragement" style="display: none;">
-            TCEC is based on voluntary work. Please consider whitelisting http://tcec.chessdom.com in your ad blocker - or send a donation. Thank you!
+            TCEC is based on voluntary work. Please consider whitelisting https://tcec.chessdom.com in your ad blocker - or send a donation. Thank you!
           </div>
         </div>
         <div class="col-md-3 col-6 d-none d-sm-non d-md-block d-lg-block d-xl-block text-right">
@@ -598,7 +598,7 @@
                   <span class="black-time-used">
                     0:00
                   </span>
-                  <i class="fa fa-cog fa-spin slow-spin black-to-move" style="float: right;""></i>
+                  <i class="fa fa-cog fa-spin slow-spin black-to-move" style="float: right;"></i>
                 </td>
               </tr>
               <tr id="material-container">
@@ -731,7 +731,7 @@
               (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
             <div class="encouragement" style="display: none;">
-              TCEC is based on voluntary work. Please consider whitelisting http://tcec.chessdom.com in your ad blocker - or send a donation. Thank you!
+              TCEC is based on voluntary work. Please consider whitelisting https://tcec.chessdom.com in your ad blocker - or send a donation. Thank you!
             </div>
           </div>
         </div>
@@ -830,7 +830,7 @@
           </div>
           <div class="col-md-12 text-center">
             <div>
-                &copy;<a href="http://tcec.chessdom.com/">TCEC</a>
+                &copy;<a href="https://tcec.chessdom.com/">TCEC</a>
                 <a target="_blank" href="http://www.chessdom.com">Chessdom</a>
                 &copy;<a target="_blank" href="https://arena.chessdom.com/">Chess Arena</a> 2010-2018
             </div>
@@ -1388,7 +1388,7 @@
         });
       });
 
-      var socket = io.connect('http://tcecbonus.club:8888');
+      var socket = io.connect('https://tcec.chessdom.com:8888');
      
       socket.on('crosstable', function(data){
          updateCrosstableData(data);
