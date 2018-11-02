@@ -1351,7 +1351,7 @@
               ,align: 'left'
           },
           {
-              field: 'White',
+              field: 'FixWhite',
               title: 'White'
               ,sortable: true
           }, 
@@ -1366,7 +1366,7 @@
               ,sortable: true
           },
           {
-              field: 'Black',
+              field: 'FixBlack',
               title: 'Black'
               ,sortable: true
           },
@@ -1438,7 +1438,7 @@
               ,sortName: 'Gamesort'
           },
           {
-              field: 'White',
+              field: 'FixWhite',
               title: 'White'
               ,sortable: true
           }, 
@@ -1448,7 +1448,7 @@
               ,sortable: true
           },
           {
-              field: 'Black',
+              field: 'FixBlack',
               title: 'Black'
               ,sortable: true
           },
@@ -1579,6 +1579,7 @@
          });
       socket.on('schedule', function(data){
          updateScheduleData(data);
+         updateH2hData(data);
          });
       socket.on('livechart', function(data){
          updateLiveChartData(data, 1);

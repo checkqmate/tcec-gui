@@ -52,6 +52,10 @@ var whiteEngineFull = null;
 var blackEngineFull = null;
 var prevwhiteEngineFull = null;
 var prevblackEngineFull = null   
+var prevwhiteEngineFullSc = null;
+var prevblackEngineFullSc = null   
+var h2hRetryCount = 0;
+var tryH2h = 0;
 
 var livePVHist = [];
 var whitePv = [];
@@ -710,6 +714,11 @@ function setInfoFromCurrentHeaders()
   $('#black-engine').attr('src', imgsrc);
   $('#black-engine').attr('alt', header);
   $('#black-engine-chessprogramming').attr('href', 'https://www.chessprogramming.org/' + name);
+  if (tryH2h)
+  {
+     tryH2h = 0;
+     updateSchedule();
+  }
 }
 
 function getMoveFromPly(ply)
@@ -1903,6 +1912,9 @@ function updateScoreHeaders(crosstableData)
       }); 
    });
    
+   prevwhiteEngineFull = whiteEngineFull;
+   prevblackEngineFull = blackEngineFull;                                                                                                                                                        
+
    return 0;
 }
 
@@ -1935,11 +1947,6 @@ async function updateCrosstableData(data)
    {
       plog ("Giving time to header to get updated", 0);
       setTimeout(function() { updateScoreHeaders(crosstableData); }, 10000);
-   }
-   else
-   {
-      prevwhiteEngineFull = whiteEngineFull;
-      prevblackEngineFull = blackEngineFull;                                                                                                                                                        
    }
 
    _.each(crosstableData.Order, function(engine, key) {
@@ -2104,11 +2111,36 @@ function shallowCopy(data)
    return JSON.parse(JSON.stringify(data));
 }
 
-function updateScheduleData(data) 
+function updateH2hData(h2hdataip) 
 {
-   plog ("Updating schedule:", 0);
+   plog ("Updating h2h:", 0);
+
+   if (h2hRetryCount < 10 &&
+       ((prevwhiteEngineFullSc != null &&
+         prevwhiteEngineFullSc == whiteEngineFull) &&
+        (prevblackEngineFullSc != null &&
+         blackEngineFull == prevblackEngineFullSc)))
+   {
+      plog ("H2h did not get updated, lets retry later: prevwhiteEngineFull:" + 
+            prevwhiteEngineFullSc + " ,whiteEngineFull:" + whiteEngineFull + " ,prevblackEngineFull:" + prevblackEngineFullSc + " ,blackEngineFull:" + blackEngineFull, 0);
+      h2hRetryCount = h2hRetryCount + 1;
+      setTimeout(function() { updateH2hData(h2hdataip); }, 5000);
+   }
+
+   if (h2hRetryCount == 10)
+   {
+      tryH2h = 1;
+   }
+   else
+   {
+      tryH2h = 0;
+   }
+
+   h2hRetryCount = 0;
+   prevwhiteEngineFullSc = whiteEngineFull;
+   prevblackEngineFullSc = blackEngineFull;
+
    var h2hdata = [];
-   var scdata = [];
    var prevDate = 0;
    var momentDate = 0;
    var diff = 0;
@@ -2116,7 +2148,7 @@ function updateScheduleData(data)
    var timezoneDiff = moment().utcOffset() * 60 * 1000 - 3600 * 1000;
    var h2hrank = 0;
    var schedEntry = {};
-   oldSchedData = shallowCopy(data);
+   var data = shallowCopy(h2hdataip);
 
    _.each(data, function(engine, key) 
    {
@@ -2146,8 +2178,9 @@ function updateScheduleData(data)
          gamesDone = engine.Game;
          engine.Game = '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass[3] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Game + '</a>';
       }
-      var engineBlack = engine.Black;
-      var engineWhite = engine.White;
+      engine.FixWhite = engine.White;
+      engine.FixBlack = engine.Black;
+ 
       if (engine.Result != undefined)
       {
          if (engine.Result == "1/2-1/2")
@@ -2156,18 +2189,17 @@ function updateScheduleData(data)
          }
          else if (engine.Result == "1-0")
          {
-            engine.White = '<div style="color:' + gameArrayClass[1] + '">' + engine.White + '</div>';
-            engine.Black = '<div style="color:' + gameArrayClass[0] + '">' + engine.Black + '</div>';
+            engine.FixWhite = '<div style="color:' + gameArrayClass[1] + '">' + engine.White + '</div>';
+            engine.FixBlack = '<div style="color:' + gameArrayClass[0] + '">' + engine.Black + '</div>';
          }
          else if (engine.Result == "0-1")
          {
-            engine.White = '<div style="color:' + gameArrayClass[0] + '">' + engine.White + '</div>';
-            engine.Black = '<div style="color:' + gameArrayClass[1] + '">' + engine.Black + '</div>';
+            engine.FixWhite = '<div style="color:' + gameArrayClass[0] + '">' + engine.White + '</div>';
+            engine.FixBlack = '<div style="color:' + gameArrayClass[1] + '">' + engine.Black + '</div>';
          }
       }
-      scdata = _.union(scdata, [engine]);
-      if ((engineBlack == blackEngineFull && engineWhite == whiteEngineFull) ||
-          (engineBlack == whiteEngineFull && engineWhite == blackEngineFull))
+      if ((engine.Black == blackEngineFull && engine.White == whiteEngineFull) ||
+          (engine.Black == whiteEngineFull && engine.White == blackEngineFull))
       {
          engine.h2hrank = engine.Game;
          if (engine.Result != undefined)
@@ -2182,8 +2214,74 @@ function updateScheduleData(data)
       }
    });
 
-   $('#schedule').bootstrapTable('load', scdata);
    $('#h2h').bootstrapTable('load', h2hdata);
+}
+
+function updateScheduleData(scdatainput) 
+{
+   plog ("Updating schedule:", 0);
+   var scdata = [];
+   var prevDate = 0;
+   var momentDate = 0;
+   var diff = 0;
+   var gameDiff = 0;
+   var timezoneDiff = moment().utcOffset() * 60 * 1000 - 3600 * 1000;
+   var schedEntry = {};
+   oldSchedData = shallowCopy(scdatainput);
+   var data = shallowCopy(scdatainput);
+
+   _.each(data, function(engine, key) 
+   {
+      engine.Gamesort = engine.Game;
+      if (engine.Start)
+      {
+         momentDate = moment(engine.Start, 'HH:mm:ss on YYYY.MM.DD');
+         if (prevDate)
+         {
+            diff = diff + momentDate.diff(prevDate);
+            gameDiff = diff/(engine.Game-1);
+         }
+         momentDate.add(timezoneDiff);
+         engine.Start = momentDate.format('HH:mm:ss on YYYY.MM.DD');
+         prevDate = momentDate;
+      }
+      else
+      {
+         if (gameDiff)
+         {
+            prevDate.add(gameDiff + timezoneDiff);
+            engine.Start = "Estd: " + prevDate.format('HH:mm:ss on YYYY.MM.DD');
+         }
+      }
+      if (typeof engine.Moves != 'undefined')
+      {
+         gamesDone = engine.Game;
+         engine.Game = '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass[3] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Game + '</a>';
+      }
+      engine.FixWhite = engine.White;
+      engine.FixBlack = engine.Black;
+ 
+      if (engine.Result != undefined)
+      {
+         if (engine.Result == "1/2-1/2")
+         {
+            /* do nothing */
+         }
+         else if (engine.Result == "1-0")
+         {
+            engine.FixWhite = '<div style="color:' + gameArrayClass[1] + '">' + engine.White + '</div>';
+            engine.FixBlack = '<div style="color:' + gameArrayClass[0] + '">' + engine.Black + '</div>';
+         }
+         else if (engine.Result == "0-1")
+         {
+            engine.FixWhite = '<div style="color:' + gameArrayClass[0] + '">' + engine.White + '</div>';
+            engine.FixBlack = '<div style="color:' + gameArrayClass[1] + '">' + engine.Black + '</div>';
+         }
+      }
+      scdata = _.union(scdata, [engine]);
+   });
+
+   $('#schedule').bootstrapTable('load', scdata);
    var options = $('#schedule').bootstrapTable('getOptions');
    pageNum = parseInt(gamesDone/options.pageSize) + 1;
    $('#schedule').bootstrapTable('selectPage', pageNum);
@@ -2194,6 +2292,7 @@ function updateSchedule()
     axios.get('schedule.json')
     .then(function (response) {
       updateScheduleData(response.data);
+      updateH2hData(response.data);
     })
     .catch(function (error) {
       // handle error
