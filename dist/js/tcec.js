@@ -1944,7 +1944,7 @@ async function updateCrosstableData(data)
          wins: wins,
          loss: loss,
          crashes: engineDetails.Strikes,
-         sb: Math.round(engineDetails.Neustadtl* 100) / 100,
+         sb: parseFloat(engineDetails.Neustadtl).toFixed(2),
          elo: engineDetails.Rating,
          elo_diff: elo + ' [' + eloDiff + ']'
          };
