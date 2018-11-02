@@ -76,6 +76,7 @@ var tcecElo = 1;
 var engGlobData = {};
 var btheme = "chess24";
 var ptheme = "chess24";
+var oldSchedData = null;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -316,7 +317,7 @@ function setUsers(data)
    }
    catch(err)
    {
-      console.log ("Unable to update usercount");
+      plog ("Unable to update usercount", 0);
    }
 }
 
@@ -1783,14 +1784,88 @@ function getOverallElo(data)
    });
 }
 
-function updateCrosstableData(data) 
+function sleep(ms)
+{
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+var crash_re = /^(?:TCEC|Syzygy|TB pos|in progress|(?:White|Black) mates|Stale|Insuff|Fifty|3-[fF]old)/; // All possible valid terminations (hopefully).  
+
+function getEngRecSched(data, engineName)
+{
+   var resultData = {
+   name: engineName,
+   LossAsBlack: 0,
+   WinAsBlack: 0,
+   LossAsWhite: 0,
+   LossAsStrike: 0,
+   WinAsWhite: 0
+   };
+
+   _.each(data, function (engine, key)
+   {
+      if (typeof engine.Moves == 'undefined')
+      {
+         return false;
+      }
+      if (getShortEngineName(engineName) == getShortEngineName(engine.Black))
+      {
+         if (engine.Result == "1-0")
+         {
+            if (crash_re.test(engine.Termination))
+            {
+               resultData.LossAsStrike = parseInt(resultData.LossAsStrike) + 1;
+            }
+            else
+            {
+               resultData.LossAsBlack = parseInt(resultData.LossAsBlack) + 1;
+            }
+         }
+         else if (engine.Result == "0-1")
+         {
+            resultData.WinAsBlack = parseInt(resultData.WinAsBlack) + 1;
+         }
+      }
+      if (getShortEngineName(engineName) == getShortEngineName(engine.White))
+      {
+         if (engine.Result == "0-1")
+         {
+            if (crash_re.test(engine.Termination))
+            {
+               resultData.LossAsStrike = parseInt(resultData.LossAsStrike) + 1;
+            }
+            else
+            {
+               resultData.LossAsWhite = parseInt(resultData.LossAsWhite) + 1;
+            }
+         }
+         else if (engine.Result == "1-0")
+         {
+            resultData.WinAsWhite = parseInt(resultData.WinAsWhite) + 1;
+         }
+      }
+   });
+   return resultData;
+}
+
+async function updateCrosstableData(data) 
 {
    var crosstableData = data;
-
    var abbreviations = [];
    var standings = [];
    whiteScore = 0;
    blackScore = 0;
+   var sleepCount = 0;
+
+   while (oldSchedData == null)
+   {
+      sleepCount = sleepCount + 1;
+      await sleep(500);
+      if (sleepCount > 20)
+      {
+         break;
+      }
+   }
 
    if (tcecElo)
    {
@@ -1799,6 +1874,7 @@ function updateCrosstableData(data)
 
    _.each(crosstableData.Table, function(engine, key) {
       abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
+
       _.each(engine.Results, function(oppEngine, oppkey)
       {
          if (whiteEngineFull != null && getShortEngineName(key) == getShortEngineName(whiteEngineFull))
@@ -1835,11 +1911,25 @@ function updateCrosstableData(data)
 
    _.each(crosstableData.Order, function(engine, key) {
       engineDetails = _.get(crosstableData.Table, engine);
+      var getEngRes = {
+         name: engine,
+         LossAsBlack: 0,
+         WinAsBlack: 0,
+         LossAsWhite: 0,
+         LossAsStrike: 0,
+         WinAsWhite: 0
+         };                                                                                                                                                                                      
+      getEngRes = getEngRecSched(oldSchedData, engine);
       wins = (engineDetails.WinsAsBlack + engineDetails.WinsAsWhite);
+      var loss = 0;
+      if (getEngRes.length)
+      {
+         loss = (getEngRes.LossAsWhite + getEngRes.LossAsBlack);
+      }
       //elo = calcElo (engineDetails.Elo, 
       if (engineDetails.eloDiff)
       {
-         plog ("engine.eloDiff is defined:" + engineDetails.eloDiff);
+         plog ("engine.eloDiff is defined:" + engineDetails.eloDiff, 1);
          elo = Math.round(engineDetails.eloDiff);
       }
       else
@@ -1848,13 +1938,16 @@ function updateCrosstableData(data)
       }
       eloDiff = engineDetails.Rating + elo;
       engine = '<div class="right-align"><img class="right-align-pic" src="img/engines/'+ getShortEngineName(engine) +'.jpg" />' + '<a class="right-align-name">' + engine + '</a></div>';
+      wins = wins + ' [' + engineDetails.WinsAsWhite + '/' + engineDetails.WinsAsBlack + ']';
+      loss = loss + ' [' + getEngRes.LossAsWhite + '/' + getEngRes.LossAsBlack + '/' + getEngRes.LossAsStrike + ']';
 
       var entry = {
          rank: engineDetails.Rank,
          name: engine,
          games: engineDetails.Games,
          points: engineDetails.Score,
-         wins: wins + '[' + engineDetails.WinsAsWhite + '/' + engineDetails.WinsAsBlack + ']',
+         wins: wins,
+         loss: loss,
          crashes: engineDetails.Strikes,
          sb: Math.round(engineDetails.Neustadtl* 100) / 100,
          elo: engineDetails.Rating,
@@ -1876,13 +1969,13 @@ function updateCrosstableData(data)
          field: 'name',
          title: 'Engine'
         ,sortable: true
-        ,width: '24%'
+        ,width: '28%'
        },
        {
          field: 'games',
          title: '# Games'
         ,sortable: true
-        ,width: '5%'
+        ,width: '4%'
        },
        {
          field: 'points',
@@ -1896,16 +1989,21 @@ function updateCrosstableData(data)
         ,width: '10%'
        },
        {
+         field: 'loss',
+         title: 'Loss [W/B/X]'
+        ,width: '10%'
+       },
+       {
          field: 'crashes',
          title: 'Crashes'
         ,sortable: true
-        ,width: '7%'
+        ,width: '4%'
        },
        {
          field: 'sb',
          title: 'SB'
         ,sortable: true
-        ,width: '7%'
+        ,width: '4%'
        },
        {
          field: 'elo',
@@ -1927,6 +2025,7 @@ function updateCrosstableData(data)
      crossTableInitialized = true;
    }
    $('#crosstable').bootstrapTable('load', standings);
+   oldSchedData = null;
 }
 
 function updateEngRatingData(data)
@@ -1943,7 +2042,7 @@ function updateEngRating()
    })
    .catch(function (error) 
    {
-      console.log(error);
+      plog(error, 0);
    });
 }
 
@@ -1957,13 +2056,18 @@ function updateCrosstable()
    .catch(function (error) 
    {
       // handle error
-      console.log(error);
+      plog(error, 0);
    });
 }
 
 function strx(json)
 {
    return JSON.stringify(json);
+}
+
+function shallowCopy(data)
+{
+   return JSON.parse(JSON.stringify(data));
 }
 
 function updateScheduleData(data) 
@@ -1976,6 +2080,8 @@ function updateScheduleData(data)
    var gameDiff = 0;
    var timezoneDiff = moment().utcOffset() * 60 * 1000 - 3600 * 1000;
    var h2hrank = 0;
+   var schedEntry = {};
+   oldSchedData = shallowCopy(data);
 
    _.each(data, function(engine, key) 
    {
@@ -2005,35 +2111,39 @@ function updateScheduleData(data)
          gamesDone = engine.Game;
          engine.Game = '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass[3] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Game + '</a>';
       }
-      scdata = _.union(scdata, [engine]);
-      if ((engine.Black == blackEngineFull && engine.White == whiteEngineFull) ||
-          (engine.Black == whiteEngineFull && engine.White == blackEngineFull))
+      var engineBlack = engine.Black;
+      var engineWhite = engine.White;
+      if (engine.Result != undefined)
       {
-         var engineX = engine;
+         if (engine.Result == "1/2-1/2")
+         {
+            /* do nothing */
+         }
+         else if (engine.Result == "1-0")
+         {
+            engine.White = '<div style="color:' + gameArrayClass[1] + '">' + engine.White + '</div>';
+            engine.Black = '<div style="color:' + gameArrayClass[0] + '">' + engine.Black + '</div>';
+         }
+         else if (engine.Result == "0-1")
+         {
+            engine.White = '<div style="color:' + gameArrayClass[0] + '">' + engine.White + '</div>';
+            engine.Black = '<div style="color:' + gameArrayClass[1] + '">' + engine.Black + '</div>';
+         }
+      }
+      scdata = _.union(scdata, [engine]);
+      if ((engineBlack == blackEngineFull && engineWhite == whiteEngineFull) ||
+          (engineBlack == whiteEngineFull && engineWhite == blackEngineFull))
+      {
          engine.h2hrank = engine.Game;
          if (engine.Result != undefined)
          {
-            if (engine.Result == "1/2-1/2")
-            {
-               /* do nothing */
-            }
-            else if (engine.Result == "1-0")
-            {
-               engineX.White = '<div style="color:' + gameArrayClass[1] + '">' + engine.White + '</div>';
-               engineX.Black = '<div style="color:' + gameArrayClass[0] + '">' + engine.Black + '</div>';
-            }
-            else if (engine.Result == "0-1")
-            {
-               engineX.White = '<div style="color:' + gameArrayClass[0] + '">' + engine.White + '</div>';
-               engineX.Black = '<div style="color:' + gameArrayClass[1] + '">' + engine.Black + '</div>';
-            }
             h2hrank += 1;
             if (h2hrank%2 == 0)
             {
-               engineX.h2hrank = engine.Game + ' (R)';
+               engine.h2hrank = engine.Game + ' (R)';
             }
          }
-         h2hdata = _.union(h2hdata, [engineX]);
+         h2hdata = _.union(h2hdata, [engine]);
       }
    });
 
@@ -2052,7 +2162,7 @@ function updateSchedule()
     })
     .catch(function (error) {
       // handle error
-      console.log(error);
+      plog(error, 0);
     });
 }
 
@@ -2739,7 +2849,7 @@ function updateLiveChart()
    })
    .catch(function (error) {
       // handle error
-      console.log(error);
+      plog(error, 0);
    });
    axios.get('liveeval1.json')
    .then(function (response) {
@@ -2861,7 +2971,7 @@ function updateStandtable()
 
 function setLastMoveTime(data)
 {
-   console.log ("Setting last move time:" + data);
+   plog ("Setting last move time:" + data, 0);
 }
 
 function checkTwitch(checkbox)
