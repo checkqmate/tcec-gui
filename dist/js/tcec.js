@@ -66,6 +66,7 @@ var activePvColor = '';
 var plyDiff = 0;
 var selectedId = 0;
 var highlightClass = 'highlight-white highlight-none';
+var highlightClassPv = 'highlight-white highlight-none';
 var boardNotation = true;
 var tcecElo = 1;
 var engGlobData = {};
@@ -89,7 +90,7 @@ var onMoveEnd = function() {
 
 var onMoveEndPv = function() {
   pvBoardElb.find('.square-' + pvSquareToHighlight)
-    .addClass(highlightClass);
+    .addClass(highlightClassPv);
 }
 
 function updateAll(refresh)
@@ -1425,9 +1426,9 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
      return;
   }
   analysFen = fen;
-  pvBoardElbL.find('.' + squareClass).removeClass(highlightClass);
-  pvBoardElbL.find('.square-' + moveFromPv).addClass(highlightClass);
-  pvBoardElbL.find('.square-' + moveToPv).addClass(highlightClass);
+  pvBoardElbL.find('.' + squareClass).removeClass(highlightClassPv);
+  pvBoardElbL.find('.square-' + moveFromPv).addClass(highlightClassPv);
+  pvBoardElbL.find('.square-' + moveToPv).addClass(highlightClassPv);
   pvSquareToHighlight = moveToPv;
 
   pvBoardL.position(fen, false);
@@ -2251,9 +2252,9 @@ var onDragMove = function(newLocation, oldLocation, source,
    activePv[pvLen].from = oldLocation;
    activePv[pvLen].to = newLocation;
    $(this).addClass('active-pv-move');
-   pvBoardEla.find('.' + squareClass).removeClass(highlightClass);
-   pvBoardEla.find('.square-' + moveFrom).addClass(highlightClass);
-   pvBoardEla.find('.square-' + moveTo).addClass(highlightClass);
+   pvBoardEla.find('.' + squareClass).removeClass(highlightClassPv);
+   pvBoardEla.find('.square-' + moveFrom).addClass(highlightClassPv);
+   pvBoardEla.find('.square-' + moveTo).addClass(highlightClassPv);
    pvSquareToHighlight = moveTo;
    activePvKey[2] = pvLen;
    analysFen = fen;
@@ -2347,17 +2348,23 @@ function setBoard()
       boardEl.find('.' + squareClass).removeClass(highlightClass);
       boardEl.find('.square-' + moveFrom).addClass(highlightClass);
       boardEl.find('.square-' + moveTo).addClass(highlightClass);
-      pvBoardElb.find('.' + squareClass).removeClass(highlightClass);
-      pvBoardElb.find('.square-' + moveFromPvB).addClass(highlightClass);
-      pvBoardElb.find('.square-' + moveToPvB).addClass(highlightClass);
-      pvBoardElw.find('.' + squareClass).removeClass(highlightClass);
-      pvBoardElw.find('.square-' + moveFromPvW).addClass(highlightClass);
-      pvBoardElw.find('.square-' + moveToPvW).addClass(highlightClass);
+      if (moveFromPvB)
+      {
+         pvBoardElb.find('.' + squareClass).removeClass(highlightClassPv);
+         pvBoardElb.find('.square-' + moveFromPvB).addClass(highlightClassPv);
+         pvBoardElb.find('.square-' + moveToPvB).addClass(highlightClassPv);
+      }
+      if (moveFromPvW)
+      {
+         pvBoardElw.find('.' + squareClass).removeClass(highlightClassPv);
+         pvBoardElw.find('.square-' + moveFromPvW).addClass(highlightClassPv);
+         pvBoardElw.find('.square-' + moveToPvW).addClass(highlightClassPv);
+      }
       if (moveFromPvL)
       {
-         pvBoardEla.find('.' + squareClass).removeClass(highlightClass);
-         pvBoardEla.find('.square-' + moveFromPvL).addClass(highlightClass);
-         pvBoardEla.find('.square-' + moveToPvL).addClass(highlightClass);
+         pvBoardEla.find('.' + squareClass).removeClass(highlightClassPv);
+         pvBoardEla.find('.square-' + moveFromPvL).addClass(highlightClassPv);
+         pvBoardEla.find('.square-' + moveToPvL).addClass(highlightClassPv);
       }
    }
 }
@@ -2479,6 +2486,7 @@ function setDefaults()
 {
    setSound();
    setHighlightDefault();
+   setHighlightDefaultPv();
    setDefaultThemes();
    setliveEngine();
    setDefaultEnginecolor();
@@ -3228,6 +3236,39 @@ function setNotation(checkbox)
       localStorage.setItem('tcec-notation', 0);
       boardNotation = false;
    }
+   setBoard();
+}
+
+function setHighLightMainPv(getHighL)
+{
+   if (getHighL == 0)
+   {
+      highlightClassPv = 'highlight-white highlight-none';
+   }
+   else
+   {
+      highlightClassPv = 'highlight-white highlight-' + getHighL;
+   }
+}
+
+function setHighlightDefaultPv()
+{
+   var getHighL = localStorage.getItem('tcec-highlight-pv');        
+
+   if (getHighL == undefined)
+   {
+      getHighL = 2;
+   }
+
+   setHighLightMainPv(getHighL);
+
+   $('input[value=highlightPvRadio'+getHighL+']').prop('checked', true);
+}
+
+function setHighlightPv(value)
+{
+   localStorage.setItem('tcec-highlight-pv', value);
+   setHighLightMainPv(value);
    setBoard();
 }
 
