@@ -1812,7 +1812,7 @@ function getEngRecSched(data, engineName)
       {
          if (engine.Result == "1-0")
          {
-            if (crash_re.test(engine.Termination))
+            if (!crash_re.test(engine.Termination))
             {
                resultData.LossAsStrike = parseInt(resultData.LossAsStrike) + 1;
             }
@@ -1830,7 +1830,7 @@ function getEngRecSched(data, engineName)
       {
          if (engine.Result == "0-1")
          {
-            if (crash_re.test(engine.Termination))
+            if (!crash_re.test(engine.Termination))
             {
                resultData.LossAsStrike = parseInt(resultData.LossAsStrike) + 1;
             }
