@@ -1985,6 +1985,12 @@ async function updateCrosstableData(data)
         ,width: '7%'
        },
        {
+         field: 'crashes',
+         title: 'Crashes'
+        ,sortable: true
+        ,width: '4%'
+       },
+       {
          field: 'wins',
          title: 'Wins [W/B]'
         ,width: '10%'
@@ -1993,12 +1999,6 @@ async function updateCrosstableData(data)
          field: 'loss',
          title: 'Loss [W/B]'
         ,width: '10%'
-       },
-       {
-         field: 'crashes',
-         title: 'Crashes'
-        ,sortable: true
-        ,width: '4%'
        },
        {
          field: 'sb',
