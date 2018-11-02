@@ -1902,8 +1902,8 @@ async function updateCrosstableData(data)
                      whiteScore = whiteScore + 0.5;
                   }
                } 
-               $('.white-engine-score').html(whiteScore);
-               $('.black-engine-score').html(blackScore);
+               $('.white-engine-score').html(whiteScore.toFixed(1));
+               $('.black-engine-score').html(blackScore.toFixed(1));
             }
          }
       }); 
@@ -1946,7 +1946,7 @@ async function updateCrosstableData(data)
          rank: engineDetails.Rank,
          name: engine,
          games: engineDetails.Games,
-         points: engineDetails.Score,
+         points: engineDetails.Score.toFixed(1),
          wins: wins,
          loss: loss,
          crashes: engineDetails.Strikes,
@@ -2885,7 +2885,7 @@ function updateStandtableData(data)
      var entry = {
        rank: engineDetails.Rank,
        name: engine,
-       points: engineDetails.Score
+       points: engineDetails.Score.toFixed(1)
      };
 
      _.each(abbreviations, function (abbreviation) {
