@@ -1908,6 +1908,7 @@ function updateScoreHeaders(crosstableData)
 
 async function updateCrosstableData(data) 
 {
+   plog ("Updating crosstable:", 0);
    var crosstableData = data;
    var abbreviations = [];
    var standings = [];
@@ -2105,6 +2106,7 @@ function shallowCopy(data)
 
 function updateScheduleData(data) 
 {
+   plog ("Updating schedule:", 0);
    var h2hdata = [];
    var scdata = [];
    var prevDate = 0;
@@ -2922,6 +2924,7 @@ function updateLiveChart()
 
 function updateStandtableData(data) 
 {
+   plog ("Updating standtable:", 0);
    var standtableData = data;
 
    var abbreviations = [];
