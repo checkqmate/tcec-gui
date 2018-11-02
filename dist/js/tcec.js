@@ -55,7 +55,6 @@ var prevblackEngineFull = null
 var prevwhiteEngineFullSc = null;
 var prevblackEngineFullSc = null   
 var h2hRetryCount = 0;
-var tryH2h = 0;
 
 var livePVHist = [];
 var whitePv = [];
@@ -714,11 +713,6 @@ function setInfoFromCurrentHeaders()
   $('#black-engine').attr('src', imgsrc);
   $('#black-engine').attr('alt', header);
   $('#black-engine-chessprogramming').attr('href', 'https://www.chessprogramming.org/' + name);
-  if (tryH2h)
-  {
-     tryH2h = 0;
-     updateSchedule();
-  }
 }
 
 function getMoveFromPly(ply)
@@ -2125,15 +2119,6 @@ function updateH2hData(h2hdataip)
             prevwhiteEngineFullSc + " ,whiteEngineFull:" + whiteEngineFull + " ,prevblackEngineFull:" + prevblackEngineFullSc + " ,blackEngineFull:" + blackEngineFull, 0);
       h2hRetryCount = h2hRetryCount + 1;
       setTimeout(function() { updateH2hData(h2hdataip); }, 5000);
-   }
-
-   if (h2hRetryCount == 10)
-   {
-      tryH2h = 1;
-   }
-   else
-   {
-      tryH2h = 0;
    }
 
    h2hRetryCount = 0;
