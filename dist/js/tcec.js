@@ -50,15 +50,10 @@ var liveEngineEval2 = [];
 var debug = 0;
 var whiteEngineFull = null;
 var blackEngineFull = null;
+var prevwhiteEngineFull = null;
+var prevblackEngineFull = null   
 
-var whitePv = [];
-var blackPv = [];
-var activePv = [];
 var livePVHist = [];
-var debug = 0;
-var whiteEngineFull = null;
-var blackEngineFull = null;
-
 var whitePv = [];
 var blackPv = [];
 var livePvs = [];
@@ -1842,33 +1837,24 @@ function getEngRecSched(data, engineName)
    return resultData;
 }
 
-async function updateCrosstableData(data) 
+function updateScoreHeaders(crosstableData)
 {
-   var crosstableData = data;
-   var abbreviations = [];
-   var standings = [];
+   var data = crosstableData;
    whiteScore = 0;
    blackScore = 0;
-   var sleepCount = 0;
 
-   while (oldSchedData == null)
+   if ((prevwhiteEngineFull != null &&
+        whiteEngineFull == whiteEngineFull) &&
+       (prevblackEngineFull != null &&
+        blackEngineFull == prevblackEngineFull))
    {
-      sleepCount = sleepCount + 1;
-      await sleep(500);
-      if (sleepCount > 20)
-      {
-         break;
-      }
-   }
-
-   if (tcecElo)
-   {
-      getOverallElo(data);
+      plog ("Header did not get updated, lets retry later", 0);
+      $('.white-engine-score').html('NA');
+      $('.black-engine-score').html('NA');
+      return 1;
    }
 
    _.each(crosstableData.Table, function(engine, key) {
-      abbreviations = _.union(abbreviations, [{abbr: engine.Abbreviation, name: key}]);
-
       _.each(engine.Results, function(oppEngine, oppkey)
       {
          if (whiteEngineFull != null && getShortEngineName(key) == getShortEngineName(whiteEngineFull))
@@ -1902,6 +1888,44 @@ async function updateCrosstableData(data)
          }
       }); 
    });
+   
+   return 0;
+}
+
+async function updateCrosstableData(data) 
+{
+   var crosstableData = data;
+   var abbreviations = [];
+   var standings = [];
+   var sleepCount = 0;
+   var retryScore = 0;
+
+   while (oldSchedData == null)
+   {
+      sleepCount = sleepCount + 1;
+      await sleep(500);
+      if (sleepCount > 20)
+      {
+         break;
+      }
+   }
+
+   if (tcecElo)
+   {
+      getOverallElo(data);
+   }
+
+   retryScore = updateScoreHeaders(crosstableData);
+   if (retryScore)
+   {
+      plog ("Giving time to header to get updated", 0);
+      setTimeout(function() { updateScoreHeaders(crosstableData); }, 10000);
+   }
+   else
+   {
+      prevwhiteEngineFull = whiteEngineFull;
+      prevblackEngineFull = blackEngineFull;                                                                                                                                                        
+   }
 
    _.each(crosstableData.Order, function(engine, key) {
       engineDetails = _.get(crosstableData.Table, engine);
