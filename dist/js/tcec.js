@@ -1816,10 +1816,7 @@ function getEngRecSched(data, engineName)
             {
                resultData.LossAsStrike = parseInt(resultData.LossAsStrike) + 1;
             }
-            else
-            {
-               resultData.LossAsBlack = parseInt(resultData.LossAsBlack) + 1;
-            }
+            resultData.LossAsBlack = parseInt(resultData.LossAsBlack) + 1;
          }
          else if (engine.Result == "0-1")
          {
@@ -1834,10 +1831,7 @@ function getEngRecSched(data, engineName)
             {
                resultData.LossAsStrike = parseInt(resultData.LossAsStrike) + 1;
             }
-            else
-            {
-               resultData.LossAsWhite = parseInt(resultData.LossAsWhite) + 1;
-            }
+            resultData.LossAsWhite = parseInt(resultData.LossAsWhite) + 1;
          }
          else if (engine.Result == "1-0")
          {
