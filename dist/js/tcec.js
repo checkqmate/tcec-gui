@@ -1922,7 +1922,7 @@ async function updateCrosstableData(data)
       getEngRes = getEngRecSched(oldSchedData, engine);
       wins = (engineDetails.WinsAsBlack + engineDetails.WinsAsWhite);
       var loss = 0;
-      if (getEngRes.length)
+      if (getEngRes)
       {
          loss = (getEngRes.LossAsWhite + getEngRes.LossAsBlack);
       }
@@ -1939,7 +1939,8 @@ async function updateCrosstableData(data)
       eloDiff = engineDetails.Rating + elo;
       engine = '<div class="right-align"><img class="right-align-pic" src="img/engines/'+ getShortEngineName(engine) +'.jpg" />' + '<a class="right-align-name">' + engine + '</a></div>';
       wins = wins + ' [' + engineDetails.WinsAsWhite + '/' + engineDetails.WinsAsBlack + ']';
-      loss = loss + ' [' + getEngRes.LossAsWhite + '/' + getEngRes.LossAsBlack + '/' + getEngRes.LossAsStrike + ']';
+      //loss = loss + ' [' + getEngRes.LossAsWhite + '/' + getEngRes.LossAsBlack + '/' + getEngRes.LossAsStrike + ']';
+      loss = loss + ' [' + getEngRes.LossAsWhite + '/' + getEngRes.LossAsBlack + ']';
 
       var entry = {
          rank: engineDetails.Rank,
@@ -1990,7 +1991,7 @@ async function updateCrosstableData(data)
        },
        {
          field: 'loss',
-         title: 'Loss [W/B/X]'
+         title: 'Loss [W/B]'
         ,width: '10%'
        },
        {
