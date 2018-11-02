@@ -59,10 +59,23 @@ body {
 	color: #dfdfdf !important;
 }
 
-.highlight-white{
+.highlight-white,
+.highlight-1{
   -webkit-box-shadow: inset 0 0 1px 1px orange;
   -moz-box-shadow: inset 0 0 1px 1px orange;
   box-shadow: inset 0 0 1px 1px orange;
+}
+
+.highlight-2{
+  -webkit-box-shadow: inset 0 0 2px 2px orange;
+  -moz-box-shadow: inset 0 0 2px 2px orange;
+  box-shadow: inset 0 0 2px 2px orange;
+}
+
+.highlight-3{
+  -webkit-box-shadow: inset 0 0 3px 3px orange;
+  -moz-box-shadow: inset 0 0 3px 3px orange;
+  box-shadow: inset 0 0 3px 3px orange;
 }
 
 .highlight-black {

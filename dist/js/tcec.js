@@ -73,6 +73,15 @@ var btheme = "chess24";
 var ptheme = "chess24";
 var oldSchedData = null;
 
+var moveFrom = null;
+var moveFromPvW = null
+var moveFromPvB = null
+var moveFromPvL = null
+var moveTo = null;
+var moveToPvW = null;
+var moveToPvB = null;
+var moveToPvL = null;
+
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
     .addClass(highlightClass);
@@ -387,8 +396,6 @@ function setPgn(pgn)
    }
 
   if (typeof pgn.Headers != 'undefined') {
-     var moveFrom = '';
-     var moveTo = '';
      if (typeof pgn.Moves != 'undefined' && pgn.Moves.length > 0) {
        currentPosition = pgn.Moves[pgn.Moves.length-1].fen;
        moveFrom = pgn.Moves[pgn.Moves.length-1].from;
@@ -1362,8 +1369,8 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
      }
   setActiveKey(pvColor, moveKey);
 
-  moveFrom = activePv[moveKey].from;
-  moveTo = activePv[moveKey].to;
+  moveFromPv = activePv[moveKey].from;
+  moveToPv = activePv[moveKey].to;
   fen = activePv[moveKey].fen;
   game.load(fen);
   var pvBoardElbL = null;
@@ -1383,6 +1390,8 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
          scrollDiv('.white-engine-pv', '#c'+pvColor+'-'+moveKey);
          currentPositionWhite = fen;
       }
+      moveFromPvW = moveFromPv;
+      moveToPvW = moveToPv;
    }
    else if (pvColor == 'black')
    {
@@ -1396,6 +1405,8 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
       $('.white-engine-pv').find('#cwhite-'+activePvKey[0]).addClass('active-pv-move');
       scrollDiv('.black-engine-pv', '#c'+pvColor+'-'+moveKey);
       currentPositionBlack = fen;
+      moveFromPvB = moveFromPv;
+      moveToPvB = moveToPv;
    }
    else if (pvColor == 'live')
    {
@@ -1405,6 +1416,8 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
       //$('#black-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
       //$('#white-engine-pv').find('#white-'+activePvKey[0]).addClass('active-pv-move');
       //scrollDiv('#black-engine-pv', '#'+pvColor+'-'+moveKey);
+      moveFromPvL = moveFromPv;
+      moveToPvL = moveToPv;
    }
 
   if (pvBoardElbL == null)
@@ -1413,9 +1426,9 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
   }
   analysFen = fen;
   pvBoardElbL.find('.' + squareClass).removeClass(highlightClass);
-  pvBoardElbL.find('.square-' + moveFrom).addClass(highlightClass);
-  pvBoardElbL.find('.square-' + moveTo).addClass(highlightClass);
-  pvSquareToHighlight = moveTo;
+  pvBoardElbL.find('.square-' + moveFromPv).addClass(highlightClass);
+  pvBoardElbL.find('.square-' + moveToPv).addClass(highlightClass);
+  pvSquareToHighlight = moveToPv;
 
   pvBoardL.position(fen, false);
 }
@@ -2328,6 +2341,25 @@ function setBoard()
 
    $('input[value='+btheme+'b]').prop('checked', true);
    $('input[value='+ptheme+'p]').prop('checked', true);
+
+   if (prevPgnData && prevPgnData.Moves.length > 0) 
+   {
+      boardEl.find('.' + squareClass).removeClass(highlightClass);
+      boardEl.find('.square-' + moveFrom).addClass(highlightClass);
+      boardEl.find('.square-' + moveTo).addClass(highlightClass);
+      pvBoardElb.find('.' + squareClass).removeClass(highlightClass);
+      pvBoardElb.find('.square-' + moveFromPvB).addClass(highlightClass);
+      pvBoardElb.find('.square-' + moveToPvB).addClass(highlightClass);
+      pvBoardElw.find('.' + squareClass).removeClass(highlightClass);
+      pvBoardElw.find('.square-' + moveFromPvW).addClass(highlightClass);
+      pvBoardElw.find('.square-' + moveToPvW).addClass(highlightClass);
+      if (moveFromPvL)
+      {
+         pvBoardEla.find('.' + squareClass).removeClass(highlightClass);
+         pvBoardEla.find('.square-' + moveFromPvL).addClass(highlightClass);
+         pvBoardEla.find('.square-' + moveToPvL).addClass(highlightClass);
+      }
+   }
 }
 
 function updateTables()
@@ -3199,35 +3231,36 @@ function setNotation(checkbox)
    setBoard();
 }
 
-function setHighlightDefault()
+function setHighLightMain(getHighL)
 {
-   var getHighL = localStorage.getItem('tcec-highlight');        
-   var cont = '#highcheck';
-
-   if (getHighL == undefined || getHighL == 0)
-   {
-      highlightClass = 'highlight-white';
-      $(cont).prop('checked', false);
-    }
-   else
+   if (getHighL == 0)
    {
       highlightClass = 'highlight-white highlight-none';
-      $(cont).prop('checked', true);
+   }
+   else
+   {
+      highlightClass = 'highlight-white highlight-' + getHighL;
    }
 }
 
-function setHighlight(checkbox)
+function setHighlightDefault()
 {
-   if (checkbox.checked)
+   var getHighL = localStorage.getItem('tcec-highlight');        
+
+   if (getHighL == undefined)
    {
-      localStorage.setItem('tcec-highlight', 1);
-      highlightClass = 'highlight-white highlight-none';
+      getHighL = 2;
    }
-   else
-   {
-      localStorage.setItem('tcec-highlight', 0);
-      highlightClass = 'highlight-white';
-   }
+
+   setHighLightMain(getHighL);
+
+   $('input[value=highlightRadio'+getHighL+']').prop('checked', true);
+}
+
+function setHighlight(value)
+{
+   localStorage.setItem('tcec-highlight', value);
+   setHighLightMain(value);
    setBoard();
 }
 
