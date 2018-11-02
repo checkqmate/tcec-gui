@@ -1858,11 +1858,13 @@ function updateScoreHeaders(crosstableData)
    blackScore = 0;
 
    if ((prevwhiteEngineFull != null &&
-        whiteEngineFull == whiteEngineFull) &&
+        prevwhiteEngineFull == whiteEngineFull) &&
        (prevblackEngineFull != null &&
         blackEngineFull == prevblackEngineFull))
    {
-      plog ("Header did not get updated, lets retry later", 0);
+      plog ("Header did not get updated, lets retry later: prevwhiteEngineFull:" + 
+            prevwhiteEngineFull + " ,whiteEngineFull:" + whiteEngineFull + " ,prevblackEngineFull:" + prevblackEngineFull + " ,blackEngineFull:" + blackEngineFull +
+            " ,prevblackEngineFull:" + prevblackEngineFull, 0);
       $('.white-engine-score').html('NA');
       $('.black-engine-score').html('NA');
       return 1;
