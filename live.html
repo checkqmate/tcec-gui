@@ -78,7 +78,7 @@
               Options
             </a>
             <ul class="bg-dark dropdown-menu" aria-labelledby="dd-themes">
-              <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Board Theme</a>
+              <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Board Config</a>
                <ul class="bg-dark dropdown-menu" aria-labelledby="dd-themes">
                  <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Piece Theme</a>
                    <ul class="dropdown-menu bg-dark whitefont">
@@ -209,6 +209,44 @@
                         </label>
                       </div>
                     </li>
+                     <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Notation</a>
+                        <ul class="dropdown-menu bg-dark whitefont">
+                          <div class="form-check" style="margin-left: 10px">
+                            <input class="form-check-input" type="checkbox" onclick="setNotation(this)" value="" id="nottcheck">
+                            <label class="form-check-label" for="defaultCheck1">
+                              Off
+                            </label>
+                          </div>
+                        </ul>
+                     </li>
+                     <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Move Highlight</a>
+                       <ul class="dropdown-menu bg-dark whitefont">
+                           <div class="form-check classpad">
+                             <input class="form-check-input" type="radio" name="highlightRadio" id="highlightRadio0" value="highlightRadio0" onclick="setHighlight(0);">
+                             <label class="form-check-label" for="highlightRadio0">
+                               Off
+                             </label>
+                           </div>
+                           <div class="form-check classpad">
+                             <input class="form-check-input" type="radio" name="highlightRadio" id="highlightRadio1" value="highlightRadio1" onclick="setHighlight(1);">
+                             <label class="form-check-label" for="highlightRadio1">
+                               Thin
+                             </label>
+                           </div>
+                           <div class="form-check classpad">
+                             <input class="form-check-input" type="radio" name="highlightRadio" id="highlightRadio2" value="highlightRadio2" onclick="setHighlight(2);">
+                             <label class="form-check-label" for="highlightRadio2">
+                               Standard
+                             </label>
+                           </div>
+                           <div class="form-check classpad">
+                             <input class="form-check-input" type="radio" name="highlightRadio" id="highlightRadio3" value="highlightRadio3" onclick="setHighlight(3);">
+                             <label class="form-check-label" for="highlightRadio3">
+                               Big
+                             </label>
+                           </div>
+                       </ul>
+                     </li>
                   </ul>
                  </li>
                </ul>
@@ -387,44 +425,6 @@
                 <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Main Board</a>
                   <ul class="dropdown-menu bg-dark whitefont">
-                     <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Notation</a>
-                        <ul class="dropdown-menu bg-dark whitefont">
-                          <div class="form-check" style="margin-left: 10px">
-                            <input class="form-check-input" type="checkbox" onclick="setNotation(this)" value="" id="nottcheck">
-                            <label class="form-check-label" for="defaultCheck1">
-                              Off
-                            </label>
-                          </div>
-                        </ul>
-                     </li>
-                     <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Move Highlight</a>
-                       <ul class="dropdown-menu bg-dark whitefont">
-                           <div class="form-check classpad">
-                             <input class="form-check-input" type="radio" name="highlightRadio" id="highlightRadio0" value="highlightRadio0" onclick="setHighlight(0);">
-                             <label class="form-check-label" for="highlightRadio0">
-                               Off
-                             </label>
-                           </div>
-                           <div class="form-check classpad">
-                             <input class="form-check-input" type="radio" name="highlightRadio" id="highlightRadio1" value="highlightRadio1" onclick="setHighlight(1);">
-                             <label class="form-check-label" for="highlightRadio1">
-                               Thin
-                             </label>
-                           </div>
-                           <div class="form-check classpad">
-                             <input class="form-check-input" type="radio" name="highlightRadio" id="highlightRadio2" value="highlightRadio2" onclick="setHighlight(2);">
-                             <label class="form-check-label" for="highlightRadio2">
-                               Standard
-                             </label>
-                           </div>
-                           <div class="form-check classpad">
-                             <input class="form-check-input" type="radio" name="highlightRadio" id="highlightRadio3" value="highlightRadio3" onclick="setHighlight(3);">
-                             <label class="form-check-label" for="highlightRadio3">
-                               Big
-                             </label>
-                           </div>
-                       </ul>
-                     </li>
                   </ul>
                 </li>
               </ul>
