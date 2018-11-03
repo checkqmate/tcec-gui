@@ -2116,7 +2116,10 @@ function updateH2hData(h2hdataip)
          blackEngineFull == prevblackEngineFullSc)))
    {
       plog ("H2h did not get updated, lets retry later: prevwhiteEngineFull:" + 
-            prevwhiteEngineFullSc + " ,whiteEngineFull:" + whiteEngineFull + " ,prevblackEngineFull:" + prevblackEngineFullSc + " ,blackEngineFull:" + blackEngineFull, 0);
+            prevwhiteEngineFullSc + 
+            " ,whiteEngineFull:" + whiteEngineFull + 
+            " ,h2hRetryCount:" + h2hRetryCount +
+            " ,prevblackEngineFull:" + prevblackEngineFullSc + " ,blackEngineFull:" + blackEngineFull, 0);
       h2hRetryCount = h2hRetryCount + 1;
       setTimeout(function() { updateH2hData(h2hdataip); }, 5000);
       return;
