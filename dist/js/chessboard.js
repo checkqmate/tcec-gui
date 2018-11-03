@@ -662,11 +662,11 @@ function buildPiece(piece, hidden, id) {
 
   if (SQUARE_SIZE < 25)
   {
-     top = -5;
+     top = -4;
   }
   else if (SQUARE_SIZE < 35)
   {
-     top = -2;
+     top = -1;
   }
   var html = '<img src="' + buildPieceImgSrc(piece) + '" ';
   if (id && typeof id === 'string') {
