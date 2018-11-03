@@ -251,6 +251,63 @@
                      </li>
                </ul>
                 <div class="dropdown-divider"></div>
+                <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">PV Board</a>
+                   <ul class="dropdown-menu bg-dark whitefont">
+                     <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Ply Div</a>
+                       <ul class="dropdown-menu bg-dark whitefont">
+                         <li class="radio">
+                            <div class="form-check classpad">
+                              <input class="form-check-input" type="radio" name="PlyRadio" id="ply0" value="ply0" checked="checked" onclick="setPlyDiv(0);">
+                              <label class="form-check-label" for="PlyRadio1">
+                                First ply
+                              </div>
+                              <div class="form-check classpad">
+                                <input class="form-check-input" type="radio" name="PlyRadio" id="ply1" value="ply1" onclick="setPlyDiv(1);">
+                                <label class="form-check-label" for="PlyRadio2">
+                                  Diverging ply
+                                </label>
+                              </div>
+                              <div class="form-check classpad">
+                                <input class="form-check-input" type="radio" name="PlyRadio" id="ply2" value="ply2" onclick="setPlyDiv(2);">
+                                <label class="form-check-label" for="PlyRadio3">
+                                  Last Ply
+                                </label>
+                              </div>
+                            </li>
+                         </ul>
+                       </li>
+                     </li>
+                      <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Move Highlight</a>
+                         <ul class="dropdown-menu bg-dark whitefont">
+                           <div class="form-check classpad">
+                             <input class="form-check-input" type="radio" name="highlightPvRadio" id="highlightPvRadio0" value="highlightPvRadio0" onclick="setHighlightPv(0);">
+                             <label class="form-check-label" for="highlightPvRadio0">
+                               Off
+                             </label>
+                           </div>
+                           <div class="form-check classpad">
+                             <input class="form-check-input" type="radio" name="highlightPvRadio" id="highlightPvRadio1" value="highlightPvRadio1" onclick="setHighlightPv(1);">
+                             <label class="form-check-label" for="highlightPvRadio1">
+                               Thin
+                             </label>
+                           </div>
+                           <div class="form-check classpad">
+                             <input class="form-check-input" type="radio" name="highlightPvRadio" id="highlightPvRadio2" value="highlightPvRadio2" onclick="setHighlightPv(2);">
+                             <label class="form-check-label" for="highlightPvRadio2">
+                               Standard
+                             </label>
+                           </div>
+                           <div class="form-check classpad">
+                             <input class="form-check-input" type="radio" name="highlightPvRadio" id="highlightPvRadio3" value="highlightPvRadio3" onclick="setHighlightPv(3);">
+                             <label class="form-check-label" for="highlightPvRadio3">
+                               Big
+                             </label>
+                           </div>
+                         </ul>
+                      </li>
+                   </ul>
+                </li>
+                <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Chat size</a>
                   <ul class="dropdown-menu bg-dark whitefont">
                     <input id="chatsize"/>
@@ -369,65 +426,6 @@
                   </ul>
                 </li>
                 <div class="dropdown-divider"></div>
-                <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">PV Board</a>
-                   <ul class="dropdown-menu bg-dark whitefont">
-                     <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Ply Div</a>
-                       <ul class="dropdown-menu bg-dark whitefont">
-                         <li class="radio">
-                            <div class="form-check classpad">
-                              <input class="form-check-input" type="radio" name="PlyRadio" id="ply0" value="ply0" checked="checked" onclick="setPlyDiv(0);">
-                              <label class="form-check-label" for="PlyRadio1">
-                                First ply
-                              </div>
-                              <div class="form-check classpad">
-                                <input class="form-check-input" type="radio" name="PlyRadio" id="ply1" value="ply1" onclick="setPlyDiv(1);">
-                                <label class="form-check-label" for="PlyRadio2">
-                                  Diverging ply
-                                </label>
-                              </div>
-                              <div class="form-check classpad">
-                                <input class="form-check-input" type="radio" name="PlyRadio" id="ply2" value="ply2" onclick="setPlyDiv(2);">
-                                <label class="form-check-label" for="PlyRadio3">
-                                  Last Ply
-                                </label>
-                              </div>
-                            </li>
-                         </ul>
-                       </li>
-                     </li>
-                      <li><a class="dropdown-item dropdown-toggle whitefont" href="#/">Move Highlight</a>
-                         <ul class="dropdown-menu bg-dark whitefont">
-                           <div class="form-check classpad">
-                             <input class="form-check-input" type="radio" name="highlightPvRadio" id="highlightPvRadio0" value="highlightPvRadio0" onclick="setHighlightPv(0);">
-                             <label class="form-check-label" for="highlightPvRadio0">
-                               Off
-                             </label>
-                           </div>
-                           <div class="form-check classpad">
-                             <input class="form-check-input" type="radio" name="highlightPvRadio" id="highlightPvRadio1" value="highlightPvRadio1" onclick="setHighlightPv(1);">
-                             <label class="form-check-label" for="highlightPvRadio1">
-                               Thin
-                             </label>
-                           </div>
-                           <div class="form-check classpad">
-                             <input class="form-check-input" type="radio" name="highlightPvRadio" id="highlightPvRadio2" value="highlightPvRadio2" onclick="setHighlightPv(2);">
-                             <label class="form-check-label" for="highlightPvRadio2">
-                               Standard
-                             </label>
-                           </div>
-                           <div class="form-check classpad">
-                             <input class="form-check-input" type="radio" name="highlightPvRadio" id="highlightPvRadio3" value="highlightPvRadio3" onclick="setHighlightPv(3);">
-                             <label class="form-check-label" for="highlightPvRadio3">
-                               Big
-                             </label>
-                           </div>
-                         </ul>
-                      </li>
-                   </ul>
-                </li>
-                <div class="dropdown-divider"></div>
-
-
               </ul>
             </li>
           </ul>
