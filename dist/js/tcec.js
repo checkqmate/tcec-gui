@@ -71,6 +71,7 @@ var selectedId = 0;
 var highlightClass = 'highlight-white highlight-none';
 var highlightClassPv = 'highlight-white highlight-none';
 var boardNotation = true;
+var boardNotationPv = true;
 var tcecElo = 1;
 var engGlobData = {};
 var btheme = "chess24";
@@ -2350,7 +2351,7 @@ var onDragMove = function(newLocation, oldLocation, source,
    analysFen = fen;
 };
 
-function drawGivenBoardDrag(cont)
+function drawGivenBoardDrag(cont, boardNotation)
 {
    var newBoard =  ChessBoard(cont, {
       pieceTheme: window[ptheme + "_piece_theme"],
@@ -2367,7 +2368,7 @@ function drawGivenBoardDrag(cont)
    return newBoard;
 }
 
-function drawGivenBoard(cont)
+function drawGivenBoard(cont, boardNotation)
 {
    var newBoard =  ChessBoard(cont, {
       pieceTheme: window[ptheme + "_piece_theme"],
@@ -2396,10 +2397,10 @@ function setBoardInit()
       ptheme = pieceTheme;
    }
 
-   pvBoarda = drawGivenBoardDrag('pv-boarda', 1);
-   board = drawGivenBoard('board', 0);
-   pvBoardw = drawGivenBoard('pv-boardw', 0);
-   pvBoardb = drawGivenBoard('pv-boardb', 0);
+   pvBoarda = drawGivenBoardDrag('pv-boarda', boardNotationPv);
+   board = drawGivenBoard('board', boardNotation);
+   pvBoardw = drawGivenBoard('pv-boardw', boardNotationPv);
+   pvBoardb = drawGivenBoard('pv-boardb', boardNotationPv);
 
    localStorage.setItem('tcec-board-theme', btheme);
    localStorage.setItem('tcec-piece-theme', ptheme);
@@ -2412,19 +2413,19 @@ function setBoardInit()
 function setBoard()
 {
    var fen = board.fen();
-   board = drawGivenBoard('board', 0);
+   board = drawGivenBoard('board', boardNotation);
    board.position(fen, false);
 
    fen = pvBoardb.fen();
-   pvBoardb = drawGivenBoard('pv-boardb', 0);
+   pvBoardb = drawGivenBoard('pv-boardb', boardNotationPv);
    pvBoardb.position(fen, false);
 
    fen = pvBoardw.fen();
-   pvBoardw = drawGivenBoard('pv-boardw', 0);
+   pvBoardw = drawGivenBoard('pv-boardw', boardNotationPv);
    pvBoardw.position(fen, false);
 
    fen = pvBoarda.fen();
-   pvBoarda = drawGivenBoardDrag('pv-boarda', 0);
+   pvBoarda = drawGivenBoardDrag('pv-boarda', boardNotationPv);
    pvBoarda.position(fen, false);
 
    localStorage.setItem('tcec-board-theme', btheme);
@@ -2581,6 +2582,7 @@ function setDefaults()
    setliveEngine();
    setDefaultEnginecolor();
    setNotationDefault();
+   setNotationPvDefault();
    setBoard();
 }
 
@@ -3298,6 +3300,23 @@ function setSound()
    }
 }
 
+function setNotationPvDefault()
+{
+   var getHighL = localStorage.getItem('tcec-notation-pv');        
+   var cont = '#nottcheckpv';
+
+   if (getHighL == undefined || getHighL == 0)
+   {
+      boardNotationPv = true;
+      $(cont).prop('checked', false);
+    }
+   else
+   {
+      boardNotationPv = false;
+      $(cont).prop('checked', true);
+   }
+}
+
 function setNotationDefault()
 {
    var getHighL = localStorage.getItem('tcec-notation');        
@@ -3313,6 +3332,21 @@ function setNotationDefault()
       boardNotation = false;
       $(cont).prop('checked', true);
    }
+}
+
+function setNotationPv(checkbox)
+{
+   if (!checkbox.checked)
+   {
+      localStorage.setItem('tcec-notation-pv', 1);
+      boardNotationPv = true;
+   }
+   else
+   {
+      localStorage.setItem('tcec-notation-pv', 0);
+      boardNotationPv = false;
+   }
+   setBoard();
 }
 
 function setNotation(checkbox)
