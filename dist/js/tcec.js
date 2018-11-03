@@ -2119,6 +2119,7 @@ function updateH2hData(h2hdataip)
             prevwhiteEngineFullSc + " ,whiteEngineFull:" + whiteEngineFull + " ,prevblackEngineFull:" + prevblackEngineFullSc + " ,blackEngineFull:" + blackEngineFull, 0);
       h2hRetryCount = h2hRetryCount + 1;
       setTimeout(function() { updateH2hData(h2hdataip); }, 5000);
+      return;
    }
 
    h2hRetryCount = 0;
