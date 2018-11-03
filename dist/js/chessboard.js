@@ -666,6 +666,7 @@ function buildPiece(piece, hidden, id) {
   'class="' + CSS.piece + '" ' +
   'data-piece="' + piece + '" ' +
   'style="width: ' + SQUARE_SIZE + 'px;' +
+  'margin-top: -3px;' + 
   'height: ' + SQUARE_SIZE + 'px;';
   if (hidden === true) {
     html += 'display:none;';
