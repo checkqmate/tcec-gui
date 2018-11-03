@@ -3302,18 +3302,18 @@ function setSound()
 
 function setNotationPvDefault()
 {
-   var getHighL = localStorage.getItem('tcec-notation-pv');        
+   var getHighL = localStorage.getItem('tcec-notation-pvx');        
    var cont = '#nottcheckpv';
 
    if (getHighL == undefined || getHighL == 0)
    {
-      boardNotationPv = true;
-      $(cont).prop('checked', false);
+      boardNotationPv = false;
+      $(cont).prop('checked', true);
     }
    else
    {
-      boardNotationPv = false;
-      $(cont).prop('checked', true);
+      boardNotationPv = true;
+      $(cont).prop('checked', false);
    }
 }
 
@@ -3338,12 +3338,12 @@ function setNotationPv(checkbox)
 {
    if (!checkbox.checked)
    {
-      localStorage.setItem('tcec-notation-pv', 1);
+      localStorage.setItem('tcec-notation-pvx', 1);
       boardNotationPv = true;
    }
    else
    {
-      localStorage.setItem('tcec-notation-pv', 0);
+      localStorage.setItem('tcec-notation-pvx', 0);
       boardNotationPv = false;
    }
    setBoard();
