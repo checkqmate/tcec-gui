@@ -1749,7 +1749,7 @@ function getRating(engine, engName)
    return elo;
 }
 
-function findEloDiff (whiteEngine, blackEngine, whiteEngName, blackEngName, score)
+function findEloDiffOld (whiteEngine, blackEngine, whiteEngName, blackEngName, score)
 {
    var k = 10;
    var b_rating = blackEngine.Rating;
@@ -1757,6 +1757,20 @@ function findEloDiff (whiteEngine, blackEngine, whiteEngName, blackEngName, scor
    var expected_score = 1 / (1 + Math.pow(10, (b_rating - w_rating) / 400 )); 
    var rating_diff = k * (score - expected_score);
    return rating_diff;
+}
+
+function findEloDiff(whiteEngine, blackEngine, whiteEngName, blackEngName, score1, score2, gameno)
+{
+   var k = 10;
+   var r1 = Math.pow(10, (whiteEngine.Rating/400));
+   var r2 = Math.pow(10, (blackEngine.Rating/400));
+   var e1 = r1/(r1+r2);
+   var e2 = r2/(r1+r2);
+   var w_rating = whiteEngine.Rating + k * (score1 - e1);
+   var b_rating = blackEngine.Rating + k * (score2 - e2);
+   //console.log ("gameno: " + (gameno + 1) + " ,w_rating: " + w_rating + ",b_rating:" + b_rating);
+   whiteEngine.Rating = w_rating;
+   blackEngine.Rating = b_rating;
 }
 
 function getOverallElo(data)
@@ -1770,28 +1784,33 @@ function getOverallElo(data)
 
    _.each(crosstableData.Table, function(engine, key) {
       eloDiff = 0;
+      engine.OrigRating = engine.Rating;
       _.each(engine.Results, function(oppEngine, oppkey)
       {
          plog ("Opp engine is " + oppkey + " ,oppEngine is " + crosstableData.Table[oppkey].Rating, 1);
          var blackEngine = crosstableData.Table[oppkey];
          var strText = oppEngine.Text;
+         var blackRating = blackEngine.Rating;
          for (var i = 0; i < strText.length; i++) 
          {
             plog ("strText.charAt(i): " + strText.charAt(i));
             if (strText.charAt(i) == '0')
             {
-               eloDiff += findEloDiff (engine, blackEngine, key, oppkey, 0);
+               findEloDiff (engine, blackEngine, key, oppkey, 0, 1, i);
             }
             else if (strText.charAt(i) == '1')
             {
-               eloDiff += findEloDiff (engine, blackEngine, key, oppkey, 1);
+               findEloDiff (engine, blackEngine, key, oppkey, 1, 0, i);
             }
             else if (strText.charAt(i) == '=')
             {
-               eloDiff += findEloDiff (engine, blackEngine, key, oppkey, 0.5);
+               findEloDiff (engine, blackEngine, key, oppkey, 0.5, 0.5, i);
             }
          }
+         eloDiff = engine.Rating - engine.OrigRating;
+         blackEngine.Rating = blackRating;
       }); 
+      engine.Rating = engine.OrigRating;
       engine.eloDiff = eloDiff;
       plog ("Final eloDiff: " + eloDiff + " ,fscore: " + parseInt(engine.Rating + eloDiff), 1);
    });
@@ -2120,7 +2139,7 @@ function updateH2hData(h2hdataip)
             prevwhiteEngineFullSc + 
             " ,whiteEngineFull:" + whiteEngineFull + 
             " ,h2hRetryCount:" + h2hRetryCount +
-            " ,prevblackEngineFull:" + prevblackEngineFullSc + " ,blackEngineFull:" + blackEngineFull, 0);
+            " ,prevblackEngineFull:" + prevblackEngineFullSc + " ,blackEngineFull:" + blackEngineFull, 1);
       h2hRetryCount = h2hRetryCount + 1;
       setTimeout(function() { updateH2hData(h2hdataip); }, 5000);
       return;
