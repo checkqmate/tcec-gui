@@ -3360,7 +3360,7 @@ function setNotationDefault()
    {
       boardNotation = true;
       $(cont).prop('checked', false);
-    }
+   }
    else
    {
       boardNotation = false;
@@ -3385,15 +3385,15 @@ function setNotationPv(checkbox)
 
 function setNotation(checkbox)
 {
-   if (!checkbox.checked)
+   if (checkbox.checked)
    {
       localStorage.setItem('tcec-notation', 1);
-      boardNotation = true;
+      boardNotation = false;
    }
    else
    {
       localStorage.setItem('tcec-notation', 0);
-      boardNotation = false;
+      boardNotation = true;
    }
    setBoard();
 }
