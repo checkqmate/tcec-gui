@@ -332,6 +332,18 @@ function setUsers(data)
 
 var newMovesCount = 0;
 
+function listPosition()
+{
+   if (board)
+   {
+      var getPos = board.position();
+      if (getPos != null)
+      {
+         console.log ("Number of pieces for leela:" + Object.keys(getPos).length);
+      }
+   }
+}
+
 function setPgn(pgn)
 {
    var currentPlyCount = 0;
@@ -532,6 +544,8 @@ function setPgn(pgn)
   if (typeof pgn.Headers == 'undefined') {
     return;
   }
+
+  listPosition();
 
   var title = "TCEC - Live Computer Chess Broadcast";
   if (pgn.Moves.length > 0) {
@@ -1106,6 +1120,7 @@ $(document).on('click', '.change-move', function(e) {
   currentPosition = clickedFen;
   activePly = clickedPly;
   e.preventDefault();
+  listPosition();
 
   if (clickedPly == loadedPlies)
   {
