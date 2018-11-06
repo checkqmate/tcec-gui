@@ -1,7 +1,10 @@
 boardEl = $('#board');
 pvBoardElb = $('#pv-boardb');
+pvBoardElbc = $('#pv-boardbc');
 pvBoardElw = $('#pv-boardw');
+pvBoardElwc = $('#pv-boardwc');
 pvBoardEla = $('#pv-boarda');
+pvBoardElac = $('#pv-boardac');
 
 var squareToHighlight = '';
 var pvSquareToHighlight = '';
@@ -86,6 +89,7 @@ var moveTo = null;
 var moveToPvW = null;
 var moveToPvB = null;
 var moveToPvL = null;
+var hideDownPv = 0;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -1301,7 +1305,11 @@ $(document).on('click', '.set-pv-board', function(e) {
    }
    else
    {
-      $('#v-pills-pv-tab').click();
+      console.log ("hideDownPv: " + hideDownPv);
+      if (hideDownPv == 0)
+      {
+         $('#v-pills-pv-tab').click();
+      }
    }
 
   activePvColor = pvColor;
@@ -1417,7 +1425,6 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
    {
       pvBoardL = pvBoardb;
       pvBoardElbL = pvBoardElb;
-      //$('#black-engine-pv').addClass('active-pv-move');
       $('#black-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
       $('#white-engine-pv').find('#white-'+activePvKey[0]).addClass('active-pv-move');
       scrollDiv('#black-engine-pv', '#'+pvColor+'-'+moveKey);
@@ -1451,6 +1458,24 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
   pvSquareToHighlight = moveToPv;
 
   pvBoardL.position(fen, false);
+  if (pvColor == 'white')
+  {
+     pvBoardL = pvBoardwc;
+     pvBoardElbL = pvBoardElwc;
+     pvBoardElbL.find('.' + squareClass).removeClass(highlightClassPv);
+     pvBoardElbL.find('.square-' + moveFromPv).addClass(highlightClassPv);
+     pvBoardElbL.find('.square-' + moveToPv).addClass(highlightClassPv);
+     pvBoardL.position(fen, false);
+  }
+  if (pvColor == 'black')
+  {
+     pvBoardL = pvBoardbc;
+     pvBoardElbL = pvBoardElbc;
+     pvBoardElbL.find('.' + squareClass).removeClass(highlightClassPv);
+     pvBoardElbL.find('.square-' + moveFromPv).addClass(highlightClassPv);
+     pvBoardElbL.find('.square-' + moveToPv).addClass(highlightClassPv);
+     pvBoardL.position(fen, false);
+  }
 }
 
 $('#pv-board-black').click(function(e) {
@@ -2435,13 +2460,15 @@ function setBoardInit()
    board = drawGivenBoard('board', boardNotation);
    pvBoardw = drawGivenBoard('pv-boardw', boardNotationPv);
    pvBoardb = drawGivenBoard('pv-boardb', boardNotationPv);
+   pvBoardwc = drawGivenBoard('pv-boardwc', boardNotationPv);
+   pvBoardbc = drawGivenBoard('pv-boardbc', boardNotationPv);
 
    localStorage.setItem('tcec-board-theme', btheme);
    localStorage.setItem('tcec-piece-theme', ptheme);
    $('input[value='+btheme+'b]').prop('checked', true);
    $('input[value='+ptheme+'p]').prop('checked', true);
 
-   return {board, pvBoardw, pvBoardb, pvBoarda};
+   return {board, pvBoardw, pvBoardb, pvBoarda, pvBoardwc, pvBoardbc};
 }
 
 function setBoard()
@@ -2461,6 +2488,14 @@ function setBoard()
    fen = pvBoarda.fen();
    pvBoarda = drawGivenBoardDrag('pv-boarda', boardNotationPv);
    pvBoarda.position(fen, false);
+
+   fen = pvBoardwc.fen();
+   pvBoardwc = drawGivenBoardDrag('pv-boardwc', boardNotationPv);
+   pvBoardwc.position(fen, false);
+
+   fen = pvBoardbc.fen();
+   pvBoardbc = drawGivenBoardDrag('pv-boardbc', boardNotationPv);
+   pvBoardbc.position(fen, false);
 
    localStorage.setItem('tcec-board-theme', btheme);
    localStorage.setItem('tcec-piece-theme', ptheme);
@@ -3954,3 +3989,34 @@ function initTables()
      ]
    });
 }
+
+function removeClassEngineInfo(cont)
+{
+   $(cont).removeClass('d-sm-none d-md-none d-lg-none d-xl-none');
+}
+
+function addClassEngineInfo(cont)
+{
+   $(cont).addClass('d-sm-none d-md-none d-lg-none d-xl-none');
+}
+
+function showEngInfo()
+{
+   hideDownPv = 1;
+   for (var i = 1 ; i < 5 ; i++)
+   {
+      removeClassEngineInfo('#boardinfod2' + i);
+      removeClassEngineInfo('#boardinfod1' + i);
+   }
+}
+
+function hideEngInfo()
+{
+   hideDownPv = 0;
+   for (var i = 1 ; i < 5 ; i++)
+   {
+      addClassEngineInfo('#boardinfod2' + i);
+      addClassEngineInfo('#boardinfod1' + i);
+   }
+}
+

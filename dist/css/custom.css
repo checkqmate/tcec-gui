@@ -158,6 +158,10 @@ body.dark #v-pills-pv {
 	background: #333 !important;
 }
 
+body.dark #v-pills-pv-top {
+	background: #333 !important;
+}
+
 body.dark #v-pills-pvanalys {
 	background: #333 !important;
 }
@@ -169,6 +173,10 @@ body.dark #v-pills-pvanalys {
 }
 
 #v-pills-pv {
+	background: #dcdcdc !important;
+}
+
+#v-pills-pv-top {
 	background: #dcdcdc !important;
 }
 
