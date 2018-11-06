@@ -301,6 +301,8 @@
                         <div id="pv-boarda" style="width: 250px; margin-left: auto; margin-right: auto;"></div>
                         <div id="pv-boardw"></div>
                         <div id="pv-boardb"></div>
+                        <div id="pv-boardwc"></div>
+                        <div id="pv-boardbc"></div>
                       </div>
                     </div>
                      <div class="btn-group d-flex navigation-buttons" style="width: 250px; margin-left: auto; margin-right:auto;" role="group">
@@ -438,7 +440,7 @@
         setDark();
       });
 
-      var {board, pvBoardw, pvBoardb, pvBoarda} = setBoardInit();
+      var {board, pvBoardw, pvBoardb, pvBoarda, pvBoardwc, pvBoardbc} = setBoardInit();
 
       $('.refreshBoard').on('click', function() {
         updatePgn(1);
