@@ -977,19 +977,23 @@ function updateEnginePv(color, whiteToPlay, moves)
       }
       if (color == "white" && effectiveKey % 2 == 0 ) {
         $('#' + color + '-engine-pv').append(pvMove + '. ');
-        $('.' + color + '-engine-pv').append(pvMove + '. ');
+        $('#' + color + '-engine-pv2').append(pvMove + '. ');
+        $('#' + color + '-engine-pv3').append(pvMove + '. ');
       }
       
       if (color == "black" && effectiveKey % 2 != 0 ) {
-        $('.' + color + '-engine-pv').append(pvMove + '. ');
+        $('#' + color + '-engine-pv3').append(pvMove + '. ');
         $('#' + color + '-engine-pv').append(pvMove + '. ');
+        $('#' + color + '-engine-pv2').append(pvMove + '. ');
       }
       
       if (color == "black" && key == 0 ) {
         $('#' + color + '-engine-pv').append(pvMove + '. ');
-        $('.' + color + '-engine-pv').append(pvMove + '. ');
+        $('#' + color + '-engine-pv2').append(pvMove + '. ');
+        $('#' + color + '-engine-pv3').append(pvMove + '. ');
         $('#' + color + '-engine-pv').append(' .. ');
-        $('.' + color + '-engine-pv').append(' .. ');
+        $('#' + color + '-engine-pv2').append(' .. ');
+        $('#' + color + '-engine-pv3').append(' .. ');
         currentMove++;
       }
       plog ("classhigh: " + classhigh, 1);
@@ -998,7 +1002,8 @@ function updateEnginePv(color, whiteToPlay, moves)
          classhigh += ' blue';
       }
       $('#' + color + '-engine-pv').append("<a href='#' id='" + color + '-' + key + "' class='set-pv-board " + classhigh + "' move-key='" + key + "' color='" + color + "'>" + move.m + '</a> ');
-      $('.' + color + '-engine-pv').append("<a href='#' id='c" + color + '-' + key + "' class='set-pv-board " + classhigh + "' move-key='" + key + "' color='" + color + "'>" + move.m + '</a> ');
+      $('#' + color + '-engine-pv2').append("<a href='#' id='" + color + '-' + key + "' class='set-pv-board " + classhigh + "' move-key='" + key + "' color='" + color + "'>" + move.m + '</a> ');
+      $('#' + color + '-engine-pv3').append("<a href='#' id='c" + color + '-' + key + "' class='set-pv-board " + classhigh + "' move-key='" + key + "' color='" + color + "'>" + move.m + '</a> ');
       });
 
     plog ("highlightpv is :" + highlightpv);
@@ -1411,11 +1416,13 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
          pvBoardL = pvBoardw;
          pvBoardElbL = pvBoardElw;
          $('#white-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
+         $('#white-engine-pv2').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
+         $('#white-engine-pv3').find('#c'+pvColor+'-'+moveKey).addClass('active-pv-move');
          $('#black-engine-pv').find('#black-'+activePvKey[1]).addClass('active-pv-move');
-         $('.white-engine-pv').find('#c'+pvColor+'-'+moveKey).addClass('active-pv-move');
-         $('.black-engine-pv').find('#cblack-'+activePvKey[1]).addClass('active-pv-move');
-         scrollDiv('.white-engine-pv', '#c'+pvColor+'-'+moveKey);
-         scrollDiv('#white-engine-pv2', '#c'+pvColor+'-'+moveKey);
+         $('#black-engine-pv2').find('#black-'+activePvKey[1]).addClass('active-pv-move');
+         $('#black-engine-pv3').find('#cblack-'+activePvKey[1]).addClass('active-pv-move');
+         scrollDiv('#white-engine-pv3', '#c'+pvColor+'-'+moveKey);
+         scrollDiv('#white-engine-pv2', '#'+pvColor+'-'+moveKey);
          scrollDiv('#white-engine-pv', '#'+pvColor+'-'+moveKey);
          currentPositionWhite = fen;
       }
@@ -1427,12 +1434,14 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
       pvBoardL = pvBoardb;
       pvBoardElbL = pvBoardElb;
       $('#black-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
+      $('#black-engine-pv2').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
+      $('#black-engine-pv3').find('#c'+pvColor+'-'+moveKey).addClass('active-pv-move');
       $('#white-engine-pv').find('#white-'+activePvKey[0]).addClass('active-pv-move');
+      $('#white-engine-pv2').find('#white-'+activePvKey[0]).addClass('active-pv-move');
+      $('#white-engine-pv3').find('#cwhite-'+activePvKey[0]).addClass('active-pv-move');
       scrollDiv('#black-engine-pv', '#'+pvColor+'-'+moveKey);
-      $('.black-engine-pv').find('#c'+pvColor+'-'+moveKey).addClass('active-pv-move');
-      $('.white-engine-pv').find('#cwhite-'+activePvKey[0]).addClass('active-pv-move');
-      scrollDiv('.black-engine-pv', '#c'+pvColor+'-'+moveKey);
-      scrollDiv('#black-engine-pv2', '#c'+pvColor+'-'+moveKey);
+      scrollDiv('#black-engine-pv3', '#c'+pvColor+'-'+moveKey);
+      scrollDiv('#black-engine-pv2', '#'+pvColor+'-'+moveKey);
       currentPositionBlack = fen;
       moveFromPvB = moveFromPv;
       moveToPvB = moveToPv;
