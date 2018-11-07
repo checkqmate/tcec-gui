@@ -933,7 +933,7 @@ function updateEnginePv(color, whiteToPlay, moves)
     if (!whiteToPlay && color == "black") {
       currentMove++;
     }
-    setpvmove = 0;
+    setpvmove = -1;
     $('#' + color + '-engine-pv').html('');
     $('.' + color + '-engine-pv').html('');
     _.each(moves, function(move, key) {
@@ -975,10 +975,27 @@ function updateEnginePv(color, whiteToPlay, moves)
             setpvmove = effectiveKey;
          }
       }
-      if (color == "white" && effectiveKey % 2 == 0 ) {
-        $('#' + color + '-engine-pv').append(pvMove + '. ');
-        $('#' + color + '-engine-pv2').append(pvMove + '. ');
-        $('#' + color + '-engine-pv3').append(pvMove + '. ');
+      var atsymbol = '';
+      if (setpvmove > -1 && effectiveKey == setpvmove)
+      {
+         pvMove = ' @ ' + pvMove;
+         //console.log ("pvMove is : " + pvMove + " setpvmove:" + setpvmove + ", effectiveKey:" + effectiveKey);
+         atsymbol = ' @ ';
+      }
+      if (color == "white")
+      {
+         if (effectiveKey % 2 == 0 ) 
+         {
+            $('#' + color + '-engine-pv').append(pvMove + '. ');
+            $('#' + color + '-engine-pv2').append(pvMove + '. ');
+            $('#' + color + '-engine-pv3').append(pvMove + '. ');
+         }
+         else if (effectiveKey % 2 != 0 ) 
+         {
+            $('#' + color + '-engine-pv').append(atsymbol);
+            $('#' + color + '-engine-pv2').append(atsymbol);
+            $('#' + color + '-engine-pv3').append(atsymbol);
+         }
       }
       
       if (color == "black" && effectiveKey % 2 != 0 ) {
@@ -986,15 +1003,25 @@ function updateEnginePv(color, whiteToPlay, moves)
         $('#' + color + '-engine-pv').append(pvMove + '. ');
         $('#' + color + '-engine-pv2').append(pvMove + '. ');
       }
-      
-      if (color == "black" && key == 0 ) {
-        $('#' + color + '-engine-pv').append(pvMove + '. ');
-        $('#' + color + '-engine-pv2').append(pvMove + '. ');
-        $('#' + color + '-engine-pv3').append(pvMove + '. ');
-        $('#' + color + '-engine-pv').append(' .. ');
-        $('#' + color + '-engine-pv2').append(' .. ');
-        $('#' + color + '-engine-pv3').append(' .. ');
-        currentMove++;
+
+      if (color == "black")
+      {
+         if (color == "black" && key == 0 ) 
+         {
+            $('#' + color + '-engine-pv').append(pvMove + '. ');
+            $('#' + color + '-engine-pv2').append(pvMove + '. ');
+            $('#' + color + '-engine-pv3').append(pvMove + '. ');
+            $('#' + color + '-engine-pv').append(' .. ');
+            $('#' + color + '-engine-pv2').append(' .. ');
+            $('#' + color + '-engine-pv3').append(' .. ');
+            currentMove++;
+         }
+         else if (effectiveKey % 2 == 0 )
+         {
+            $('#' + color + '-engine-pv3').append(atsymbol);
+            $('#' + color + '-engine-pv').append(atsymbol);
+            $('#' + color + '-engine-pv2').append(atsymbol);
+         }
       }
       plog ("classhigh: " + classhigh, 1);
       if (color == 'black')
