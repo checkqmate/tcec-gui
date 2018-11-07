@@ -1412,10 +1412,13 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
          pvBoardElbL = pvBoardElw;
          $('#white-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
          $('#black-engine-pv').find('#black-'+activePvKey[1]).addClass('active-pv-move');
+         $('#white-engine-pv2').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
+         $('#black-engine-pv2').find('#black-'+activePvKey[1]).addClass('active-pv-move');
          scrollDiv('#white-engine-pv', '#'+pvColor+'-'+moveKey);
          $('.white-engine-pv').find('#c'+pvColor+'-'+moveKey).addClass('active-pv-move');
          $('.black-engine-pv').find('#cblack-'+activePvKey[1]).addClass('active-pv-move');
          scrollDiv('.white-engine-pv', '#c'+pvColor+'-'+moveKey);
+         scrollDiv('#white-engine-pv2', '#'+pvColor+'-'+moveKey);
          currentPositionWhite = fen;
       }
       moveFromPvW = moveFromPv;
@@ -1427,10 +1430,13 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
       pvBoardElbL = pvBoardElb;
       $('#black-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
       $('#white-engine-pv').find('#white-'+activePvKey[0]).addClass('active-pv-move');
+      $('#black-engine-pv2').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
+      $('#white-engine-pv2').find('#white-'+activePvKey[0]).addClass('active-pv-move');
       scrollDiv('#black-engine-pv', '#'+pvColor+'-'+moveKey);
       $('.black-engine-pv').find('#c'+pvColor+'-'+moveKey).addClass('active-pv-move');
       $('.white-engine-pv').find('#cwhite-'+activePvKey[0]).addClass('active-pv-move');
       scrollDiv('.black-engine-pv', '#c'+pvColor+'-'+moveKey);
+      scrollDiv('#black-engine-pv2', '#'+pvColor+'-'+moveKey);
       currentPositionBlack = fen;
       moveFromPvB = moveFromPv;
       moveToPvB = moveToPv;
