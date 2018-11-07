@@ -1412,12 +1412,11 @@ function setPvFromKey(moveKey, pvColor, choosePvx)
          pvBoardElbL = pvBoardElw;
          $('#white-engine-pv').find('#'+pvColor+'-'+moveKey).addClass('active-pv-move');
          $('#black-engine-pv').find('#black-'+activePvKey[1]).addClass('active-pv-move');
-         scrollDiv('#white-engine-pv', '#'+pvColor+'-'+moveKey);
-         console.log ("Came to scroll white");
          $('.white-engine-pv').find('#c'+pvColor+'-'+moveKey).addClass('active-pv-move');
          $('.black-engine-pv').find('#cblack-'+activePvKey[1]).addClass('active-pv-move');
          scrollDiv('.white-engine-pv', '#c'+pvColor+'-'+moveKey);
          scrollDiv('#white-engine-pv2', '#c'+pvColor+'-'+moveKey);
+         scrollDiv('#white-engine-pv', '#'+pvColor+'-'+moveKey);
          currentPositionWhite = fen;
       }
       moveFromPvW = moveFromPv;
@@ -2648,6 +2647,7 @@ function setLight()
 function setDefaults()
 {
    setSound();
+   showTabDefault();
    setHighlightDefault();
    setHighlightDefaultPv();
    setDefaultThemes();
@@ -4011,6 +4011,7 @@ function showEngInfo()
       removeClassEngineInfo('#boardinfod2' + i);
       removeClassEngineInfo('#boardinfod1' + i);
    }
+   localStorage.setItem('tcec-top-tab', 2);
 }
 
 function hideEngInfo()
@@ -4021,5 +4022,18 @@ function hideEngInfo()
       addClassEngineInfo('#boardinfod2' + i);
       addClassEngineInfo('#boardinfod1' + i);
    }
+   localStorage.setItem('tcec-top-tab', 1);
 }
 
+function showTabDefault()
+{
+   var topTab = localStorage.getItem('tcec-top-tab');
+   if (topTab == undefined || topTab == 1)
+   {
+      $('#v-pills-gameinfo-tab').click();
+   }
+   else
+   {
+      $('#v-pills-pv-top-tab').click();
+   }
+}
