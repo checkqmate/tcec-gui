@@ -1528,19 +1528,19 @@ $('#pv-board-next').click(function(e) {
   return false;
 });
 
-$('#pv-board-to-first1').click(function(e) {
+$('.pv-board-to-first1').click(function(e) {
   setPvFromKey(0, 'white');
   e.preventDefault();
   return false;
 });
 
-$('#pv-board-to-first2').click(function(e) {
+$('.pv-board-to-first2').click(function(e) {
   setPvFromKey(0, 'black');
   e.preventDefault();
   return false;
 });
 
-$('#pv-board-previous1').click(function(e) {
+$('.pv-board-previous1').click(function(e) {
   if (activePvKey[0] > 0) {
     setPvFromKey(activePvKey[0] - 1, 'white');
   }
@@ -1549,7 +1549,7 @@ $('#pv-board-previous1').click(function(e) {
   return false;
 });
 
-$('#pv-board-previous2').click(function(e) {
+$('.pv-board-previous2').click(function(e) {
   if (activePvKey[1] > 0) {
     setPvFromKey(activePvKey[1] - 1, 'black');
   }
@@ -1562,15 +1562,15 @@ var isPvAutoplay = [];
 isPvAutoplay[1] = false;
 isPvAutoplay[0] = false;
 
-$('#pv-board-autoplay1').click(function(e) {
+$('.pv-board-autoplay1').click(function(e) {
   if (isPvAutoplay[0]) {
     isPvAutoplay[0] = false;
-    $('#pv-board-autoplay1 i').removeClass('fa-pause');
-    $('#pv-board-autoplay1 i').addClass('fa-play');
+    $('.pv-board-autoplay1 i').removeClass('fa-pause');
+    $('.pv-board-autoplay1 i').addClass('fa-play');
   } else {
     isPvAutoplay[0] = true;
-    $('#pv-board-autoplay1 i').removeClass('fa-play')
-    $('#pv-board-autoplay1 i').addClass('fa-pause');
+    $('.pv-board-autoplay1 i').removeClass('fa-play')
+    $('.pv-board-autoplay1 i').addClass('fa-pause');
     pvBoardautoplay(0, 'white', whitePv);
   }
   e.preventDefault();
@@ -1578,15 +1578,15 @@ $('#pv-board-autoplay1').click(function(e) {
   return false;
 });
 
-$('#pv-board-autoplay2').click(function(e) {
+$('.pv-board-autoplay2').click(function(e) {
   if (isPvAutoplay[1]) {
     isPvAutoplay[1] = false;
-    $('#pv-board-autoplay2 i').removeClass('fa-pause');
-    $('#pv-board-autoplay2 i').addClass('fa-play');
+    $('.pv-board-autoplay2 i').removeClass('fa-pause');
+    $('.pv-board-autoplay2 i').addClass('fa-play');
   } else {
     isPvAutoplay[1] = true;
-    $('#pv-board-autoplay2 i').removeClass('fa-play')
-    $('#pv-board-autoplay2 i').addClass('fa-pause');
+    $('.pv-board-autoplay2 i').removeClass('fa-play')
+    $('.pv-board-autoplay2 i').addClass('fa-pause');
     pvBoardautoplay(1, 'black', blackPv);
   }
   e.preventDefault();
@@ -1605,18 +1605,18 @@ function pvBoardautoplay(value, color, activePv)
     isPvAutoplay[value] = false;
     if (value == 0)
     {
-       $('#pv-board-autoplay1 i').removeClass('fa-pause');
-       $('#pv-board-autoplay1 i').addClass('fa-play');
+       $('.pv-board-autoplay1 i').removeClass('fa-pause');
+       $('.pv-board-autoplay1 i').addClass('fa-play');
     }
     else
     {
-       $('#pv-board-autoplay2 i').removeClass('fa-pause');
-       $('#pv-board-autoplay2 i').addClass('fa-play');
+       $('.pv-board-autoplay2 i').removeClass('fa-pause');
+       $('.pv-board-autoplay2 i').addClass('fa-play');
     }
   }
 }
 
-$('#pv-board-next1').click(function(e) {
+$('.pv-board-next1').click(function(e) {
   if (activePvKey[0] < whitePv.length) {
     setPvFromKey(activePvKey[0] + 1, 'white');
   }
@@ -1624,7 +1624,7 @@ $('#pv-board-next1').click(function(e) {
   return false;
 });
 
-$('#pv-board-next2').click(function(e) {
+$('.pv-board-next2').click(function(e) {
   if (activePvKey[1] < blackPv.length) {
     setPvFromKey(activePvKey[1] + 1, 'black');
   }
@@ -1632,25 +1632,25 @@ $('#pv-board-next2').click(function(e) {
   return false;
 });
 
-$('#pv-board-to-last1').click(function(e) {
+$('.pv-board-to-last1').click(function(e) {
   setPvFromKey(whitePv.length - 1, 'white');
   e.preventDefault();
   return false;
 });
 
-$('#pv-board-to-last2').click(function(e) {
+$('.pv-board-to-last2').click(function(e) {
   setPvFromKey(blackPv.length - 1, 'black');
   e.preventDefault();
   return false;
 });
 
-$('#pv-board-reverse1').click(function(e) {
+$('.pv-board-reverse1').click(function(e) {
   pvBoardw.flip();
   e.preventDefault();
   return false;
 });
 
-$('#pv-board-reverse2').click(function(e) {
+$('.pv-board-reverse2').click(function(e) {
   pvBoard.flip();
   e.preventDefault();
   return false;
@@ -3625,11 +3625,11 @@ function firstButton()
    {
       if (selectedId == 'white-engine-pv')
       {
-         $('#pv-board-to-first1').click();
+         $('.pv-board-to-first1').click();
       }
       else if (selectedId == 'black-engine-pv')
       {
-         $('#pv-board-to-first2').click();
+         $('.pv-board-to-first2').click();
       }
    }
 };
@@ -3654,11 +3654,11 @@ function backButton()
    {
       if (selectedId == 'white-engine-pv')
       {
-         $('#pv-board-previous1').click();
+         $('.pv-board-previous1').click();
       }
       else if (selectedId == 'black-engine-pv')
       {
-         $('#pv-board-previous2').click();
+         $('.pv-board-previous2').click();
       }
    }
 }
@@ -3685,11 +3685,11 @@ function forwardButton()
    {
       if (selectedId == 'white-engine-pv')
       {
-         $('#pv-board-next1').click();
+         $('.pv-board-next1').click();
       }
       else if (selectedId == 'black-engine-pv')
       {
-         $('#pv-board-next2').click();
+         $('.pv-board-next2').click();
       }
    }
 }
@@ -3709,11 +3709,11 @@ function endButton()
    {
       if (selectedId == 'white-engine-pv')
       {
-         $('#pv-board-to-last1').click();
+         $('.pv-board-to-last1').click();
       }
       else if (selectedId == 'black-engine-pv')
       {
-         $('#pv-board-to-last2').click();
+         $('.pv-board-to-last2').click();
       }
    }
 };
