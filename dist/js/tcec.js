@@ -1972,9 +1972,9 @@ function updateScoreHeaders(crosstableData)
    _.each(crosstableData.Table, function(engine, key) {
       _.each(engine.Results, function(oppEngine, oppkey)
       {
-         if (whiteEngineFull != null && getShortEngineName(key) == getShortEngineName(whiteEngineFull))
+         if (whiteEngineFull != null && key == whiteEngineFull)
          {
-            if (getShortEngineName(oppkey) == getShortEngineName(blackEngineFull))
+            if (oppkey == blackEngineFull)
             {
                $('#white-engine-elo').html(data.Table[key].Rating);
                $('#black-engine-elo').html(data.Table[oppkey].Rating);
