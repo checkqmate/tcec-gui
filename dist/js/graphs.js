@@ -9,6 +9,7 @@ engine2color = '#66CC00';
 engine2color = '#A44BC0';
 var evalChartData = {};
 var engineColorArray = ['darkred', 'red', 'green', 'darkgreen', 'yellow', 'purple', 'orange'];
+var evalconstant = 10.0;
 
 function setevalChartData()
 {
@@ -469,28 +470,28 @@ function updateChartData()
 				//depth = move.sd;
 			}
 
-         //arun: cap moves at 6.5
+         //arun: cap moves at evalconstant
          move.cwv = move.wv;
          if (!isNaN(move.wv)) 
          {
-            if (move.wv > 6.5) 
+            if (move.wv > evalconstant) 
             {
-               move.cwv = 6.5;
+               move.cwv = evalconstant;
             } 
-            else if (move.wv < -6.5) 
+            else if (move.wv < -evalconstant) 
             {
-               move.cwv = -6.5;
+               move.cwv = -evalconstant;
             }
          } 
          else 
          {
             if (move.wv.substring(0,1) == '-') 
             {
-               move.cwv = -6.5;
+               move.cwv = -evalconstant;
             } 
             else 
             {
-               move.cwv = 6.5;
+               move.cwv = evalconstant;
             }
          }
          eval = [
@@ -642,16 +643,16 @@ function getLiveEval(key, moveNumber, isBlack, contno)
 	if (_.isObject(evalObject)) {
 		eval = evalObject.eval;
 		if (!isNaN(evalObject.eval)) {
-	        if (evalObject.eval > 6.5) {
-	        	evalObject.eval = 6.5;
-	        } else if (evalObject.eval < -6.5) {
-	        	evalObject.eval = -6.5;
+	        if (evalObject.eval > evalconstant) {
+	        	evalObject.eval = evalconstant;
+	        } else if (evalObject.eval < -evalconstant) {
+	        	evalObject.eval = -evalconstant;
 	        }
 	    } else {
 	    	if (evalObject.eval.substring(0,1) == '-') {
-	    		evalObject.eval = -6.5;
+	    		evalObject.eval = -evalconstant;
 	    	} else {
-	    		evalObject.eval = 6.5;
+	    		evalObject.eval = evalconstant;
 	    	}
 	    }
 
