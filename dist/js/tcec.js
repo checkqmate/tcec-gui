@@ -574,7 +574,7 @@ function setPgn(pgn)
       if (Math.abs(adjudication.Draw) <= 10 && pgn.Moves.length > 68) {
         movesToDraw = Math.abs(adjudication.Draw);
       }
-      if (Math.abs(adjudication.ResignOrWin) < 9) {
+      if (Math.abs(adjudication.ResignOrWin) < 11) {
         movesToResignOrWin = Math.abs(adjudication.ResignOrWin);
       }
       if (adjudication.FiftyMoves < 51) {
