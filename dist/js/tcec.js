@@ -60,30 +60,31 @@ function updatePgnData(data, read)
    loadedPgn = data;
    timeDiffRead = read;
 
-   if (data.Headers.Black == 'Caruana, Fabiano (USA)') {
-    data.WhiteEngineOptions = {
-      'Born': 'November 30, 1990 (age 27 years), Tønsberg, Norway',
-      'Nationality': 'Norwegian',
-      'World Champion': '2013–present',
-      'Ranking': 'No. 1 (November 2018)'
-    };
-    data.BlackEngineOptions = [{
-      'Born': 'July 30, 1992 (age 26 years), Miami, Florida, United States',
-      'Nationality': 'United States',
-      'Ranking': 'No. 2 (November 2018)'
-    }];
+   console.log(data.Headers.Black);
+
+   if (data.Headers.Black == 'Caruana, Fabiano (USA) ') {
+    data.WhiteEngineOptions = [
+      {'Name': 'Born', 'Value': 'November 30, 1990 (age 27 years), Tønsberg, Norway'},
+      {'Name': 'Nationality', 'Value': 'Norwegian'},
+      {'Name': 'World Champion', 'Value': '2013–present'},
+      {'Name': 'Ranking', 'Value': 'No. 1 (November 2018)'},
+    ];
+    data.BlackEngineOptions = [
+      {'Name': 'Born', 'Value': 'July 30, 1992 (age 26 years), Miami, Florida, United States'},
+      {'Name': 'Nationality', 'Value': 'United States'},
+      {'Name': 'Ranking', 'Value': 'No. 2 (November 2018)'}
+    ];
    } else {
     data.WhiteEngineOptions = {
       'Born': 'July 30, 1992 (age 26 years), Miami, Florida, United States',
       'Nationality': 'United States',
       'Ranking': 'No. 2 (November 2018)'
     };
-    data.BlackEngineOptions = [{
-      'Born': 'November 30, 1990 (age 27 years), Tønsberg, Norway',
-      'Nationality': 'Norwegian',
-      'World Champion': '2013–present',
-      'Ranking': 'No. 1 (November 2018)'
-    }];
+    data.BlackEngineOptions = [
+      {'Name': 'Born', 'Value': 'July 30, 1992 (age 26 years), Miami, Florida, United States'},
+      {'Name': 'Nationality', 'Value': 'United States'},
+      {'Name': 'Ranking', 'Value': 'No. 2 (November 2018)'}
+    ];
    }
 
    // if (!prevPgnData)
