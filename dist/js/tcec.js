@@ -73,11 +73,11 @@ function updatePgnData(data, read)
       {'Name': 'Ranking', 'Value': 'No. 2 (November 2018)'}
     ];
    } else {
-    data.WhiteEngineOptions = {
-      'Born': 'July 30, 1992 (age 26 years), Miami, Florida, United States',
-      'Nationality': 'United States',
-      'Ranking': 'No. 2 (November 2018)'
-    };
+    data.WhiteEngineOptions = [
+      {'Name': 'Born', 'Value': 'July 30, 1992 (age 26 years), Miami, Florida, United States'},
+      {'Name': 'Nationality', 'Value': 'United States'},
+      {'Name': 'Ranking', 'Value': 'No. 2 (November 2018)'}
+    ];
     data.BlackEngineOptions = [
       {'Name': 'Born', 'Value': 'July 30, 1992 (age 26 years), Miami, Florida, United States'},
       {'Name': 'Nationality', 'Value': 'United States'},
