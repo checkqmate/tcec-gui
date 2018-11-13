@@ -2585,7 +2585,7 @@ function setTwitchBackgroundInit(backg)
    }
    else if (backg == 2)
    {
-      $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat?darkpopout');
+      $('#chatright').attr('src', 'https://www.twitch.tv/popout/TCEC_Chess_TV/chat');
       setValue = 2;
    }
    else
@@ -2593,7 +2593,7 @@ function setTwitchBackgroundInit(backg)
       var darkMode = localStorage.getItem('tcec-dark-mode');
       if (darkMode == 20)
       {
-         $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat?darkpopout');
+         $('#chatright').attr('src', 'https://www.twitch.tv/popout/TCEC_Chess_TV/chat');
          setValue = 2;
       }
       else
@@ -2618,7 +2618,7 @@ function setTwitchBackground(backg)
       }
       else if (darkMode == 2)
       {
-         $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat?darkpopout');
+         $('#chatright').attr('src', 'https://www.twitch.tv/popout/TCEC_Chess_TV/chat');
          setValue = 2;
       }
       else if (darkMode == 0)
@@ -2629,7 +2629,7 @@ function setTwitchBackground(backg)
          }
          else
          {
-            $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat?darkpopout');
+            $('#chatright').attr('src', 'https://www.twitch.tv/popout/TCEC_Chess_TV/chat');
          }
       }
    }
@@ -2641,7 +2641,7 @@ function setTwitchBackground(backg)
       }
       else
       {
-         $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat?darkpopout');
+         $('#chatright').attr('src', 'https://www.twitch.tv/popout/TCEC_Chess_TV/chat');
       }
    }
    localStorage.setItem('tcec-twitch-back-mode', setValue);
@@ -2654,7 +2654,7 @@ function setDark()
   $('.toggleDark').find('i').addClass('fa-sun');
   $('body').addClass('dark');
   setTwitchBackground(2);
-  $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat?darkpopout');
+  $('#chatright').attr('src', 'https://www.twitch.tv/popout/TCEC_Chess_TV/chat');
   $('#info-frame').attr('src', 'info.html?body=dark');
   $('#crosstable').addClass('table-dark');
   $('#schedule').addClass('table-dark');
