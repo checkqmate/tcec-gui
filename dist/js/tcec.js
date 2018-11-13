@@ -60,6 +60,8 @@ function updatePgnData(data, read)
    loadedPgn = data;
    timeDiffRead = read;
 
+   console.log(data);
+
    if (!prevPgnData)
    {
       updateEngineInfo('#whiteenginetable', '#white-engine-info', data.WhiteEngineOptions);
