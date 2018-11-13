@@ -60,9 +60,7 @@ function updatePgnData(data, read)
    loadedPgn = data;
    timeDiffRead = read;
 
-   console.log(data.Headers.Black);
-
-   if (data.Headers.Black == 'Caruana, Fabiano (USA) ') {
+   if (data.Headers.Black.trim() == 'Caruana, Fabiano (USA) ') {
     data.WhiteEngineOptions = [
       {'Name': 'Born', 'Value': 'November 30, 1990 (age 27 years), Tønsberg, Norway'},
       {'Name': 'Nationality', 'Value': 'Norwegian'},
