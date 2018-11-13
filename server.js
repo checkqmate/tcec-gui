@@ -1,4 +1,4 @@
-var http = require("http");
+var https = require("https");
 var url = require('url');
 var fs = require('fs');
 var io = require('socket.io');
@@ -27,7 +27,10 @@ console.log ("Port is " + portnum);
 // first parameter is the mount point, second is the location in the file system
 var app = express();
 app.use(express.static(__dirname));
-var server = require('http').createServer(app);  
+var server = https.createServer({
+  key: fs.readFileSync('/etc/letsencrypt/live/tcecbonus.club/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/tcecbonus.club/fullchain.pem')
+},app); 
 server.listen(parseInt(portnum));
 var listener = io.listen(server);                                                                                                                                                                                                             
 
@@ -49,12 +52,12 @@ var watcher = chokidar.watch('crosstable.json', {
 });
 var liveeval = 'data.json';
 var ctable = 'crosstable.json';
+watcher.add('data1.json');
+watcher.add('liveeval1.json');
 watcher.add(liveeval);
 watcher.add('live.json');
 watcher.add('schedule.json');
 watcher.add('liveeval.json');
-watcher.add('sf_liveeval.json');
-watcher.add('sf_data.json');
 
 var count = 0;
 var socket = 0;
@@ -169,6 +172,9 @@ function getDeltaPgn(pgnX)
 var prevData = 0;
 var prevliveData = 0;
 var prevevalData = 0;
+var prevliveData1 = 0;
+var prevevalData1 = 0;
+
 watcher.on('change', (path, stats) => {
    console.log ("path changed:" + path + ",count is " + count);
    if (!socket)
@@ -179,25 +185,25 @@ watcher.on('change', (path, stats) => {
    try 
    {
       var data = JSON.parse(content);
-      if (path.match(/sf_data.json/))
-      {
-         broadCastData(socket, 'sf_liveeval', path, data, prevliveData);
-         prevliveData = data;
-      }
-      else if (path.match(/data.json/))
+      if (path.match(/data.json/))
       {
          broadCastData(socket, 'liveeval', path, data, prevliveData);
          prevliveData = data;
       }
-      if (path.match(/sf_liveeval.json/))
+      if (path.match(/data1.json/))
       {
-         broadCastData(socket, 'sf_livechart', path, data, prevevalData);
-         prevevalData = data;
+         broadCastData(socket, 'liveeval1', path, data, prevliveData1);
+         prevliveData1 = data;
       }
-      else if (path.match(/liveeval.json/))
+      if (path.match(/liveeval.json/))
       {
          broadCastData(socket, 'livechart', path, data, prevevalData);
          prevevalData = data;
+      }
+      if (path.match(/liveeval1.json/))
+      {
+         broadCastData(socket, 'livechart1', path, data, prevevalData1);
+         prevevalData1 = data;
       }
       if (path.match(/live.json/))
       {
