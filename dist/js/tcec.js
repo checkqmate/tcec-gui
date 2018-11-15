@@ -2081,7 +2081,7 @@ async function updateCrosstableData(data)
          points: engineDetails.Score.toFixed(1),
          wins: wins,
          loss: loss,
-         crashes: engineDetails.Strikes,
+         crashes: getEngRes.LossAsStrike,
          sb: parseFloat(engineDetails.Neustadtl).toFixed(2),
          elo: engineDetails.Rating,
          elo_diff: elo + ' [' + eloDiff + ']'
