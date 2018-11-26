@@ -216,7 +216,10 @@ var CSS = {
   sparePiecesBottom: 'spare-pieces-bottom-ae20f',
   sparePiecesTop: 'spare-pieces-top-4028b',
   square: 'square-55d63',
-  white: 'white-1e1d7'
+  white: 'white-1e1d7',
+  overlay: 'overlay-4fc5e',
+  overlayArrow: 'overlay-arrow-9d6ed',
+  overlayGroup: 'overlay-group-672a1'
 };
 
 //------------------------------------------------------------------------------
@@ -256,6 +259,13 @@ var ANIMATION_HAPPENING = false,
 //------------------------------------------------------------------------------
 
 // http://tinyurl.com/3ttloxj
+function createId() {
+  return 'xxxx-xxxx-xxxx-xxxx-xxxx-xxxx-xxxx-xxxx'.replace(/x/g, function(c) {
+    var r = Math.random() * 16 | 0;
+    return r.toString(16);
+  });
+}
+
 function uuid() {
   return 'xxxx-xxxx-xxxx-xxxx-xxxx-xxxx-xxxx-xxxx'.replace(/x/g, function(c) {
     var r = Math.random() * 16 | 0;
