@@ -1602,12 +1602,8 @@ widget.addArrowAnnotation = function(source, target, color) {
   if(cfg.overlay === true) {
     var groupEl = overlayEl.find('> .square-' + source);
     if(!groupEl.length) {
-      strClass = CSS['overlayGroup'] + " square-" + source
-      if (color === "blue") {
-        strClass += " blue"
-      }
       groupEl = createSvgEl("g", {
-        'class': strClass
+        'class': CSS['overlayGroup'] + " square-" + source + ' ' + color;
       });
       overlayEl.append(groupEl);
     }
@@ -1615,7 +1611,7 @@ widget.addArrowAnnotation = function(source, target, color) {
     var pathEl = overlayEl.find("> g.square-" + source + " > path.square-" + target);
     if(!pathEl.length) {
       var pathEl = createSvgEl("path", {
-        'class' :       CSS['overlayArrow'] + " square-" + target,
+        'class' :       CSS['overlayArrow'] + " square-" + target + " " + color,
         'd':            computePath(source, target),
         'stroke-width': (SQUARE_SIZE / 3)
       });
