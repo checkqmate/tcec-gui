@@ -228,7 +228,8 @@ var containerEl,
   boardEl,
   draggedPieceEl,
   sparePiecesTopEl,
-  sparePiecesBottomEl;
+  sparePiecesBottomEl,
+  overlayEl;
 
 // constructor return object
 var widget = {};
@@ -1511,6 +1512,9 @@ widget.resize = function() {
 
   // set board width
   boardEl.css('width', (SQUARE_SIZE * 8) + 'px');
+  overlayEl.css('width', (SQUARE_SIZE * 8) + 'px');
+  overlayEl.css('height', (SQUARE_SIZE * 8) + 'px');
+  overlayEl.css('padding', (BOARD_BORDER_SIZE) + 'px');
 
   // set drag piece size
   draggedPieceEl.css({
@@ -1774,6 +1778,7 @@ function initDom() {
 
   // build board and save it in memory
   containerEl.html(buildBoardContainer());
+  overlayEl = containerEl.find('.' + CSS.overlay);
   boardEl = containerEl.find('.' + CSS.board);
 
   buildOverlay();
