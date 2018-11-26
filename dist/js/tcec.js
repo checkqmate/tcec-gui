@@ -1637,8 +1637,8 @@ function updateLiveEvalData(data)
     }
   });
 
-  boardEl.clearAnnotation();
-  boardEl.addArrowAnnotation(livePvs[0][0].from, livePvs[0][0].to);
+  board.clearAnnotation();
+  board.addArrowAnnotation(livePvs[0][0].from, livePvs[0][0].to);
 
   $('#live-eval-cont').html('');
   _.each(engineData, function(engineDatum, key) {
