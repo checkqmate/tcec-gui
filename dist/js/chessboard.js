@@ -1613,7 +1613,7 @@ widget.addArrowAnnotation = function(source, target, color) {
       var pathEl = createSvgEl("path", {
         'class' :       CSS['overlayArrow'] + " square-" + target + " " + color,
         'd':            computePath(source, target),
-        'stroke-width': (SQUARE_SIZE / 3)
+        'stroke-width': (SQUARE_SIZE / 6)
       });
       groupEl.append(pathEl);
     }

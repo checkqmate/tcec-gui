@@ -35,8 +35,8 @@
 }
 
 .blue {
-  fill: #007bff;
-  stroke: #007bff;
+  fill: #007bff !important;
+  stroke: #007bff !important;
 }
 
 .overlay-4fc5e defs {
