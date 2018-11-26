@@ -1141,7 +1141,8 @@ function setBoardInit()
          onMoveEnd: onMoveEnd,
          moveSpeed: 1,
          appearSpeed: 1,
-         boardTheme: window[btheme + "_board_theme"]
+         boardTheme: window[btheme + "_board_theme"],
+         overlay: true
    });
 
    $('input[value='+ptheme+']').prop('checked', true);
