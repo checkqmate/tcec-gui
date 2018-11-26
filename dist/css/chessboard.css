@@ -30,8 +30,13 @@
   position: absolute;
   z-index: 10;
   opacity: 1.0;
-  fill: #efb700;
-  stroke: #efb700;
+  fill: #ff8400;
+  stroke: #ff8400;
+}
+
+.blue {
+  fill: #007bff;
+  stroke: #007bff;
 }
 
 .overlay-4fc5e defs {

@@ -1567,6 +1567,8 @@ function updateSFLiveEvalData(data)
    // handle success
 }
 
+var nextMove = {};
+var nextSFMove = {};
 
 function updateLiveEvalData(data) 
 {
@@ -1644,7 +1646,8 @@ function updateLiveEvalData(data)
   });
 
   chessBoard.clearAnnotation();
-  chessBoard.addArrowAnnotation(livePvs[0][0].from, livePvs[0][0].to);
+  chessBoard.addArrowAnnotation(livePvs[0][0].from, livePvs[0][0].to, 'orange');
+  chessBoard.addArrowAnnotation(livePvs[3][0].from, livePvs[3][0].to, 'blue');
 
   $('#live-eval-cont').html('');
   _.each(engineData, function(engineDatum, key) {

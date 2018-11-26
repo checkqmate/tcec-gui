@@ -1598,12 +1598,16 @@ widget.start = function(useAnimation) {
   widget.position('start', useAnimation);
 };
 
-widget.addArrowAnnotation = function(source, target) {
+widget.addArrowAnnotation = function(source, target, color) {
   if(cfg.overlay === true) {
     var groupEl = overlayEl.find('> .square-' + source);
     if(!groupEl.length) {
+      strClass = CSS['overlayGroup'] + " square-" + source
+      if (color === "blue") {
+        strClass += " blue"
+      }
       groupEl = createSvgEl("g", {
-        'class': CSS['overlayGroup'] + " square-" + source
+        'class': strClass
       });
       overlayEl.append(groupEl);
     }
