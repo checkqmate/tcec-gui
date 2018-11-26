@@ -1123,6 +1123,7 @@ function pad(pad, str) {
 var btheme = "chess24";
 var ptheme = "chess24";
 var game = new Chess();
+var chessBoard = '';
 
 function setBoardInit()
 {
@@ -1144,6 +1145,8 @@ function setBoardInit()
          boardTheme: window[btheme + "_board_theme"],
          overlay: true
    });
+
+   var chessBoard = board;
 
    $('input[value='+ptheme+']').prop('checked', true);
    $('input[value='+btheme+'b]').prop('checked', true);
@@ -1637,8 +1640,8 @@ function updateLiveEvalData(data)
     }
   });
 
-  board.clearAnnotation();
-  board.addArrowAnnotation(livePvs[0][0].from, livePvs[0][0].to);
+  chessBoard.clearAnnotation();
+  chessBoard.addArrowAnnotation(livePvs[0][0].from, livePvs[0][0].to);
 
   $('#live-eval-cont').html('');
   _.each(engineData, function(engineDatum, key) {
