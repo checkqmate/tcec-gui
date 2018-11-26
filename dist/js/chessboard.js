@@ -1478,6 +1478,41 @@ widget.start = function(useAnimation) {
   widget.position('start', useAnimation);
 };
 
+widget.addArrowAnnotation = function(source, target) {
+  if(cfg.overlay === true) {
+    var groupEl = overlayEl.find('> .square-' + source);
+    if(!groupEl.length) {
+      groupEl = createSvgEl("g", {
+        'class': CSS['overlayGroup'] + " square-" + source
+      });
+      overlayEl.append(groupEl);
+    }
+    
+    var pathEl = overlayEl.find("> g.square-" + source + " > path.square-" + target);
+    if(!pathEl.length) {
+      var pathEl = createSvgEl("path", {
+        'class' :       CSS['overlayArrow'] + " square-" + target,
+        'd':            computePath(source, target),
+        'stroke-width': (SQUARE_SIZE / 3)
+      });
+      groupEl.append(pathEl);
+    }
+  }
+}
+
+widget.removeArrowAnnotation = function(source, target) {
+  if(cfg.overlay === true) {
+    overlayEl.find(
+      '> g.square-' + source
+      + (target !== undefined ? ' > path.square-' + target : '')
+    ).remove();
+  }
+}
+
+widget.clearAnnotation = function() {
+  buildOverlay();
+}
+
 //------------------------------------------------------------------------------
 // Browser Events
 //------------------------------------------------------------------------------
