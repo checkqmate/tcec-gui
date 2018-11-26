@@ -1231,8 +1231,11 @@ function setBoard()
       onMoveEnd: onMoveEnd,
       moveSpeed: 1,
       appearSpeed: 1,
-      boardTheme: window[btheme + "_board_theme"]
+      boardTheme: window[btheme + "_board_theme"],
+      overlay: true
    });
+   chessBoard = board;
+   
    board.position(fen, false);
    localStorage.setItem('tcec-board-theme', btheme);
    localStorage.setItem('tcec-piece-theme', ptheme);
