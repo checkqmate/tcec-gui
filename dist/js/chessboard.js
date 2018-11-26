@@ -1365,6 +1365,57 @@ function stopDraggedPiece(location) {
 }
 
 //------------------------------------------------------------------------------
+// SVG Overlay
+//------------------------------------------------------------------------------
+
+/* 
+ * Construct an svg path string for an arrow drawn between two points.
+ */
+function computePath(s1, s2) {
+  function tristate(a,b) {
+    if(a < b) return -0.25;
+    if(a > b) return +0.25;
+    return 0;
+  }
+  
+  var start = { x: COLUMNS.indexOf(s1[0]), y: parseInt(s1[1], 10) -1 };
+  var end   = { x: COLUMNS.indexOf(s2[0]), y: parseInt(s2[1], 10) -1 };
+  
+  if(cfg.orientation == "white") {
+    start.y = 7 - start.y;
+    end.y   = 7 - end.y;
+  }
+  
+  var dist = { x: Math.abs(start.x - end.x), y: Math.abs(start.y - end.y) };
+  var corner;   // Point of the dog-leg for knight moves
+  var epsilon;  // To adjust the target coords to take account of the arrowhead.
+  
+  if(dist.x != 0 && dist.y != 0 && dist.x != dist.y) {
+    // Knight move; Calculate a corner point for the path, such that
+    // the path dog-legs first along the long side, then short.
+    if(dist.x > dist.y) {
+      corner  = {x: end.x, y: start.y};
+      epsilon = {x: 0, y: tristate(start.y, end.y) };
+    }
+    else {
+      corner  = {x: start.x, y: end.y};
+      epsilon = {x: tristate(start.x, end.x), y: 0 };
+    }
+  }
+  else {
+    epsilon = {x: tristate(start.x, end.x), y: tristate(start.y, end.y) };
+  }
+  
+  var path = ["M", SQUARE_SIZE * (start.x + 0.5), SQUARE_SIZE * (start.y + 0.5)];
+  if(corner !== undefined) {
+    path.push("L", SQUARE_SIZE * (corner.x + 0.5) , SQUARE_SIZE * (corner.y + 0.5));
+  } 
+  path.push("L", SQUARE_SIZE * (end.x + epsilon.x + 0.5), SQUARE_SIZE * (end.y + epsilon.y + 0.5));
+  
+  return path.join(" ");
+}
+
+//------------------------------------------------------------------------------
 // Public Methods
 //------------------------------------------------------------------------------
 
