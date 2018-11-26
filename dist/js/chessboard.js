@@ -1603,7 +1603,7 @@ widget.addArrowAnnotation = function(source, target, color) {
     var groupEl = overlayEl.find('> .square-' + source);
     if(!groupEl.length) {
       groupEl = createSvgEl("g", {
-        'class': CSS['overlayGroup'] + " square-" + source + ' ' + color;
+        'class': CSS['overlayGroup'] + " square-" + source + " " + color
       });
       overlayEl.append(groupEl);
     }
