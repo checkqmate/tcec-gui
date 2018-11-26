@@ -554,6 +554,10 @@ function buildBoardContainer() {
       CSS.sparePiecesTop + '"></div>';
   }
 
+  if (cfg.overlay === true) {
+     html += '<svg class="' + CSS.overlay + '"></svg>';
+  }
+
   html += '<div class="' + CSS.board + '"></div>';
 
   if (cfg.sparePieces === true) {
@@ -565,6 +569,57 @@ function buildBoardContainer() {
 
   return html;
 }
+
+function createSvgEl(tag, attr) {
+  // jQuery seemingly can't handle namespaces or case-sensitive attributes,
+  // so we have to go old-skool.
+  var svgEl = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for(var key in attr) {
+    svgEl.setAttribute(key, attr[key]);
+  }
+  return $(svgEl);
+}
+
+function buildOverlay() {
+  if(cfg.hasOwnProperty("overlay") === true) {
+    var defsEl = createSvgEl("defs", {});
+    defsEl.append(
+      createSvgEl("marker", {
+        id: "arrowhead",
+        viewBox: "0 0 10 10",
+        refX: "0",
+        refY: "5",
+        markerUnits: "strokeWidth",
+        markerWidth: "3",
+        markerHeight: "2",
+        orient: "auto"
+      }).append(
+        createSvgEl("path", {
+          d: "M 0 0 L 5 5 L 0 10 Z"
+        })
+      ),
+      createSvgEl("marker", {
+        id: "bulb",
+        viewBox: "0 0 10 10",
+        refX: "5",
+        refY: "5",
+        markerUnits: "strokeWidth",
+        markerWidth: "3",
+        markerHeight: "2",
+        orient: "auto"
+      }).append(
+        createSvgEl("circle", {
+          cx: 5,
+          cy: 5,
+          r: 4
+        })
+      )
+    );
+    overlayEl.empty();
+    overlayEl.append(defsEl);
+  }
+};  
+
 
 /*
 var buildSquare = function(color, size, id) {
@@ -1720,6 +1775,8 @@ function initDom() {
   // build board and save it in memory
   containerEl.html(buildBoardContainer());
   boardEl = containerEl.find('.' + CSS.board);
+
+  buildOverlay();
 
   if (cfg.sparePieces === true) {
     sparePiecesTopEl = containerEl.find('.' + CSS.sparePiecesTop);
