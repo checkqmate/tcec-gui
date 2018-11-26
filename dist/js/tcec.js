@@ -1146,7 +1146,7 @@ function setBoardInit()
          overlay: true
    });
 
-   var chessBoard = board;
+   chessBoard = board;
 
    $('input[value='+ptheme+']').prop('checked', true);
    $('input[value='+btheme+'b]').prop('checked', true);
@@ -1235,7 +1235,7 @@ function setBoard()
       overlay: true
    });
    chessBoard = board;
-   
+
    board.position(fen, false);
    localStorage.setItem('tcec-board-theme', btheme);
    localStorage.setItem('tcec-piece-theme', ptheme);
