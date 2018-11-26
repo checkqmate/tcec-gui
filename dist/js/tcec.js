@@ -1636,6 +1636,9 @@ function updateLiveEvalData(data)
     }
   });
 
+  boardEl.clearAnnotation();
+  boardEl.addArrowAnnotation(livePvs[0][0].from, livePvs[0][0].to);
+
   $('#live-eval-cont').html('');
   _.each(engineData, function(engineDatum, key) {
     $('#live-eval-cont').append('<h5>' + engineDatum.engine + ' PV ' + engineDatum.eval + '</h5>');
