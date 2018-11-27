@@ -2912,10 +2912,11 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
           }
         });
       });
-
-      if (localStorage.getItem('tcec-move-arrows')) {
+      console.log(localStorage.getItem('tcec-move-arrows'));
+      console.log(livePvsC);
+      // if (localStorage.getItem('tcec-move-arrows')) {
         chessBoard.addArrowAnnotation(livePvsC[0].from, livePvsC[0].to, 'orange');
-      }
+      // }
     }
     $(container).append('<div class="engine-pv engine-pv-live alert alert-dark">' + moveContainer.join(' ') + '</div>');
     livePvs[contno] = livePvsC[0];
