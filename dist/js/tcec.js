@@ -3062,6 +3062,7 @@ function updateLiveEvalData(datum, update, fen, contno)
             moveContainer = _.union(moveContainer, [move]);
           }
         });
+        console.log('cookie ' + localStorage.getItem('tcec-move-arrows'));
         if (localStorage.getItem('tcec-move-arrows')) {
           if (pvKey == 0) {
             color = 'blue';
