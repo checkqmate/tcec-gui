@@ -2499,6 +2499,8 @@ function setBoardInit()
 
    pvBoarda = drawGivenBoardDrag('pv-boarda', boardNotationPv);
    chessBoard = board = drawGivenBoard('board', boardNotation);
+
+   console.log(chessBoard);
    
    if (!localStorage.getItem('tcec-move-arrows')) {
     chessBoard.clearAnnotation();
