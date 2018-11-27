@@ -2499,10 +2499,8 @@ function setBoardInit()
 
    pvBoarda = drawGivenBoardDrag('pv-boarda', boardNotationPv);
    chessBoard = board = drawGivenBoard('board', boardNotation);
-
-   console.log(chessBoard);
    
-   if (!localStorage.getItem('tcec-move-arrows')) {
+   if (localStorage.getItem('tcec-move-arrows') < 1) {
     chessBoard.clearAnnotation();
    }
 
@@ -2911,7 +2909,8 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
             moveContainer = _.union(moveContainer, [move]);
           }
         });
-        if (localStorage.getItem('tcec-move-arrows')) {
+
+        if (localStorage.getItem('tcec-move-arrows') > 0) {
           if (pvKey == 0) {
             color = 'blue';
           } else {
@@ -3062,8 +3061,8 @@ function updateLiveEvalData(datum, update, fen, contno)
             moveContainer = _.union(moveContainer, [move]);
           }
         });
-        console.log('cookie ' + localStorage.getItem('tcec-move-arrows'));
-        if (localStorage.getItem('tcec-move-arrows')) {
+        
+        if (localStorage.getItem('tcec-move-arrows') > 0) {
           if (pvKey == 0) {
             color = 'blue';
           } else {
