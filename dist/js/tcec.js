@@ -2500,6 +2500,10 @@ function setBoardInit()
    pvBoarda = drawGivenBoardDrag('pv-boarda', boardNotationPv);
    chessBoard = board = drawGivenBoard('board', boardNotation);
    
+   if (typeof localStorage.getItem('tcec-move-arrows') == 'undefined') {
+    localStorage.setItem('tcec-move-arrows', 1);
+   }
+
    if (localStorage.getItem('tcec-move-arrows') < 1) {
     chessBoard.clearAnnotation();
    }
