@@ -2912,11 +2912,10 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
           }
         });
       });
-      console.log(localStorage.getItem('tcec-move-arrows'));
-      console.log(livePvsC);
-      // if (localStorage.getItem('tcec-move-arrows')) {
+
+      if (localStorage.getItem('tcec-move-arrows')) {
         chessBoard.addArrowAnnotation(livePvsC[0].from, livePvsC[0].to, 'orange');
-      // }
+      }
     }
     $(container).append('<div class="engine-pv engine-pv-live alert alert-dark">' + moveContainer.join(' ') + '</div>');
     livePvs[contno] = livePvsC[0];
@@ -3028,6 +3027,8 @@ function updateLiveEvalData(datum, update, fen, contno)
    }
 
   $(container).html('');
+  chessBoard.clearAnnotation();
+
   _.each(engineData, function(engineDatum) {
     if (engineDatum.engine == '')
     {
@@ -3058,6 +3059,10 @@ function updateLiveEvalData(datum, update, fen, contno)
           }
         });
       });
+      
+      if (localStorage.getItem('tcec-move-arrows')) {
+        chessBoard.addArrowAnnotation(livePvsC[0].from, livePvsC[0].to, 'orange');
+      }
     }
     $(container).append('<div class="engine-pv engine-pv-live alert alert-dark">' + moveContainer.join(' ') + '</div>');
     livePvs[contno] = livePvsC[0];
