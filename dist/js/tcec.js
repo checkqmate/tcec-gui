@@ -3567,9 +3567,16 @@ function setHighlight(value)
    setBoard();
 }
 
-function setMoveArrows(value)
+function setMoveArrows(checkbox)
 {
-   localStorage.setItem('tcec-move-arrows', value); 
+   if (checkbox.checked)
+   {
+      localStorage.setItem('tcec-move-arrows', 0);
+   }
+   else
+   {
+      localStorage.setItem('tcec-move-arrows', 1);
+   } 
    setBoard();
 }
 
