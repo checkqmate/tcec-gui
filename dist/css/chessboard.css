@@ -21,6 +21,42 @@
   box-sizing: content-box;
 }
 
+.chessboard-63f37 {
+  position: relative;
+}
+
+.overlay-4fc5e {
+  pointer-events: none;
+  position: absolute;
+  z-index: 10;
+  opacity: 1.0;
+  fill: #ff8400;
+  stroke: #ff8400;
+}
+
+.overlay-4fc5e .blue {
+  fill: #007bff !important;
+  stroke: #007bff !important;
+}
+
+.blue {
+  fill: #007bff !important;
+  stroke: #007bff !important;
+}
+
+.overlay-4fc5e defs {
+  stroke: none;
+}
+  
+.overlay-group-672a1 {
+  opacity: 0.7;
+  stroke-linecap: square;
+  stroke-linejoin: round;
+  marker-end: url(#arrowhead);
+  marker-start: url(#bulb);
+  fill: none;
+}
+
 /* square */
 .square-55d63 {
   float: left;

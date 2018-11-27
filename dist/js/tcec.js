@@ -2394,6 +2394,7 @@ function pad(pad, str) {
 }
 
 var game = new Chess();
+var chessBoard = '';
 
 var onDragStart = function(source, piece, position, orientation) 
 {
@@ -2460,7 +2461,8 @@ function drawGivenBoardDrag(cont, boardNotation)
       draggable: true,
       onDragStart: onDragStart,
       onDrop: onDragMove,   
-      boardTheme: window[btheme + "_board_theme"]
+      boardTheme: window[btheme + "_board_theme"],
+      overlay: true
    });
    return newBoard;
 }
@@ -2474,7 +2476,8 @@ function drawGivenBoard(cont, boardNotation)
       onMoveEnd: onMoveEnd,
       moveSpeed: 1,
       appearSpeed: 1,
-      boardTheme: window[btheme + "_board_theme"]
+      boardTheme: window[btheme + "_board_theme"],
+      overlay: true
    });
    return newBoard;
 }
@@ -2495,7 +2498,12 @@ function setBoardInit()
    }
 
    pvBoarda = drawGivenBoardDrag('pv-boarda', boardNotationPv);
-   board = drawGivenBoard('board', boardNotation);
+   chessBoard = board = drawGivenBoard('board', boardNotation);
+   
+   if (!localStorage.getItem('tcec-move-arrows')) {
+    chessBoard.clearAnnotation();
+   }
+
    pvBoardw = drawGivenBoard('pv-boardw', boardNotationPv);
    pvBoardb = drawGivenBoard('pv-boardb', boardNotationPv);
    pvBoardwc = drawGivenBoard('pv-boardwc', boardNotationPv);
@@ -2512,7 +2520,7 @@ function setBoardInit()
 function setBoard()
 {
    var fen = board.fen();
-   board = drawGivenBoard('board', boardNotation);
+   chessBoard = board = drawGivenBoard('board', boardNotation);
    board.position(fen, false);
 
    fen = pvBoardb.fen();
@@ -2870,6 +2878,7 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
     engineData = _.union(engineData, [datum]);
    }
 
+  chessBoard.clearAnnotation();
   $(container).html('');
   _.each(engineData, function(engineDatum) {
     if (engineDatum.engine == '')
@@ -2901,6 +2910,10 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
           }
         });
       });
+
+      if (localStorage.getItem('tcec-move-arrows')) {
+        chessBoard.addArrowAnnotation(livePvsC[0].from, livePvsC[0].to, 'orange');
+      }
     }
     $(container).append('<div class="engine-pv engine-pv-live alert alert-dark">' + moveContainer.join(' ') + '</div>');
     livePvs[contno] = livePvsC[0];
@@ -3535,6 +3548,12 @@ function setHighlight(value)
 {
    localStorage.setItem('tcec-highlight', value);
    setHighLightMain(value);
+   setBoard();
+}
+
+function setMoveArrows(value)
+{
+   localStorage.setItem('tcec-move-arrows', value); 
    setBoard();
 }
 

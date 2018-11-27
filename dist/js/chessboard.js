@@ -658,16 +658,6 @@ function buildPieceImgSrc(piece) {
 }
 
 function buildPiece(piece, hidden, id) {
-  var top = -1;
-
-  if (SQUARE_SIZE < 25)
-  {
-     top = -4;
-  }
-  else if (SQUARE_SIZE < 35)
-  {
-     top = -1;
-  }
   var html = '<img src="' + buildPieceImgSrc(piece) + '" ';
   if (id && typeof id === 'string') {
     html += 'id="' + id + '" ';
@@ -676,7 +666,6 @@ function buildPiece(piece, hidden, id) {
   'class="' + CSS.piece + '" ' +
   'data-piece="' + piece + '" ' +
   'style="width: ' + SQUARE_SIZE + 'px;' +
-  'margin-top: ' + top + 'px;' + 
   'height: ' + SQUARE_SIZE + 'px;';
   if (hidden === true) {
     html += 'display:none;';
