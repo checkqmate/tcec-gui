@@ -2911,11 +2911,15 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
             moveContainer = _.union(moveContainer, [move]);
           }
         });
+        if (localStorage.getItem('tcec-move-arrows')) {
+          if (pvKey == 0) {
+            color = 'blue';
+          } else {
+            color = 'orange';
+          }
+          chessBoard.addArrowAnnotation(livePvsC[pvKey][0].from, livePvsC[pvKey][0].to, color);
+        }
       });
-
-      if (localStorage.getItem('tcec-move-arrows')) {
-        chessBoard.addArrowAnnotation(livePvsC[0].from, livePvsC[0].to, 'orange');
-      }
     }
     $(container).append('<div class="engine-pv engine-pv-live alert alert-dark">' + moveContainer.join(' ') + '</div>');
     livePvs[contno] = livePvsC[0];
