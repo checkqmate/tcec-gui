@@ -75,6 +75,7 @@ var highlightClass = 'highlight-white highlight-none';
 var highlightClassPv = 'highlight-white highlight-none';
 var boardNotation = true;
 var boardNotationPv = true;
+var boardArrows = true;
 var tcecElo = 1;
 var engGlobData = {};
 var btheme = "chess24";
@@ -2500,11 +2501,7 @@ function setBoardInit()
    pvBoarda = drawGivenBoardDrag('pv-boarda', boardNotationPv);
    chessBoard = board = drawGivenBoard('board', boardNotation);
    
-   if (typeof localStorage.getItem('tcec-move-arrows') == 'undefined') {
-    localStorage.setItem('tcec-move-arrows', 1);
-   }
-
-   if (localStorage.getItem('tcec-move-arrows') < 1) {
+   if (!boardArrows) {
     chessBoard.clearAnnotation();
    }
 
@@ -2703,6 +2700,7 @@ function setDefaults()
    setDefaultEnginecolor();
    setNotationDefault();
    setNotationPvDefault();
+   setMoveArrowsDefault();
    setBoard();
 }
 
@@ -2914,7 +2912,7 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
           }
         });
 
-        if (localStorage.getItem('tcec-move-arrows') > 0) {
+        if (boardArrows) {
           if (pvKey == 0) {
             color = 'blue';
           } else {
@@ -3066,7 +3064,7 @@ function updateLiveEvalData(datum, update, fen, contno)
           }
         });
         
-        if (localStorage.getItem('tcec-move-arrows') > 0) {
+        if (boardArrows) {
           if (pvKey == 0) {
             color = 'blue';
           } else {
@@ -3571,15 +3569,38 @@ function setHighlight(value)
    setBoard();
 }
 
+function setMoveArrowsDefault()
+{
+   var getHighL = localStorage.getItem('tcec-move-arrows');     
+   var cont = '#notacheck';
+
+   if (getHighL == undefined || getHighL == 1)
+   {
+      boardArrows = true;
+      $(cont).prop('checked', false);
+      console.log ("false");
+   }
+   else
+   {
+      boardArrows = false;
+      $(cont).prop('checked', true);
+      console.log ("true:" + getHighL);
+   }
+}
+
 function setMoveArrows(checkbox)
 {
    if (checkbox.checked)
    {
       localStorage.setItem('tcec-move-arrows', 0);
+      boardArrows = false;
+      console.log ("setting false:");
    }
    else
    {
       localStorage.setItem('tcec-move-arrows', 1);
+      boardArrows = true;
+      console.log ("setting true:");
    } 
    setBoard();
 }
