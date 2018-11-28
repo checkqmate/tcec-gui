@@ -1,1 +1,15 @@
-../tcec.chessdom.com/enginerating.json
+{
+   "ratings":
+      [
+         {"name":"Stockfish", "elo": 3489},
+         {"name":"Komodo", "elo": 3435},
+         {"name":"Houdini", "elo": 3468},
+         {"name":"Fire", "elo": 3396},
+         {"name":"Ethereal", "elo": 3360},
+         {"name":"Andscacs", "elo": 3344},
+         {"name":"Ginkgo", "elo": 3334},
+         {"name":"LCZero", "elo": 3250},
+         {"name":"KomodoMCTS", "elo": 3050},
+         {"name":"Chiron", "elo": 3331}
+      ]
+}
