@@ -1338,7 +1338,6 @@ $(document).on('click', '.set-pv-board', function(e) {
    }
    else
    {
-      console.log ("hideDownPv: " + hideDownPv);
       if (hideDownPv == 0)
       {
          $('#v-pills-pv-tab').click();
@@ -1847,7 +1846,7 @@ function findEloDiff(whiteEngine, blackEngine, whiteEngName, blackEngName, score
    var e2 = r2/(r1+r2);
    var w_rating = whiteEngine.Rating + k * (score1 - e1);
    var b_rating = blackEngine.Rating + k * (score2 - e2);
-   //console.log ("gameno: " + (gameno + 1) + " ,w_rating: " + w_rating + ",b_rating:" + b_rating);
+    
    whiteEngine.Rating = w_rating;
    blackEngine.Rating = b_rating;
 }
@@ -2417,7 +2416,6 @@ var onDragMove = function(newLocation, oldLocation, source,
    });
 
    // illegal move
-   // console.log ("Came here to dragi:" + newLocation + ",strx:" + strx(move)); 
    if (move === null) return 'snapback';
 
    var pvLen = activePvKey[2] + 1;
@@ -3578,13 +3576,11 @@ function setMoveArrowsDefault()
    {
       boardArrows = true;
       $(cont).prop('checked', false);
-      console.log ("false");
    }
    else
    {
       boardArrows = false;
       $(cont).prop('checked', true);
-      console.log ("true:" + getHighL);
    }
 }
 
@@ -3594,13 +3590,11 @@ function setMoveArrows(checkbox)
    {
       localStorage.setItem('tcec-move-arrows', 0);
       boardArrows = false;
-      console.log ("setting false:");
    }
    else
    {
       localStorage.setItem('tcec-move-arrows', 1);
       boardArrows = true;
-      console.log ("setting true:");
    } 
    setBoard();
 }
