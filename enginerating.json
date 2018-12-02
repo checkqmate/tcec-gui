@@ -9,7 +9,13 @@
          {"name":"Andscacs", "elo": 3344},
          {"name":"Ginkgo", "elo": 3334},
          {"name":"LCZero", "elo": 3250},
-         {"name":"KomodoMCTS", "elo": 3050},
-         {"name":"Chiron", "elo": 3331}
+         {"name":"KomodoMCTS", "elo": 3479},
+         {"name":"Chiron", "elo": 3354},
+         {"name":"Hannibal", "elo": 3169},
+         {"name":"Nemorino", "elo": 3360},
+         {"name":"rofChade", "elo": 3376},
+         {"name":"Arasan", "elo": 3204},
+         {"name":"Vajolet2", "elo": 3184},
+         {"name":"Pedone", "elo": 3197}
       ]
 }
