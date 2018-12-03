@@ -1645,7 +1645,7 @@ function reverseCoordinate(oldCoord)
   let newCoord = '';
   let newRow = (Math.abs(8 - oldCoord.charAt(1)) + 1).toString();
 
-  switch(oldCoord.charAt(0).toLowerCase) {
+  switch(oldCoord.charAt(0).toLowerCase()) {
     case 'a':
       newCoord = 'h';
       break;
