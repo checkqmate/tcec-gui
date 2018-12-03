@@ -1634,9 +1634,9 @@ function revrseCoordinate(oldCoord)
   return newCoord;
 }
 
-widget.addArrowAnnotation = function(source, target, color) {
-  console.log(cfg.orientation);
-  if(cfg.orientation == "black") {
+widget.addArrowAnnotation = function(source, target, color, orientation) {
+  console.log(orientation);
+  if(orientation == "black") {
     console.log(source);
     source = reverseCoordinate(source);
     target = reverseCoordinate(target);

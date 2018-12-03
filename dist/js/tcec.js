@@ -2915,7 +2915,7 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
           } else {
             color = 'orange';
           }
-          board.addArrowAnnotation(livePvsC[pvKey][0].from, livePvsC[pvKey][0].to, color);
+          board.addArrowAnnotation(livePvsC[pvKey][0].from, livePvsC[pvKey][0].to, color, board.orientation());
         }
       });
     }
@@ -3067,7 +3067,7 @@ function updateLiveEvalData(datum, update, fen, contno)
           } else {
             color = 'orange';
           }
-          board.addArrowAnnotation(livePvsC[pvKey][0].from, livePvsC[pvKey][0].to, color);
+          board.addArrowAnnotation(livePvsC[pvKey][0].from, livePvsC[pvKey][0].to, color, board.orientation());
         }
       });
     }
