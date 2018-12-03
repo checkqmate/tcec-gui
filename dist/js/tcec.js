@@ -2933,6 +2933,7 @@ function updateLiveEvalData(datum, update, fen, contno)
 
    if (contno == 1 && !showLivEng1)
    {
+      board.clearAnnotation();
       $(container).html(''); 
       return;
    }
@@ -3029,7 +3030,6 @@ function updateLiveEvalData(datum, update, fen, contno)
    }
 
   $(container).html('');
-  board.clearAnnotation();
 
   _.each(engineData, function(engineDatum) {
     if (engineDatum.engine == '')
