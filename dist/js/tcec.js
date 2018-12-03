@@ -3067,7 +3067,7 @@ function updateLiveEvalData(datum, update, fen, contno)
           } else {
             color = 'orange';
           }
-          board.addArrowAnnotation(livePvsC[pvKey][0].from, livePvsC[pvKey][0].to, color, board.orientation());
+          board.addArrowAnnotation(livePv[0].from, livePv[0].to, color, board.orientation());
         }
       });
     }

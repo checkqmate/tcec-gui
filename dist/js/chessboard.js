@@ -1599,12 +1599,9 @@ widget.start = function(useAnimation) {
 };
 
 widget.addArrowAnnotation = function(source, target, color, orientation) {
-  console.log(orientation);
   if(orientation == "black") {
-    console.log(source);
     source = reverseCoordinate(source);
     target = reverseCoordinate(target);
-    console.log(source);
   }
   if(cfg.overlay === true) {
     var groupEl = overlayEl.find('> .square-' + source);
@@ -1672,12 +1669,7 @@ function reverseCoordinate(oldCoord)
       break;
   }
 
-  console.log(newCoord);
-  console.log(newRow);
-
   newCoord += newRow;
-
-  console.log(newCoord);
 
   return newCoord;
 }
