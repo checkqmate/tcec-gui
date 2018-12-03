@@ -2394,7 +2394,6 @@ function pad(pad, str) {
 }
 
 var game = new Chess();
-var chessBoard = '';
 
 var onDragStart = function(source, piece, position, orientation) 
 {
@@ -2497,10 +2496,10 @@ function setBoardInit()
    }
 
    pvBoarda = drawGivenBoardDrag('pv-boarda', boardNotationPv);
-   chessBoard = board = drawGivenBoard('board', boardNotation);
+   board = drawGivenBoard('board', boardNotation);
    
    if (!boardArrows) {
-    chessBoard.clearAnnotation();
+    board.clearAnnotation();
    }
 
    pvBoardw = drawGivenBoard('pv-boardw', boardNotationPv);
@@ -2519,7 +2518,7 @@ function setBoardInit()
 function setBoard()
 {
    var fen = board.fen();
-   chessBoard = board = drawGivenBoard('board', boardNotation);
+   board = drawGivenBoard('board', boardNotation);
    board.position(fen, false);
 
    fen = pvBoardb.fen();
@@ -2878,7 +2877,7 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
     engineData = _.union(engineData, [datum]);
    }
 
-  chessBoard.clearAnnotation();
+  board.clearAnnotation();
   $(container).html('');
   _.each(engineData, function(engineDatum) {
     if (engineDatum.engine == '')
@@ -2916,7 +2915,7 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
           } else {
             color = 'orange';
           }
-          chessBoard.addArrowAnnotation(livePvsC[pvKey][0].from, livePvsC[pvKey][0].to, color);
+          board.addArrowAnnotation(livePvsC[pvKey][0].from, livePvsC[pvKey][0].to, color);
         }
       });
     }
@@ -3030,7 +3029,7 @@ function updateLiveEvalData(datum, update, fen, contno)
    }
 
   $(container).html('');
-  chessBoard.clearAnnotation();
+  board.clearAnnotation();
 
   _.each(engineData, function(engineDatum) {
     if (engineDatum.engine == '')
@@ -3068,7 +3067,7 @@ function updateLiveEvalData(datum, update, fen, contno)
           } else {
             color = 'orange';
           }
-          chessBoard.addArrowAnnotation(livePvsC[pvKey][0].from, livePvsC[pvKey][0].to, color);
+          board.addArrowAnnotation(livePvsC[pvKey][0].from, livePvsC[pvKey][0].to, color);
         }
       });
     }

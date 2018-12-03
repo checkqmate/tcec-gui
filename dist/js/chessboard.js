@@ -1635,9 +1635,12 @@ function revrseCoordinate(oldCoord)
 }
 
 widget.addArrowAnnotation = function(source, target, color) {
+  console.log(cfg.orientation);
   if(cfg.orientation == "black") {
+    console.log(source);
     source = reverseCoordinate(source);
     target = reverseCoordinate(target);
+    console.log(source);
   }
   if(cfg.overlay === true) {
     var groupEl = overlayEl.find('> .square-' + source);
