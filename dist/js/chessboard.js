@@ -1598,7 +1598,47 @@ widget.start = function(useAnimation) {
   widget.position('start', useAnimation);
 };
 
+function revrseCoordinate(oldCoord)
+{
+  let newCoord = '';
+
+  switch(oldCoord.charAt(0).toLowerCase) {
+    case 'a':
+      newCoord = 'h';
+      break;
+    case 'b':
+      newCoord = 'g';
+      break;
+    case 'c':
+      newCoord = 'f';
+      break;
+    case 'd':
+      newCoord = 'e';
+      break;
+    case 'e':
+      newCoord = 'd';
+      break;
+    case 'f':
+      newCoord = 'c';
+      break;
+    case 'g':
+      newCoord = 'b';
+      break;
+    case 'h':
+      newCoord = 'a';
+      break;
+  }
+
+  newCoord = newCoord + Math.abs(8 - olcCoord.charAt(1)) + 1;
+
+  return newCoord;
+}
+
 widget.addArrowAnnotation = function(source, target, color) {
+  if(cfg.orientation == "black") {
+    source = reverseCoordinate(source);
+    target = reverseCoordinate(target);
+  }
   if(cfg.overlay === true) {
     var groupEl = overlayEl.find('> .square-' + source);
     if(!groupEl.length) {
