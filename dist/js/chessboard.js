@@ -1672,7 +1672,12 @@ function reverseCoordinate(oldCoord)
       break;
   }
 
+  console.log(newCoord);
+  console.log(newRow);
+
   newCoord += newRow;
+
+  console.log(newCoord);
 
   return newCoord;
 }
