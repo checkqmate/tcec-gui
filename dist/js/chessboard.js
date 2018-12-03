@@ -1671,7 +1671,7 @@ function reverseCoordinate(oldCoord)
       break;
   }
 
-  newCoord = newCoord + Math.abs(8 - olcCoord.charAt(1)) + 1;
+  newCoord = newCoord + Math.abs(8 - oldCoord.charAt(1)) + 1;
 
   return newCoord;
 }
