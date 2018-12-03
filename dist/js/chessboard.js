@@ -1643,6 +1643,7 @@ widget.clearAnnotation = function() {
 function reverseCoordinate(oldCoord)
 {
   let newCoord = '';
+  let newRow = (Math.abs(8 - oldCoord.charAt(1)) + 1).toString();
 
   switch(oldCoord.charAt(0).toLowerCase) {
     case 'a':
@@ -1671,7 +1672,7 @@ function reverseCoordinate(oldCoord)
       break;
   }
 
-  newCoord = newCoord + (Math.abs(8 - oldCoord.charAt(1)) + 1);
+  newCoord += newRow;
 
   return newCoord;
 }
