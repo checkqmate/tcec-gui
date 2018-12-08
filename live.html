@@ -1300,6 +1300,121 @@
                 CPUs: 2 x Intel Xeon E5-2689 @ 3300 MHz<br>
                 Cores: 16 physical<br>
                 CPU Coolers: 2 x Corsair H80i<br>
+<b>Event</b><br>
+                The Top Chess Engine Championship (TCEC) is the premier championship for chess software. It is a competition between 32 or more engines with ELO 3000+ and is divided into five divisions and a Superfinal.  <br>
+
+                TCEC runs 24/7 until all games have been played. One game is played at a time - the next one starts automatically.<br><br>
+
+                <b>Time control</b><br>
+                Classical time control will be used through the season and it is increased as the season progresses. For Division 2, 3 and 4, the time control is 30 minutes + 10 seconds added per move for the whole game. For Division 1, the time control is 60 minutes + 10 seconds added per move for the whole game. For Division Premier, the time control is 90 minutes + 10 seconds added per move for the whole game. For the Superfinal, the time control is 120 minutes + 15 seconds added per move for the whole game. If an engine loses on time, the result will not be changed or the game replayed. If the TCEC game server locks up at any time during a game (BSOD, freeze etc), that game will be restarted unless the last position was a 6-man or less tablebase position, then it will be manually adjudicated. If a remote GPU machine disconnects, the decision whether to replay the game or adjudicate will be by the Season administrator. Prior to Season 9, different time controls have been used. Check the individual games in the "Archive page" for info.<br><br>
+
+                <b>Game adjudication</b><br>
+                A game can be drawn by the normal 3-fold repetition rule or the 50-move rule. However, a game can also be drawn at move 35 or later if the eval from both playing engines are within +0.08 to -0.08 pawns for the last 5 moves, or 10 plies. If there is a pawn advance, or a capture of any kind, this special draw rule will reset and start over. On the GUI interface, this rule is shown as "TCEC draw rule" with a number indicating how many plies there are left until it becomes official. It will adjudicate as won for one side if both playing engines have an eval of at least 10.00 pawns (or -10.00 in case of a black win) for 5 consecutive moves, or 10 plies - this rule is in effect as soon as the game starts. On the GUI interface, this rule is shown as "TCEC win rule" with a number indicating how many plies there are left until it becomes official. Cutechess will also adjudicate 6-men or less endgame positions automatically with Syzygy tablebases.<br><br>
+
+                
+
+                <b>Critical Engine Bugs</b><br>
+                In the case of a serious, play-limiting bug (like crashing or interface communication problems, not including losses on time) not discovered during the pre-Season testing, the engine can be updated once per Division to fix this/these bug/bugs only at the cost of one strike. If this update still doesn't fix the problem(s) or if there is no update available, the engine might have the number of cores reduced, have the hash size reduced or have the tablebase access disabled - these changes will remain for the rest of the Division.<br><br>
+
+                <b>Tiebreaks</b><br>
+                If necessary, tiebreaks can be used to determine advancement. For all Divisions (not the Superfinal), the first tiebreak criteria is the "crash" tiebreak, meaning that if an engine has crashed once or more during the Division, it will fail qualification versus another engine that has not crashed if both of them has the same amount of points. In case of still being tied, then the direct encounter between the tied engines decides. The next criterion is the greatest number of wins, then the greatest number of wins with black. The Sonneborn-Berger is the next criteria. If they are still tied, then the tournament organizers will decide which engine gets the promotion.<br><br>
+
+                <b>Engine Updates</b><br>
+                Engines that promote to a new Division are allowed to update before the Division submission deadline without penalty, no matter if it is to fix bugs uncovered during the previous Division or to submit a better version. Promoting engines may update UCI/xboard settings. The deadline for engine submission is the last game of the current Division unless the programmer is given a specific deadline from the Tournament Director - the goal is to be able to start the next Division as soon as possible without any significant delay. Note that no testing between divisions will be provided and engine authors update at their own risk. <br><br>
+
+                <b>Engine Ratings</b><br>
+                In the TCEC Archive page (available via the File menu), you can see the official TCEC ratings list (in the bottom right corner). This list is updated after each Division or Superfinal and is calculated by using Ordo. The calculation is global (all versions of an engine are included under a single name) and includes all games played since (and including) Season 1. All games lost on time, via stall or disconnect, are discarded...as are engines that have had only losses. If there is a new engine entering TCEC for the first time, it will get a "temporary" rating taken from the CCRL 40/40 4CPU list. If an engine isn't found here, or if it has played very few games, an approximate ELO rating will be given to that engine based on tests from the programmer. Then after this new engine has played an event, an official rating will be calculated.<br><br>
+
+                <hr><br>
+                <b>The TCEC Division System</b><br>
+                As soon as a Division starts, it will run 24/7 until all games have been played. One game is played at a time - the next one starts automatically. There will be a short break between the Divisions, to make sure everything is ok with the TCEC game server and to prepare for the next Division.
+                <br><br>
+
+                <b>Division 4</b><br>
+                Division 4 is now upgraded to a qualification Division. In order to accommodate the demands of the ever growing computer chess sector, unlimited number of engines will be admited to the competition. They have to face minimum requirements for rating and to be actively developed. The division will continue to be 2x double RR. The time control of the games will be 30 mins + 10 sec/move. The top 2 engines qualify for Division 3. The top 8 will qualify for the TCEC Cup, while the rest are out of TCEC for the current Season.<br><br>
+
+                <b>Division 3</b><br>
+                Division 3 consists of the 6 engines that qualified from previous Season plus the top 2 engines from Division 4. It is a 2x double RR (112 games). The top 2 engines promote to Division 2 and the bottom 2 engines are relegated.<br><br>
+                                                    
+                <b>Division 2</b><br>
+                Division 2 consists of the 6 engines that qualified from previous Season plus the top 2 engines from Division 3. It is a 2x double RR (112 games).  The top 2 engines promote to Division 1 and the bottom 2 engines are relegated to Division 3.<br><br>
+                                                    
+                <b>Division 1</b><br>
+                Division 1 consists of the 6 engines that qualified from previous Season plus the top 2 engines from Division 2. It is a 2x double RR (112 games).  The top 2 engines promote to Division Premier and the bottom 2 engines are relegated to Division 2<br><br>
+                                                    
+                <b>Division Premier</b><br>
+                Division Premier consists of the 6 engines that qualified from previous Season plus the top 2 engines from Division 1. It is a 3x double round robin (178 games).  The top 2 engines promote to the Superfinal and the bottom 2 engines are relegated to Division 1<br><br>                                    
+
+                <b>Superfinal</b><br>
+                This match is played with 50 different openings so that each engine plays both black and white of the same position. The match will be presented with opening 1 used in games 1 and 2, then opening 2 used in games 3 and 4 etc. If the match is theoretically won for one side before game 100, the match will still continue until all 100 games have been played. In the case of a drawn match there will be a rapid match of 16 games with a time control of 25' + 10" with random openings selected from earlier in the same Season. In case it is still tied there will be a Blitz match of 8 games with a time control of 3' + 2". When the Superfinal is over, the current Season ends.<br><br>
+
+                <b>The TCEC Grand Champion</b><br>
+                The winner of the Superfinal will be crowned the TCEC Grand Champion and will keep this title until there is a winner in the next Superfinal. There is no automatic qualification for the reigning Grand Champion, it will have to go all the way through the next Season for it to be able to defend the title.<br><br>
+
+                <hr><br>
+                <b>Engine Specific Configuration</b><br>
+                UCI and Xboard (Winboard) engines are supported. To identify the protocol an engine is using you can hoover over the king figure placed above the engine logo during a game. This info will be saved for the archive, but does not work for Season 5 or older games.<br><br>
+
+                <b>Compiles</b><br>
+                Many engines come with different .exe files. 64-bit .exes are always preferred over 32-bit. Also, compiles that support SSE 4.2, AVX/AVX2 or similar instruction sets are preferred.<br><br>
+
+                <b>Large Pages</b><br>
+                Some engines can utilize a function in Windows called large pages, that gives a speed boost. However, after a while the memory in the computer will be fragmented, so that one engine might receive large pages and the opponent won't, which would be unfair. Therefore, this has been disabled. Large pages are often useful when you are running infinite analysis on a position.<br><br>
+
+                <b>Number of Cores / Threads</b><br>
+                Each engine can use up to 43 cores of the processors, if this is supported. Some engines have a prefix like "deep", but this has been omitted from the engine name to make it shorter. When watching a game you can see the number of cores that are in use by hoovering over the king figure above the engine logos.<br><br>
+
+                <b>Split Depth</b><br>
+                The split depth parameter basically defines the minimum depth for work to be split between threads. If no specific settings are given from the programmer, the default value will be used.<br><br>
+
+                <b>Main Hash Size</b><br>
+                Each engine is allowed to use up to 16384 MB of hash. Not all engines supports this much hash, so the maximum for that engine will be used in this case, typically 2048 MB or 4096 MB. When watching a game you can see the size of the hash that is in use for the engines currently playing by clicking the gears next to the engine logo.<br><br>
+
+                <b>Minor Hash Sizes</b><br>
+                Some engines have an option to configure the size of other hash tables, often called pawn hash or evaluation hash. The combined, total limit for hash types like these is 4096 MB (8192 MB in case of the Superfinal).<br><br>
+
+                <b>Own Opening Book</b><br>
+                All opening books shipped with the engines are removed and/or disabled and any engine found to be using hidden, internal opening books will be disqualified and replaced with another engine chosen by the Tournament Director.<br><br>
+
+                <b>Endgame Tablebases</b><br>
+                For all divisions, 5-men Nalimov/Gaviota/Scorpio, and 6-men Syzygy are available thanks to the 256 GB SSD. When watching a game you can see the type of the tablebases (if any) that is in use for the engines currently playing by clicking the gears next to the engine logo.<br><br>
+
+                <b>Ponder / Permanent Brain</b><br>
+                Basically this means that the engines can think during their opponents turn. It is not allowed so it will be disabled because of performance limitations with only 1 computer. This might change in a future Season of TCEC.<br><br>
+
+                <b>Contempt / Draw Score</b><br>
+                Some engines have a setting that can adjust their own view of the positions throughout a game to avoid draws. This setting is not changed from the default unless it is a request from the programmer.<br><br>
+
+                <b>Other Settings</b><br>
+                Any configurable option not described above, is not normally adjusted in any way, except if the programmer of an engine wants specific settings for each specific Division. Options like "keep hash tables" or similar is usually enabled.<br><br>
+
+                <hr><br>
+                <b>TCEC Hardware</b><br>
+                Thanks to the devoted audience for it's support! Because of them, the server was upgraded for Season 10 and on, allowing TCEC to use a powerful 44 cores machine for all divisions.<br><br>
+
+                <b>Current TCEC server</b><br>
+                CPUs: 2 x Intel Xeon E5 2699 v4 @ 2.8 GHz<br>
+                Cores: 44 physical<br>
+                Motherboard: Supermicro X10DRL-i<br>
+                RAM: 64 GB DDR4 ECC<br>
+                SSD: Crucial CT250M500 240 GB<br>
+                Chassis: Supermicro <br>
+                OS: Windows Server 2012 R2<br><br>
+
+                Again, thanks to the generous support from our viewers, we are now able to include a dedicated GPU server for the Neural Network engines. If you'd like to contribute and help us improve the event even further, please check out how to support TCEC.<br><br>
+
+                <b>GPU Server</b><br>
+
+                GPUs: 1 x 2080 ti + 1 x 2080<br>
+                CPU: Quad Core i5 2600k<br>
+                RAM: 16GB DDR3-2133<br>
+                SSD:Samsung 840 Pro 256gb<br>
+                
+
+                <b>Previous Seasons</b><br>
+                CPUs: 2 x Intel Xeon E5-2689 @ 3300 MHz<br>
+                Cores: 16 physical<br>
+                CPU Coolers: 2 x Corsair H80i<br>
                 Motherboard: Asus Z9PE-D8 WS<br>
                 RAM: 64 GB Kingston KVR16R11D4K4/32 Reg/ECC<br>
                 PSU: Corsair AX 760<br>
@@ -1352,7 +1467,7 @@ To play the games a special version of cutechess-cli is used. This is a command 
                 The current web GUI is created by Ben Reese and Arun Satya. Previous seasons used a GUI by Martin Thoresen, currently known as legacy GUI
 
                 <b>What is the name of the web framework that displays the games?</b><br>
-                It is called <a href="http://pgn4web.casaschi.net/home.html" target="_blank">pgn4web</a> and is totally free. Paolo Casaschi is the mastermind behind it and has helped a lot on certain difficult programming challenges.<br><br>
+                For the current web GUI it is chessboard.js and cutechess-cli. For the legacy GUI and archive GUI it is called <a href="http://pgn4web.casaschi.net/home.html" target="_blank">pgn4web</a> and is totally free. Paolo Casaschi is the mastermind behind it and has helped a lot on certain difficult programming challenges.<br><br>
                 </div>
               </div>
             </div>
