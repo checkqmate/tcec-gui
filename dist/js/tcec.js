@@ -2886,7 +2886,7 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
        engineDatum.engine = datum.engine;
     }
     
-    parseScore = parseFloat(engineDatum).toFixed(2);
+    parseScore = parseFloat(engineDatum.eval).toFixed(2);
     
     $(container).append('<h6>' + engineDatum.engine + ' PV ' + parseScore + '</h6><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
@@ -3044,7 +3044,7 @@ function updateLiveEvalData(datum, update, fen, contno)
        engineDatum.engine = datum.engine;
     }
     
-    parseScore = parseFloat(engineDatum).toFixed(2);
+    parseScore = parseFloat(engineDatum.eval).toFixed(2);
     
     $(container).append('<h6>' + engineDatum.engine + ' PV ' + parseScore + '</h6><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
