@@ -2885,7 +2885,10 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
     {
        engineDatum.engine = datum.engine;
     }
-    $(container).append('<h6>' + engineDatum.engine + ' PV ' + engineDatum.eval.toFixed(2) + '</h6><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
+    
+    parseScore = parseFloat(engineDatum).toFixed(2);
+    
+    $(container).append('<h6>' + engineDatum.engine + ' PV ' + parseScore + '</h6><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
     if (livePvsC.length > 0) {
       _.each(livePvsC, function(livePv, pvKey) {
@@ -3040,7 +3043,10 @@ function updateLiveEvalData(datum, update, fen, contno)
     {
        engineDatum.engine = datum.engine;
     }
-    $(container).append('<h6>' + engineDatum.engine + ' PV ' + engineDatum.eval.toFixed(2) + '</h6><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
+    
+    parseScore = parseFloat(engineDatum).toFixed(2);
+    
+    $(container).append('<h6>' + engineDatum.engine + ' PV ' + parseScore + '</h6><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
     if (livePvsC.length > 0) {
       _.each(livePvsC, function(livePv, pvKey) {
