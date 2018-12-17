@@ -26,14 +26,17 @@ console.log ("Port is " + portnum);
 
 // first parameter is the mount point, second is the location in the file system
 var app = express();
-app.use(express.static(__dirname));
-var server = https.createServer({
-  key: fs.readFileSync('/etc/letsencrypt/live/tcecbonus.club/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/tcecbonus.club/fullchain.pem')
-},app); 
-server.listen(parseInt(portnum));
-var listener = io.listen(server);                                                                                                                                                                                                             
+//app.use(express.static(__dirname));
 
+var options = {
+   key: fs.readFileSync('/etc/letsencrypt/live/tcecbonus.club/privkey.pem'),
+   cert: fs.readFileSync('/etc/letsencrypt/live/tcecbonus.club/fullchain.pem')   
+};
+
+var server = https.createServer(options, app).listen(parseInt(portnum), function() {
+   console.log('Express server listening on port ' + portnum);
+});
+var listener = io.listen(server);                                                                                                 
 var watcher = chokidar.watch('crosstable.json', {
       persistent: true,
       ignoreInitial: false,
@@ -59,6 +62,39 @@ watcher.add('live.json');
 watcher.add('schedule.json');
 watcher.add('liveeval.json');
 
+app.get('/api/gameState', function (req, res) {
+   var currentFen = '';
+   var liveData = fs.readFileSync('live.json');
+   var liveJsonData = JSON.parse(liveData);
+
+   if (liveJsonData.Moves.length > 0) {
+      currentFen = liveJsonData.Moves[(liveJsonData.Moves.length - 1)].fen;
+   }
+
+   var response = {
+      'White': liveJsonData.Headers.White,
+      'Black': liveJsonData.Headers.Black,
+      'CurrentPosition': currentFen,
+      'Result': liveJsonData.Headers.Result,
+      'Event': liveJsonData.Headers.Event
+   }
+   res.setHeader('Content-Type', 'application/json');
+   res.status(200).send(JSON.stringify(response))
+});
+
+app.get('/api/currentPosition', function (req, res) {
+   var currentFen = 'No game in progress';
+   var liveData = fs.readFileSync('live.json');
+   var liveJsonData = JSON.parse(liveData);
+
+   if (liveJsonData.Moves.length > 0) {
+      currentFen = liveJsonData.Moves[(liveJsonData.Moves.length - 1)].fen;
+   }
+
+   res.setHeader('Content-Type', 'application/json');
+   res.status(200).send(currentFen);
+});
+
 var count = 0;
 var socket = 0;
 var totalCount = 0;
@@ -70,13 +106,17 @@ listener.sockets.on('connection', function(s){
    {
       totalCount = count;
    }
-   socket.emit('users', {'count': totalCount});
-   socket.broadcast.emit('users', {'count': totalCount});
-   console.log ("coutn connected:" + count);
+   
+   //socket.emit('users', {'count': totalCount});
+   //socket.broadcast.emit('users', {'count': totalCount});
+   if (count % 50 == 0) {  
+      console.log ("count connected:" + count);
+   }
+   
 
    socket.on('disconnect', function(){
        count--;
-       socket.broadcast.emit('users', {'count': totalCount});
+       //socket.broadcast.emit('users', {'count': totalCount});
    });
 
    //recieve client data
@@ -99,6 +139,7 @@ function broadCastData(socket, message, file, currData, prevData)
       console.log ("File "+ file + " did not change:");
       return;
    }
+   socket.broadcast.emit('users', {'count': totalCount});
    socket.broadcast.emit(message, currData); 
 }
 
@@ -214,8 +255,10 @@ watcher.on('change', (path, stats) => {
          {
             delta = getDeltaPgn(data, prevData);
             //broadCastData(socket, 'pgn', path, delta, delta);
-            socket.emit('pgn', delta); 
-            socket.broadcast.emit('pgn', delta); 
+            socket.broadcast.emit('pgn', delta);
+            //socket.broadcast.emit('users', {'count': totalCount}); 
+            //socket.broadcast.emit('pgn', delta);
+             
             console.log ("Sent pgn data:" + JSON.stringify(delta).length + ",orig" + JSON.stringify(data).length + ",changed" + delta.gameChanged);
             lastPgnTime = Date.now(); 
          }
