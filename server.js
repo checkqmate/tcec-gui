@@ -63,6 +63,7 @@ watcher.add('schedule.json');
 watcher.add('liveeval.json');
 
 app.get('/api/gameState', function (req, res) {
+   console.log('api gameState request');
    var currentFen = '';
    var liveData = fs.readFileSync('live.json');
    var liveJsonData = JSON.parse(liveData);
@@ -83,6 +84,7 @@ app.get('/api/gameState', function (req, res) {
 });
 
 app.get('/api/currentPosition', function (req, res) {
+   console.log('api currentPosition request');
    var currentFen = 'No game in progress';
    var liveData = fs.readFileSync('live.json');
    var liveJsonData = JSON.parse(liveData);
