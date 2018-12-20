@@ -141,7 +141,7 @@ function broadCastData(socket, message, file, currData, prevData)
       console.log ("File "+ file + " did not change:");
       return;
    }
-   socket.broadcast.emit('users', {'count': totalCount});
+   socket.emit(message, currData); 
    socket.broadcast.emit(message, currData); 
 }
 
@@ -258,7 +258,9 @@ watcher.on('change', (path, stats) => {
             delta = getDeltaPgn(data, prevData);
             //broadCastData(socket, 'pgn', path, delta, delta);
             socket.broadcast.emit('pgn', delta);
-            //socket.broadcast.emit('users', {'count': totalCount}); 
+            socket.emit('pgn', delta);
+            socket.broadcast.emit('users', {'count': totalCount}); 
+            socket.emit('users', {'count': totalCount}); 
             //socket.broadcast.emit('pgn', delta);
              
             console.log ("Sent pgn data:" + JSON.stringify(delta).length + ",orig" + JSON.stringify(data).length + ",changed" + delta.gameChanged);
