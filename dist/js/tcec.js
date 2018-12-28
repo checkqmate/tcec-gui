@@ -573,8 +573,8 @@ function setPgn(pgn)
       var movesToDraw = 50;
       var movesToResignOrWin = 50;
       var movesTo50R = 50;
-      if (Math.abs(adjudication.Draw) <= 10 && pgn.Moves.length > 68) {
-        movesToDraw = Math.abs(adjudication.Draw);
+      if (Math.abs(adjudication.Draw) <= 10 && pgn.Moves.length > 58) {
+        movesToDraw = Math.max(Math.abs(adjudication.Draw), 69 - pgn.Moves.length);
       }
       if (Math.abs(adjudication.ResignOrWin) < 11) {
         movesToResignOrWin = Math.abs(adjudication.ResignOrWin);
