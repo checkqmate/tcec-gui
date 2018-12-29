@@ -1732,7 +1732,7 @@ function getLinkArch(gameNumber)
 
 function openCross(gamen)
 {
-   var link = "http://legacy-tcec.chessdom.com/archive.php?se=14&di=1&ga=" + gamen;
+   var link = "http://legacy-tcec.chessdom.com/archive.php?se=14&di=P&ga=" + gamen;
    window.open(link,'_blank');
 }
 
