@@ -78,6 +78,7 @@ var boardNotationPv = true;
 var boardArrows = true;
 var tcecElo = 1;
 var engGlobData = {};
+var tourInfo = {};
 var btheme = "chess24";
 var ptheme = "chess24";
 var oldSchedData = null;
@@ -1732,7 +1733,27 @@ function getLinkArch(gameNumber)
 
 function openCross(gamen)
 {
-   var link = "http://legacy-tcec.chessdom.com/archive.php?se=14&di=P&ga=" + gamen;
+   var link = "http://legacy-tcec.chessdom.com/archive.php";
+   var season = 1;
+   var div = "di";
+   var divno = 1;
+
+   _.each(tourInfo, function(engine, key) {
+      if (key == "season")
+      {
+         season = parseInt(engine);
+      }
+      if (key == "type")
+      {
+         div = engine;
+      }
+      if (key == "typeno")
+      {
+         divno = engine;
+      }
+      console.log ("key:" + key);
+   });
+   link = link + "?se=" + season + "&" + div + "=" + divno + "&ga=" + gamen;
    window.open(link,'_blank');
 }
 
@@ -2167,6 +2188,24 @@ function updateEngRatingData(data)
    engGlobData = data;
 }
 
+function updateTourInfo(data)
+{
+   tourInfo = data;
+}
+
+function readTourInfo()
+{
+   axios.get('tournament.json')
+   .then(function (response)
+   {
+      updateTourInfo(response.data);
+   })
+   .catch(function (error) 
+   {
+      plog(error, 0);
+   });
+}
+
 function updateEngRating()
 {
    axios.get('enginerating.json')
@@ -2580,6 +2619,7 @@ function updateTables()
   updateSchedule();
   updateCrosstable();
   updateStandtable();
+  readTourInfo();
 }
 
 function setTwitchBackgroundInit(backg)
