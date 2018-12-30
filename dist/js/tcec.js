@@ -1751,7 +1751,6 @@ function openCross(gamen)
       {
          divno = engine;
       }
-      console.log ("key:" + key);
    });
    link = link + "?se=" + season + "&" + div + "=" + divno + "&ga=" + gamen;
    window.open(link,'_blank');
