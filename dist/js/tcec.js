@@ -93,6 +93,8 @@ var moveToPvB = null;
 var moveToPvL = null;
 var hideDownPv = 0;
 
+var twitchChatUrl = 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat';
+
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
     .addClass(highlightClass);
@@ -451,6 +453,8 @@ function setPgn(pgn)
      timeDiff = 0; 
   }
 
+  let previousPlies = loadedPlies;
+
   loadedPlies = currentPlyCount;
   gameActive = currentGameActive;
 
@@ -471,6 +475,12 @@ function setPgn(pgn)
       {
          $('#move_sound')[0].play();
       }
+  }
+
+  if (previousPlies > currentPlyCount) {
+    initializeCharts();
+    standTableInitialized = false;
+    updateStandtable();
   }
 
   var whiteEval = {};
@@ -2621,17 +2631,26 @@ function updateTables()
   readTourInfo();
 }
 
+function setTwitchChatUrl(darkmode)
+{
+  if (darkmode) {
+    $('#chatright').attr('src', twitchChatUrl + '?darkpopout');
+  } else {
+    $('#chatright').attr('src', twitchChatUrl + '');
+  }
+}
+
 function setTwitchBackgroundInit(backg)
 {
    var setValue = 0;
    if (backg == 1)
    {
-      $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat');
+      $('#chatright').attr('src', setTwitchChatUrl(false));
       setValue = 1;
    }
    else if (backg == 2)
    {
-      $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat?darkpopout');
+      $('#chatright').attr('src', setTwitchChatUrl(true));
       setValue = 2;
    }
    else
@@ -2639,12 +2658,12 @@ function setTwitchBackgroundInit(backg)
       var darkMode = localStorage.getItem('tcec-dark-mode');
       if (darkMode == 20)
       {
-         $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat?darkpopout');
+         $('#chatright').attr('src', setTwitchChatUrl(true));
          setValue = 2;
       }
       else
       {
-         $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat');
+         $('#chatright').attr('src', setTwitchChatUrl(false));
          setValue = 1;
       }
    }
@@ -2659,23 +2678,23 @@ function setTwitchBackground(backg)
    {
       if (darkMode == 1)
       {
-         $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat');
+         setTwitchChatUrl(false);
          setValue = 1;
       }
       else if (darkMode == 2)
       {
-         $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat?darkpopout');
+         setTwitchChatUrl(true);
          setValue = 2;
       }
       else if (darkMode == 0)
       {
          if (backg == 1)
          {
-            $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat');
+            setTwitchChatUrl(false);
          }
          else
          {
-            $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat?darkpopout');
+            setTwitchChatUrl(true);
          }
       }
    }
@@ -2683,11 +2702,11 @@ function setTwitchBackground(backg)
    {
       if (backg == 1)
       {
-         $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat');
+         setTwitchChatUrl(false);
       }
       else
       {
-         $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat?darkpopout');
+         setTwitchChatUrl(true);
       }
    }
    localStorage.setItem('tcec-twitch-back-mode', setValue);
@@ -2700,7 +2719,7 @@ function setDark()
   $('.toggleDark').find('i').addClass('fa-sun');
   $('body').addClass('dark');
   setTwitchBackground(2);
-  $('#chatright').attr('src', 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat');
+  setTwitchChatUrl(true)
   $('#info-frame').attr('src', 'info.html?body=dark');
   $('#crosstable').addClass('table-dark');
   $('#schedule').addClass('table-dark');

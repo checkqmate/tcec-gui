@@ -198,6 +198,11 @@ function drawEval()
 
 $(function() {
    drawEval();
+   initializeCharts();
+});
+
+function initializeCharts()
+{
 	timeChart = Chart.Line($('#time-graph'), {
 	  data: timeChartData,
 	  options: {
@@ -404,7 +409,7 @@ $(function() {
 	    }
 	  }
 	});
-});
+}
 
 function updateChartData()
 {
