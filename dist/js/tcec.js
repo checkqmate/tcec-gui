@@ -2626,6 +2626,7 @@ function updateTables()
 {
   updateEngRating();
   updateSchedule();
+  initializeStandtable()
   updateCrosstable();
   updateStandtable();
   readTourInfo();
@@ -3285,54 +3286,52 @@ function updateStandtableData(data)
    });
 
    if (!standTableInitialized) {
-
-     columns = [
-       {
-         field: 'rank',
-         title: 'Rank'
-        ,sortable: true
-        ,width: '4%'
-       },
-       {
-         field: 'name',
-         title: 'Engine'
-        ,sortable: true
-        ,width: '18%'
-       },
-       {
-         field: 'points',
-         title: 'Points'
-        ,sortable: true
-        ,width: '7%'
-       }
-     ];
-     _.each(standtableData.Order, function(engine, key) {
-       engineDetails = _.get(standtableData.Table, engine);
-       columns = _.union(columns, [{field: engineDetails.Abbreviation, title: engineDetails.Abbreviation, 
-                                    formatter: formatter, cellStyle: cellformatter}]);
-     });
-
-     $('#standtable').bootstrapTable({
-       columns: columns,
-       classes: 'table table-striped table-no-bordered',
-     });
+    initializeStandtable();
+     
      standTableInitialized = true;
    }
    $('#standtable').bootstrapTable('load', standings);
 }
 
-var crosstableUpdateCount = 0;
+function initializeStandtable()
+{
+  columns = [
+     {
+       field: 'rank',
+       title: 'Rank'
+      ,sortable: true
+      ,width: '4%'
+     },
+     {
+       field: 'name',
+       title: 'Engine'
+      ,sortable: true
+      ,width: '18%'
+     },
+     {
+       field: 'points',
+       title: 'Points'
+      ,sortable: true
+      ,width: '7%'
+     }
+   ];
+   _.each(standtableData.Order, function(engine, key) {
+     engineDetails = _.get(standtableData.Table, engine);
+     columns = _.union(columns, [{field: engineDetails.Abbreviation, title: engineDetails.Abbreviation, 
+                                  formatter: formatter, cellStyle: cellformatter}]);
+   });
+
+   $('#standtable').bootstrapTable({
+     columns: columns,
+     classes: 'table table-striped table-no-bordered',
+   });
+}
 
 function updateStandtable() 
 {
    axios.get('crosstable.json')
    .then(function (response)
    {
-      crosstableUpdateCount++;
-      if (crosstableUpdateCount > 10) {
-        standTableInitialized = false;
-        crosstableUpdateCount = 0;
-      }
       updateStandtableData(response.data);
    })
    .catch(function (error) 
