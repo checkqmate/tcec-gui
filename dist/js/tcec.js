@@ -3321,11 +3321,18 @@ function updateStandtableData(data)
    $('#standtable').bootstrapTable('load', standings);
 }
 
+var crosstableUpdateCount = 0;
+
 function updateStandtable() 
 {
    axios.get('crosstable.json')
    .then(function (response)
    {
+      crosstableUpdateCount++;
+      if (crosstableUpdateCount > 10) {
+        standTableInitialized = false;
+        crosstableUpdateCount = 0;
+      }
       updateStandtableData(response.data);
    })
    .catch(function (error) 
