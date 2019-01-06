@@ -2636,7 +2636,7 @@ function setTwitchChatUrl(darkmode)
   if (darkmode) {
     $('#chatright').attr('src', twitchChatUrl + '?darkpopout');
   } else {
-    $('#chatright').attr('src', twitchChatUrl + '');
+    $('#chatright').attr('src', twitchChatUrl);
   }
 }
 
@@ -2645,12 +2645,12 @@ function setTwitchBackgroundInit(backg)
    var setValue = 0;
    if (backg == 1)
    {
-      $('#chatright').attr('src', setTwitchChatUrl(false));
+      setTwitchChatUrl(false);
       setValue = 1;
    }
    else if (backg == 2)
    {
-      $('#chatright').attr('src', setTwitchChatUrl(true));
+      setTwitchChatUrl(true);
       setValue = 2;
    }
    else
@@ -2658,12 +2658,12 @@ function setTwitchBackgroundInit(backg)
       var darkMode = localStorage.getItem('tcec-dark-mode');
       if (darkMode == 20)
       {
-         $('#chatright').attr('src', setTwitchChatUrl(true));
+         setTwitchChatUrl(true);
          setValue = 2;
       }
       else
       {
-         $('#chatright').attr('src', setTwitchChatUrl(false));
+         setTwitchChatUrl(false);
          setValue = 1;
       }
    }
