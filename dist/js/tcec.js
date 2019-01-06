@@ -2626,7 +2626,7 @@ function updateTables()
 {
   updateEngRating();
   updateSchedule();
-  initializeStandtable()
+  standTableInitialized = false;
   updateCrosstable();
   updateStandtable();
   readTourInfo();
@@ -3286,16 +3286,7 @@ function updateStandtableData(data)
    });
 
    if (!standTableInitialized) {
-    initializeStandtable();
-     
-     standTableInitialized = true;
-   }
-   $('#standtable').bootstrapTable('load', standings);
-}
-
-function initializeStandtable()
-{
-  columns = [
+      columns = [
      {
        field: 'rank',
        title: 'Rank'
@@ -3325,6 +3316,10 @@ function initializeStandtable()
      columns: columns,
      classes: 'table table-striped table-no-bordered',
    });
+     
+     standTableInitialized = true;
+   }
+   $('#standtable').bootstrapTable('load', standings);
 }
 
 function updateStandtable() 
