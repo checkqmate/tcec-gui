@@ -291,7 +291,10 @@ function initializeCharts()
 	        id: 'y-axis-1',
 	        ticks: {
 			  callback: function(value, index, values) {
-			  	if (value >= 1000000) {
+			  	if (value >= (1000000*1000)) {
+			  		value = Math.round (value / (100000 * 1000)) / 10;
+			  		value += 'B';
+			  	} else if ((value >= (1000000*1))) {
 			  		value = Math.round (value / 100000) / 10;
 			  		value += 'M'
 			  	} else {
@@ -313,7 +316,10 @@ function initializeCharts()
 	        },
 	        ticks: {
 			  callback: function(value, index, values) {
-			  	if (value >= 1000000) {
+			  	if (value >= 1000000*1000) {
+			  		value = Math.round (value / (100000 * 1000)) / 10;
+			  		value += 'B'
+			  	} else if ((value >= (1000000*1))) {
 			  		value = Math.round (value / 100000) / 10;
 			  		value += 'M'
 			  	} else {
