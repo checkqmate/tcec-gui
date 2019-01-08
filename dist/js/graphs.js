@@ -1,6 +1,7 @@
 var evalChart;
 var timeChart;
 var speedChart;
+var nodesChart;
 var depthChart;
 var tbHitsChart;
 var engine2colorno = 0;
@@ -142,6 +143,29 @@ var tbHitsChartData = {
   }]
 };
 
+var nodesChartData = {
+  labels: [],
+  datasets: [{
+    label: 'White Engine Speeds',
+    lineTension: 0,
+    borderColor: '#EFEFEF',
+    backgroundColor: '#EFEFEF',
+    fill: false,
+    data: [
+    ],
+    yAxisID: 'y-axis-1',
+  }, {
+    label: 'Black Engine Speed',
+    lineTension: 0,
+    borderColor: '#000000',
+    backgroundColor: '#000000',
+    fill: false,
+    data: [
+    ],
+    yAxisID: 'y-axis-2'
+  }]
+};
+
 function drawEval()
 {
    setevalChartData();
@@ -221,6 +245,84 @@ function initializeCharts()
 	        display: true,
 	        position: 'left',
 	        id: 't-y-axis-1',
+	      }],
+	      xAxes: [{
+	      	ticks: {
+		        autoSkip: true,
+		        maxTicksLimit: 25
+		    }
+	      }]
+	    }
+	  }
+	});
+
+	nodesChart = Chart.Line($('#nodes-graph'), {
+	  data: nodesChartData,
+	  options: {
+	    responsive: true,
+	    hoverMode: 'index',
+	    stacked: false,
+	    legend: {
+	      display: false
+	    },
+	    title: {
+	      display: false
+	    },
+        tooltips: {
+	      callbacks: {
+	            label: function(tooltipItem, data) {
+				  	var nodes = parseInt(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].nodes);
+	                if (nodes >= 1000000000) {
+			  			nodes = Math.round (nodes / 100000000) / 10;
+				  		nodes += 'B'
+				  	} else {
+				  		nodes = Math.round (nodes / 100000) / 10;
+				  		nodes += 'M'
+				  	}
+				    return ' (' + nodes + ' nodes)';
+	            }
+	      } // end callbacks:
+	    },
+	    scales: {
+	      yAxes: [{
+	        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+	        display: true,
+	        position: 'left',
+	        id: 'y-axis-1',
+	        ticks: {
+			  callback: function(value, index, values) {
+			  	if (value >= 1000000) {
+			  		value = Math.round (value / 100000) / 10;
+			  		value += 'M'
+			  	} else {
+			  		value = Math.round (value / 100) / 10;
+			  		value += 'K'
+			  	}
+			    return value;
+			  }
+			}
+	      }, {
+	        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+	        display: true,
+	        position: 'right',
+	        id: 'y-axis-2',
+
+	        // grid line settings
+	        gridLines: {
+	          drawOnChartArea: false, // only want the grid lines for one axis to show up
+	        },
+	        ticks: {
+			  callback: function(value, index, values) {
+			  	if (value >= 1000000) {
+			  		value = Math.round (value / 100000) / 10;
+			  		value += 'M'
+			  	} else {
+			  		value = Math.round (value / 100) / 10;
+			  		value += 'K'
+			  	}
+			    return value;
+			  }
+			}
 	      }],
 	      xAxes: [{
 	      	ticks: {
@@ -426,6 +528,10 @@ function updateChartData()
 	speedChart.data.datasets[0].data = [];
 	speedChart.data.datasets[1].data = [];
 
+	nodesChart.data.labels = [];
+	nodesChart.data.datasets[0].data = [];
+	nodesChart.data.datasets[1].data = [];
+
 	depthChart.data.labels = [];
 	depthChart.data.datasets[0].data = [];
 	depthChart.data.datasets[1].data = [];
@@ -447,6 +553,9 @@ function updateChartData()
 
 	whiteSpeed = [];
 	blackSpeed = [];
+
+	whiteNodes = [];
+	blackNodes = [];
 
 	whiteDepth = [];
 	blackDepth = [];
@@ -541,6 +650,15 @@ function updateChartData()
 				}
 			];
 
+			nodes = [
+				{
+					'x': moveNumber,
+					'y': move.n,
+					'nodes': move.n,
+					'ply': plyNum
+				}
+			];
+
 			if (key % 2 == 0) {
 				labels = _.union(labels, [moveNumber]);
 				// evalLabels = _.union(evalLabels, [moveNumber]);
@@ -549,6 +667,7 @@ function updateChartData()
 				// whiteEval = _.union(whiteEval, [{'x': moveNumber + 0.5, 'y': move.wv, 'eval': evaluation}]);
 				whiteTime = _.union(whiteTime, time);
 				whiteSpeed = _.union(whiteSpeed, speed);
+				whiteNodes = _.union(whiteNodes, nodes);
 				whiteDepth = _.union(whiteDepth, depth);
 				whiteTBHits = _.union(whiteTBHits, tbHits);
 
@@ -572,6 +691,7 @@ function updateChartData()
 				// blackEval = _.union(blackEval, [{'x': moveNumber + 0.5, 'y': move.wv, 'eval': evaluation}]);
 				blackTime = _.union(blackTime, time);
 				blackSpeed = _.union(blackSpeed, speed);
+				blackNodes = _.union(blackNodes, nodes);
 				blackDepth = _.union(blackDepth, depth);
 				blackTBHits = _.union(blackTBHits, tbHits);
 
@@ -612,6 +732,10 @@ function updateChartData()
 	speedChart.data.datasets[0].data = whiteSpeed;
 	speedChart.data.datasets[1].data = blackSpeed;
 
+	nodesChart.data.labels = labels;
+	nodesChart.data.datasets[0].data = whiteNodes;
+	nodesChart.data.datasets[1].data = blackNodes;
+
 	depthChart.data.labels = labels;
 	depthChart.data.datasets[0].data = whiteDepth;
 	depthChart.data.datasets[1].data = blackDepth;
@@ -623,6 +747,7 @@ function updateChartData()
     evalChart.update();
     timeChart.update();
     speedChart.update();
+    nodesChart.update();
     depthChart.update();
     tbHitsChart.update();
 }
