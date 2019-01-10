@@ -93,7 +93,9 @@ var moveToPvB = null;
 var moveToPvL = null;
 var hideDownPv = 0;
 
-var twitchChatUrl = 'https://www.twitch.tv/embed/TCEC_Chess_TV/chat';
+var twitchAccount = 'TCEC_Chess_TV';
+var twitchChatUrl = 'https://www.twitch.tv/embed/' + twitchAccount + '/chat';
+var twitchSRCIframe = 'https://player.twitch.tv/?channel=' + twitchAccount;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -3350,7 +3352,7 @@ function checkTwitch(checkbox)
    }
    else
    {
-      $('iframe#twitchvid').attr('src', 'https://player.twitch.tv/?channel=TCEC_Chess_TV');
+      $('iframe#twitchvid').attr('src', twitchSRCIframe);
       $('iframe#twitchvid').show();
       localStorage.setItem('tcec-twitch-video', 0);
    }
@@ -3361,7 +3363,7 @@ function setTwitch()
    var getVideoCheck = localStorage.getItem('tcec-twitch-video');        
    if (getVideoCheck == undefined || getVideoCheck == 0)
    {
-      $('iframe#twitchvid').attr('src', 'https://player.twitch.tv/?channel=TCEC_Chess_TV');
+      $('iframe#twitchvid').attr('src', twitchSRCIframe);
       $('iframe#twitchvid').show();
       $('#twitchcheck').prop('checked', false);
    }
