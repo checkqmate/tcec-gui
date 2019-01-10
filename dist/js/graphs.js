@@ -605,7 +605,7 @@ function updateChartData()
          } 
          else 
          {
-            if (move.wv.substring(0,1) == '-') 
+            if (move.wv && move.wv.substring(0,1) == '-') 
             {
                move.cwv = -evalconstant;
             } 
