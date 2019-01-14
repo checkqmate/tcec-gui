@@ -1786,6 +1786,48 @@ function setDarkMode(value)
    }
 }
 
+function crossFormatter(value, row, index, field) {
+   plog ("Came here:", 0);
+   if (!value.hasOwnProperty("Score")) // true
+   {
+      return value;
+   } 
+
+   var retStr = '';
+   var valuex = _.get(value, 'Score');
+   var countGames = 0;
+
+   _.each(valuex, function(engine, key) 
+   {
+      var gameX = parseInt(countGames/2);
+      var gameXColor = parseInt(gameX%3);
+
+      if (engine.Result == "0.5")
+      {
+         engine.Result = '&frac12'
+         gameXColor = 2;
+      }
+      else
+      {
+         gameXColor = parseInt(engine.Result);
+      }
+      if (retStr == '')
+      {
+         retStr = '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
+      }
+      else
+      {
+         retStr += ' ' + '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
+      }
+      countGames = countGames + 1;
+      if (countGames%10 == 0)
+      {
+         retStr += '<br />';
+      }
+   });
+  return retStr;
+}
+
 function formatter(value, row, index, field) {
    if (!value.hasOwnProperty("Score")) // true
    {
@@ -1825,6 +1867,15 @@ function formatter(value, row, index, field) {
       }
    });
   return retStr;
+}
+
+function crossCellformatter(value, row, index, field) 
+{
+   if (row.crashes >= 3)
+   {
+      return {classes: 'strike'};
+   }
+   return {classes: 'normal'};
 }
 
 function cellformatter(value, row, index, field) {
@@ -2314,12 +2365,19 @@ async function updateCrosstableData(data)
          elo = Math.round(engineDetails.Elo);
       }
       eloDiff = engineDetails.Rating + elo;
-      engine = '<div class="right-align"><img class="right-align-pic" src="img/engines/'+ getShortEngineName(engine) +'.jpg" />' + '<a class="right-align-name">' + engine + '</a></div>';
+      var dQ = engineDisqualified(engine);
+      if (dQ)
+      {
+         engine = '<div class="right-align strike"><img class="right-align-pic" src="img/engines/'+ getShortEngineName(engine) +'.jpg" />' + '<a class="right-align-name">' + engine + '</a></div>';
+      }
+      else
+      {
+         engine = '<div class="right-align"><img class="right-align-pic" src="img/engines/'+ getShortEngineName(engine) +'.jpg" />' + '<a class="right-align-name">' + engine + '</a></div>';
+      }
       wins = wins + ' [' + getEngRes.WinAsWhite + '/' + getEngRes.WinAsBlack + ']';
       //loss = loss + ' [' + getEngRes.LossAsWhite + '/' + getEngRes.LossAsBlack + '/' + getEngRes.LossAsStrike + ']';
       loss = loss + ' [' + getEngRes.LossAsWhite + '/' + getEngRes.LossAsBlack + ']';
       engineDetails.Score = getEngRes.Score;
-      var dQ = engineDisqualified(engine);
       if (dQ)
       {
          engineDetails.Neustadtl = 0;
@@ -2341,57 +2399,65 @@ async function updateCrosstableData(data)
       });
 
    if (!crossTableInitialized) {
-
      columns = [
        {
          field: 'rank',
          title: 'Rank'
         ,sortable: true
         ,width: '4%'
+        ,cellStyle: crossCellformatter
        },
        {
          field: 'name',
          title: 'Engine'
         ,sortable: true
         ,width: '28%'
+        ,cellStyle: crossCellformatter
        },
        {
          field: 'games',
          title: '# Games'
         ,sortable: true
         ,width: '4%'
+        ,cellStyle: crossCellformatter
        },
        {
          field: 'points',
          title: 'Points'
         ,sortable: true
         ,width: '7%'
+        ,cellStyle: crossCellformatter
        },
        {
          field: 'crashes',
          title: 'Crashes'
         ,sortable: true
         ,width: '4%'
+        ,cellStyle: crossCellformatter
        },
        {
          field: 'wins',
          title: 'Wins [W/B]'
         ,width: '10%'
+        ,cellStyle: crossCellformatter
        },
        {
          field: 'loss',
          title: 'Loss [W/B]'
         ,width: '10%'
+        ,cellStyle: crossCellformatter
        },
        {
          field: 'sb',
          title: 'SB'
         ,sortable: true
+        ,cellStyle: crossCellformatter
         ,width: '4%'
        },
        {
          field: 'elo',
          title: 'Elo'
+        ,cellStyle: crossCellformatter
         ,sortable: true
         ,width: '5%'
        },
@@ -2399,6 +2465,7 @@ async function updateCrosstableData(data)
          field: 'elo_diff',
          title: 'Diff [Live]'
         ,width: '7%'
+        ,cellStyle: crossCellformatter
        }
      ];
 

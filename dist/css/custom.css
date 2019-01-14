@@ -374,6 +374,16 @@ canvas {
    font-size: large;
 }
 
+.strike
+{
+   text-decoration: line-through;
+   color: red; 
+}
+
+.normal
+{
+}
+
 .copied {
    color: green;
    display: none;
