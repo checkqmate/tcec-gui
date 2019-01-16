@@ -2292,6 +2292,7 @@ function fixOrder()
    _.each(crosstableData.Table, function(engine, key) {
       engine.Rank = ranks[count];
       count = count + 1;
+      crosstableData.Order[engine.Rank-1] = key;
       });
 }
 
