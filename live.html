@@ -1073,7 +1073,7 @@ OS: Ubuntu 18.04 server
         });
       });
 
-      var socket = io.connect('http://tcec.chessdom.com:8888');
+      var socket = io.connect('https://tcec.chessdom.com:8888');
 
       socket.on('crosstable', function(data){
          updateTablesData(data);

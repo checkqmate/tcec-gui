@@ -21,42 +21,42 @@ var roundDateMan = [
 0, /* 18 */
 0, /* 19 */
 0, /* 20 */
-'23:00 on 2018.10.15', /* 21 */
-'11:00 on 2018.10.16', /* 22 */
-'16:00 on 2018.10.16', /* 23  */
-'22:30 on 2018.10.16', /* 24 */
-'12:00 on 2018.10.17', /* 25  */
-'17:30 on 2018.10.17', /* 26 */
+0, /* 15 */
+0, /* 16 */
+0, /* 17 */
+0, /* 18 */
+0, /* 19 */
+0, /* 19 */
 0, /* 27 */
 0, /* 28 */
 0, /* 29 */
 0, /* 30 */
-'12:00 on 2018.10.21', /* 31 */
+0, /* 30 */
 0, /* 32 */
-'17:30 on 2018.10.17', /* 33 */
+0, /* 30 */
 0, /* 34 */
 ];
 
-var startDateR1 = '12:30:00 on 2018.10.05';
-var startDateR2 = '18:00:00 on 2018.10.05';
+var startDateR1 = '12:30:00 on 2019.01.21';
+var startDateR2 = '18:00:00 on 2019.01.21';
 var roundNo = 2;
 var teamsx = 
-     [[["Stockfish 270918", 1], ["Ivanhoe 999946h", 32]],
-      [["Gull 180521", 17], ["Texel 1.08a11", 16]],
-      [["Fizbo 2", 9], ["Hannibal 20180922", 24]],
-      [["Chiron S13.2", 8], ["Nemorino 5.05", 25]],
-      [["Fire 7.1", 4], ["Senpai 2.0", 29]],
-      [["Vajolet2 2.6.1", 20], ["Booot 6.3.1", 13]],
-      [["Laser 250918", 12], ["Lc0 18.11248", 21]],
-      [["Ethereal 11.06", 5], ["Rodent III 1.0.171",28]],
-      [["Komodo 2135.10", 2], ["Tucano 7.06", 31]],
-      [["Xiphos 0.4.2", 15], ["Nirvana 2.4", 18]],
-      [["Fritz 16.10", 10], ["DeusX 1.1", 23]],
-      [["Ginkgo 2.12", 7], ["Bobcat 8", 26]],
-      [["Houdini 6.03", 3], ["chess22k 1.11", 30]],
-      [["ChessBrainVB 3.70", 14], ["Arasan TCEC13.2", 19]],
-      [["Jonny 8.1", 11], ["Pedone 1.9", 22]],
-      [["Andscacs 094030", 6], ["Wasp 3.3", 27]]
+     [[["Stockfish ", 1], ["Rodent ", 32]],
+      [["Booot          ", 6], ["Nirvana ", 27]],
+      [["Nemorino ", 5], ["KomodoMCTS ",28]],
+      [["Fizbo ", 2], ["rofChade ", 31]],
+      [["Wasp ", 8], ["Houdini ", 25]],
+      [["Texel       ", 3], ["Fritz        ", 30]],
+      [["Fire 7.1", 4], ["Pirarucu ", 29]],
+      [["Jonny      ", 7], ["Arasan  ", 26]],
+      [["Tucano ", 17], ["Lc0 ", 16]],
+      [["ChessBrainVB ", 11], ["Xiphos ", 22]],
+      [["Andscacs ", 12], ["Hannibal ", 21]],
+      [["Chiron ", 15], ["Pedone     ", 18]],
+      [["Komodo ", 9], ["Demolito ", 24]],
+      [["Ginkgo           ", 14], ["Gull           ", 19]],
+      [["Schooner ", 20], ["Ethereal ", 13]],
+      [["Vajolet    ", 10], ["Laser    ", 23]]
   ];
 
 var bigData = {                                                                                                                                                                              

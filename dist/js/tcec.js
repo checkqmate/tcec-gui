@@ -3005,9 +3005,9 @@ async function eventCrosstable(mandata)
       }
    }
 
-   plog ("drawing standings");
+   plog ("drawing standings", 0);
    $(divname).bootstrapTable('load', standings);
-   plog ("drawing bracket");
+   plog ("drawing bracket", 0);
    drawBracket();
    drawBracket1();
 }
@@ -3495,7 +3495,7 @@ function drawBracket1()
         var localRound = parseInt(roundNox/2) - 1;
         var isFirst = roundNox%2;
 
-        plog ("Came to round: " + roundNox + " data.name is: " + data.name, 1);
+        //plog ("Came to round: " + roundNox + " data.name is: " + data.name, 1);
         roundNox ++;
 
         switch(state) {
