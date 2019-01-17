@@ -3314,7 +3314,10 @@ function updateLiveEvalData(datum, update, fen, contno, initial)
       board.clearAnnotation();
    }
 
-   clearedAnnotation = 0;
+   if (contno == 2)
+   {
+      clearedAnnotation = 0;
+   }
    var engineData = [];
    livePvs[contno] = [];
    var livePvsC = livePvs[contno];
