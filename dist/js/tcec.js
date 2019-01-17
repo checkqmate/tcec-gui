@@ -1796,7 +1796,7 @@ function eventCrosstableWrap()
       return -1;
    }
    eventCrossTableInitial = 1;
-   axios.get('json/manual.json?no-cache' + (new Date()).getTime())
+   axios.get('manual.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
       eventCrosstable(response.data);
