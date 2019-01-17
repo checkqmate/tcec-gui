@@ -352,7 +352,7 @@ function listPosition()
       var getPos = board.position();
       if (getPos != null)
       {
-         console.log ("Number of pieces for leela:" + Object.keys(getPos).length);
+         plog ("Number of pieces for leela:" + Object.keys(getPos).length);
       }
    }
 }
@@ -1325,7 +1325,7 @@ function handlePlyChange(handleclick)
             if (parseInt(livePVHist[yy].moves[xx].ply) == activePly)
             {
                livePVHist[yy].moves[xx].engine = livePVHist[yy].engine;
-               updateLiveEvalData(livePVHist[yy].moves[xx], 0, prevMove.fen, yy);
+               updateLiveEvalData(livePVHist[yy].moves[xx], 0, prevMove.fen, yy, 0);
                break;
             }
          }
@@ -3286,7 +3286,8 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
    // handle success
 }
 
-function updateLiveEvalData(datum, update, fen, contno)
+var clearedAnnotation = 0;
+function updateLiveEvalData(datum, update, fen, contno, initial)
 {
    var container = '#live-eval-cont' + contno;
 
@@ -3301,8 +3302,16 @@ function updateLiveEvalData(datum, update, fen, contno)
       return;
    }
 
-   if (contno == 1) {
-    board.clearAnnotation();
+   if (!initial && (contno == 1))
+   {
+      board.clearAnnotation();
+      clearedAnnotation = clearedAnnotation + 1;
+   }
+
+   if ((clearedAnnotation < 1) && (contno == 2))
+   {
+      plog ("Annotation did not get cleared" + clearedAnnotation, 0);
+      board.clearAnnotation();
    }
 
    var engineData = [];
@@ -3454,7 +3463,7 @@ function updateLiveEval() {
    axios.get('data.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
-      updateLiveEvalData(response.data, 1, null, 1);
+      updateLiveEvalData(response.data, 1, null, 1, 1);
    })
    .catch(function (error) {
       // handle error
@@ -3463,7 +3472,7 @@ function updateLiveEval() {
    axios.get('data1.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
-      updateLiveEvalData(response.data, 1, null, 2);
+      updateLiveEvalData(response.data, 1, null, 2, 1);
    })
    .catch(function (error) {
       // handle error
