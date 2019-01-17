@@ -3308,9 +3308,9 @@ function updateLiveEvalData(datum, update, fen, contno, initial)
       clearedAnnotation = clearedAnnotation + 1;
    }
 
+   plog ("Annotation did not get cleared" + clearedAnnotation, 0);
    if ((clearedAnnotation < 1) && (contno == 2))
    {
-      plog ("Annotation did not get cleared" + clearedAnnotation, 0);
       board.clearAnnotation();
    }
 
