@@ -3305,15 +3305,16 @@ function updateLiveEvalData(datum, update, fen, contno, initial)
    if (!initial && (contno == 1))
    {
       board.clearAnnotation();
-      clearedAnnotation = clearedAnnotation + 1;
+      clearedAnnotation = 1;
    }
 
-   plog ("Annotation did not get cleared" + clearedAnnotation, 0);
+   plog ("Annotation did not get cleared" + clearedAnnotation + ",contno:" + contno, 0);
    if ((clearedAnnotation < 1) && (contno == 2))
    {
       board.clearAnnotation();
    }
 
+   clearedAnnotation = 0;
    var engineData = [];
    livePvs[contno] = [];
    var livePvsC = livePvs[contno];
