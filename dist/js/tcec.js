@@ -2867,6 +2867,7 @@ function getCurrDate(currdate, mins)
 function getDateRound()
 {
    roundDate = [];
+   var diffData = 0;
 
    for (var x = 0 ; x <= totalEvents; x++)
    {
@@ -2877,13 +2878,27 @@ function getDateRound()
       else
       {
          var y = x + 1;
-         if (y%2 == 1)
+         if (diffData)
          {
-            roundDate[x] = getCurrDate(startDateR1, 1440 * (parseInt(y/2)));
+            if (y%2 == 1)
+            {
+               roundDate[x] = getCurrDate(startDateR1, 1440 * (parseInt(y/2)));
+            }
+            else
+            {
+               roundDate[x] = getCurrDate(startDateR2, 1440 * (parseInt((y-1)/2)));
+            }
          }
          else
          {
-            roundDate[x] = getCurrDate(startDateR2, 1440 * (parseInt((y-1)/2)));
+            if (y%2 == 1)
+            {
+               roundDate[x] = getCurrDate(startDateR1, 720 * (parseInt(y/2)));
+            }
+            else
+            {
+               roundDate[x] = getCurrDate(startDateR2, 720 * (parseInt((y-1)/2)));
+            }
          }
       }
    }
