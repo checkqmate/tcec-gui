@@ -41,22 +41,22 @@ var startDateR1 = '12:30:00 on 2019.01.21';
 var startDateR2 = '18:00:00 on 2019.01.21';
 var roundNo = 2;
 var teamsx = 
-     [[["Stockfish ", 1], ["Rodent ", 32]],
-      [["Booot          ", 6], ["Nirvana ", 27]],
-      [["Nemorino ", 5], ["KomodoMCTS ",28]],
-      [["Fizbo ", 2], ["rofChade ", 31]],
-      [["Wasp ", 8], ["Houdini ", 25]],
-      [["Texel       ", 3], ["Fritz        ", 30]],
-      [["Fire 7.1", 4], ["Pirarucu ", 29]],
-      [["Jonny      ", 7], ["Arasan  ", 26]],
-      [["Tucano ", 17], ["Lc0 ", 16]],
-      [["ChessBrainVB ", 11], ["Xiphos ", 22]],
-      [["Andscacs ", 12], ["Hannibal ", 21]],
-      [["Chiron ", 15], ["Pedone     ", 18]],
-      [["Komodo ", 9], ["Demolito ", 24]],
-      [["Ginkgo           ", 14], ["Gull           ", 19]],
-      [["Schooner ", 20], ["Ethereal ", 13]],
-      [["Vajolet    ", 10], ["Laser    ", 23]]
+     [[["Stockfish ", 1], ["RodentIII ", 32]],
+      [["Booot ", 16], ["Nirvana ", 17]],
+      [["Fizbo ", 9], ["rofChade ", 24]],
+      [["KomodoMCTS ", 8], ["Nemorino ",25]],
+      [["Houdini ", 4], ["Wasp ", 29]],
+      [["Fritz ", 13], ["Texel       ", 20]],
+      [["Jonny ", 12], ["Arasan  ", 21]],
+      [["Fire 7.1 ", 5], ["Pirarucu ", 28]],
+      [["Lc0 ", 2], ["Tucano ", 31]],
+      [["Xiphos ", 15], ["ChessBrainVB ", 18]],
+      [["Chiron ", 10], ["Pedone     ", 23]],
+      [["Andscacs ", 7], ["Hannibal ", 216]],
+      [["Komodo ", 3], ["Demolito ", 30]],
+      [["Ginkgo ", 14], ["Gull ", 19]],
+      [["Laser ", 11], ["Vajolet2 ", 22]],
+      [["Ethereal ", 6], ["Schooner ", 27]]
   ];
 
 var bigData = {                                                                                                                                                                              
