@@ -2960,7 +2960,7 @@ async function eventCrosstable(mandata)
                              score: -1, rank: '1', date: '', lead: 0},
                             {name: getSeededName(teamsx[i-1][1][0]), flag: getShortName(teamsx[i-1][1][0]),
                              score: -1, rank: '2', date: '', lead: 0}];
-      plog ("Score is :" + i + ", name:" + getSeededName(teamsx[i-1][0][0]), 0);
+      //plog ("Score is :" + i + ", name:" + getSeededName(teamsx[i-1][0][0]), 0);
    }
 
    _.each(mandata.skip, function(matchdum, key) {
