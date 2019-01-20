@@ -3526,7 +3526,8 @@ function drawBracket1()
                var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
                if (roundDate[localRound] != undefined)
                {
-                  befStr = befStr + '<a class="dateright"> (' + roundDate[localRound] + ')</a> </div>';
+                  //befStr = befStr + '<a class="dateright"> (' + roundDate[localRound] + ')</a> </div>';
+                  befStr = befStr + '</div>';
                }
                else
                {
@@ -3580,7 +3581,8 @@ function drawBracket1()
                      var befStr = '<div class="labelbracket"> <a class="roundleft"> #' + (localRound + 1) + '</a> ';
                      if (roundDate[localRound] != undefined)
                      {
-                        befStr = befStr + '<a> ' + roundDate[localRound] + '</a> </div>';
+                        //befStr = befStr + '<a> ' + roundDate[localRound] + '</a> </div>';
+                        befStr = befStr + '</div>';
                      }
                      else
                      {
@@ -3598,7 +3600,8 @@ function drawBracket1()
                      if (roundDate[localRound] != undefined)
                      {
                         //befStr = befStr + '<a class="dateright"> ' + roundDate[localRound] + '</a> </div>';
-                        befStr = befStr + '<a> ' + roundDate[localRound] + '</a> </div>';
+                        //befStr = befStr + '<a> ' + roundDate[localRound] + '</a> </div>';
+                        befStr = befStr + '</div>';
                      }
                      else
                      {
