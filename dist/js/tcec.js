@@ -3450,6 +3450,14 @@ function updateLiveEvalData(datum, update, fen, contno, initial)
           } else {
             color = 'orange';
           }
+          if (contno == 2)
+          {
+             color = 'reds';
+          }
+          else
+          {
+             color = 'blues';
+          }
           board.addArrowAnnotation(livePv[0].from, livePv[0].to, color, board.orientation());
         }
       });

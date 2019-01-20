@@ -57,8 +57,25 @@
 
 .overlay-4fc5e defs {
   stroke: none;
+  //fill: #ff8400;
+  //stroke: #ff8400;
 }
   
+.overlay-4fc5e defs-blue {
+  fill: #007bff;
+  stroke: #007bff;
+}
+
+.blues {
+  fill: #007bff;
+  stroke: #007bff;
+}
+
+.reds {
+  fill: #f08080;
+  stroke: #f08080;
+}
+
 .overlay-group-672a1 {
   opacity: 0.7;
   stroke-linecap: square;

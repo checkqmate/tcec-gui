@@ -1614,8 +1614,9 @@ widget.addArrowAnnotation = function(source, target, color, orientation) {
     
     var pathEl = overlayEl.find("> g.square-" + source + " > path.square-" + target);
     if(!pathEl.length) {
+      console.log ("Came to arrow annotation:" + color);
       var pathEl = createSvgEl("path", {
-        'class' :       CSS['overlayArrow'] + " square-" + target + " " + color,
+        'class' :       CSS['overlayArrow'] + " square-" + target + " ",
         'd':            computePath(source, target),
         'stroke-width': (SQUARE_SIZE / 6)
       });
