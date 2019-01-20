@@ -277,6 +277,7 @@ function setUsers(data)
 {
    userCount = data.count;
    lastGame = data.gamesdone;
+   plog ("Setting viewers to userCount:" + userCount, 0);
    try
    {
       $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: userCount});

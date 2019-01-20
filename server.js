@@ -1,4 +1,4 @@
-var http = require("http");
+var https = require("https");
 var url = require('url');
 var fs = require('fs');
 var io = require('socket.io');
@@ -10,12 +10,6 @@ const axios = require('axios');
 var chokidar = require('chokidar');
 var _ = require('lodash');
 var lastPgnTime = Date.now();
-
-var prevData = 0;
-var prevliveData = 0;
-var prevevalData = 0;
-var prevtotalCount = 0;
-var prevmanData = 0;
 
 const pid = process.pid;
 
@@ -32,11 +26,17 @@ console.log ("Port is " + portnum);
 
 // first parameter is the mount point, second is the location in the file system
 var app = express();
-app.use(express.static(__dirname));
-var server = require('http').createServer(app);  
-server.listen(parseInt(portnum));
-var listener = io.listen(server);                                                                                                                                                                                                             
+//app.use(express.static(__dirname));
 
+var options = {
+   key: fs.readFileSync('/etc/letsencrypt/live/tcecbonus.club/privkey.pem'),
+   cert: fs.readFileSync('/etc/letsencrypt/live/tcecbonus.club/fullchain.pem')   
+};
+
+var server = https.createServer(options, app).listen(parseInt(portnum), function() {
+   console.log('Express server listening on port ' + portnum);
+});
+var listener = io.listen(server);                                                                                                 
 var watcher = chokidar.watch('crosstable.json', {
       persistent: true,
       ignoreInitial: false,
@@ -55,11 +55,47 @@ var watcher = chokidar.watch('crosstable.json', {
 });
 var liveeval = 'data.json';
 var ctable = 'crosstable.json';
+watcher.add('data1.json');
+watcher.add('liveeval1.json');
 watcher.add(liveeval);
 watcher.add('live.json');
 watcher.add('schedule.json');
 watcher.add('liveeval.json');
-watcher.add('json/manual.json');
+
+app.get('/api/gameState', function (req, res) {
+   console.log('api gameState request');
+   var currentFen = '';
+   var liveData = fs.readFileSync('live.json');
+   var liveJsonData = JSON.parse(liveData);
+
+   if (liveJsonData.Moves.length > 0) {
+      currentFen = liveJsonData.Moves[(liveJsonData.Moves.length - 1)].fen;
+   }
+
+   var response = {
+      'White': liveJsonData.Headers.White,
+      'Black': liveJsonData.Headers.Black,
+      'CurrentPosition': currentFen,
+      'Result': liveJsonData.Headers.Result,
+      'Event': liveJsonData.Headers.Event
+   }
+   res.setHeader('Content-Type', 'application/json');
+   res.status(200).send(JSON.stringify(response))
+});
+
+app.get('/api/currentPosition', function (req, res) {
+   console.log('api currentPosition request');
+   var currentFen = 'No game in progress';
+   var liveData = fs.readFileSync('live.json');
+   var liveJsonData = JSON.parse(liveData);
+
+   if (liveJsonData.Moves.length > 0) {
+      currentFen = liveJsonData.Moves[(liveJsonData.Moves.length - 1)].fen;
+   }
+
+   res.setHeader('Content-Type', 'application/json');
+   res.status(200).send(currentFen);
+});
 
 var count = 0;
 var socket = 0;
@@ -72,11 +108,17 @@ listener.sockets.on('connection', function(s){
    {
       totalCount = count;
    }
-   socket.emit('users', {'count': totalCount});
-   console.log ("coutn connected:" + count);
+   
+   //socket.emit('users', {'count': totalCount});
+   //socket.broadcast.emit('users', {'count': totalCount});
+   if (count % 50 == 0) {  
+      console.log ("count connected:" + count);
+   }
+   
 
    socket.on('disconnect', function(){
        count--;
+       //socket.broadcast.emit('users', {'count': totalCount});
    });
 
    //recieve client data
@@ -99,6 +141,7 @@ function broadCastData(socket, message, file, currData, prevData)
       console.log ("File "+ file + " did not change:");
       return;
    }
+   socket.emit(message, currData); 
    socket.broadcast.emit(message, currData); 
 }
 
@@ -168,6 +211,13 @@ function getDeltaPgn(pgnX)
    return pgn;
 }
 
+
+var prevData = 0;
+var prevliveData = 0;
+var prevevalData = 0;
+var prevliveData1 = 0;
+var prevevalData1 = 0;
+
 watcher.on('change', (path, stats) => {
    console.log ("path changed:" + path + ",count is " + count);
    if (!socket)
@@ -183,15 +233,20 @@ watcher.on('change', (path, stats) => {
          broadCastData(socket, 'liveeval', path, data, prevliveData);
          prevliveData = data;
       }
+      if (path.match(/data1.json/))
+      {
+         broadCastData(socket, 'liveeval1', path, data, prevliveData1);
+         prevliveData1 = data;
+      }
       if (path.match(/liveeval.json/))
       {
          broadCastData(socket, 'livechart', path, data, prevevalData);
          prevevalData = data;
       }
-      if (path.match(/manual.json/))
+      if (path.match(/liveeval1.json/))
       {
-         broadCastData(socket, 'manual', path, data, prevmanData);
-         prevmanData = data;
+         broadCastData(socket, 'livechart1', path, data, prevevalData1);
+         prevevalData1 = data;
       }
       if (path.match(/live.json/))
       {
@@ -202,17 +257,16 @@ watcher.on('change', (path, stats) => {
          {
             delta = getDeltaPgn(data, prevData);
             //broadCastData(socket, 'pgn', path, delta, delta);
-            socket.emit('pgn', delta); 
-            socket.broadcast.emit('pgn', delta); 
+            socket.broadcast.emit('pgn', delta);
+            socket.emit('pgn', delta);
+            socket.broadcast.emit('users', {'count': totalCount}); 
+            socket.emit('users', {'count': totalCount}); 
+            //socket.broadcast.emit('pgn', delta);
+             
             console.log ("Sent pgn data:" + JSON.stringify(delta).length + ",orig" + JSON.stringify(data).length + ",changed" + delta.gameChanged);
             lastPgnTime = Date.now(); 
          }
          prevData = data;
-         if (totalCount != prevtotalCount)
-         {
-            socket.broadcast.emit('users', {'count': totalCount});
-            prevtotalCount = totalCount;
-         }
       }
       if (path.match(/crosstable/))
       {
