@@ -2822,7 +2822,7 @@ function getSeededName(name)
 {
    var engineName = '';
    _.each(teamsx, function(engine, key) {
-      if (engine[0][0] == name)
+      if (getShortName(engine[0][0]) == getShortName(name))
       {
          //engineName = "S#" + engine[0][1] + " " + engine[0][0];
          engineName = engine[0][0];
@@ -2833,7 +2833,7 @@ function getSeededName(name)
          }
          return false;
       }
-      else if (engine[1][0] == name)
+      else if (getShortName(engine[1][0]) == getShortName(name))
       {
          //engineName = "S#" + engine[1][1] + " " + engine[1][0];
          engineName = engine[1][0];
@@ -3562,7 +3562,7 @@ function drawBracket1()
                   else if (lead == 0)
                   {
                      appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
-                                 '<div class="bracket-score red"> <a> (' + scoreL + ')</a> </div>'
+                                 '<div class="bracket-score red small"> <a> (' + scoreL + ')</a> </div>'
                      $(container).parent().addClass('bracket-name-red');
                   }
                   else if (lead == 1)

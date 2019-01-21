@@ -329,7 +329,12 @@ canvas {
    font-family: monospace; 
    font-size: large;
    text-align: left;
-    
+}
+
+.small
+{
+   font-family: monospace;
+   font-size: small;
 }
 
 .copied {
@@ -397,7 +402,7 @@ canvas {
 
 .green
 {
-   color: '#39FF14'
+   color: '#39FF14';
 }
 
 .labelbracket
