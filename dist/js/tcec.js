@@ -2280,6 +2280,7 @@ function fixOrder()
       tiePoints = tiePoints + engine.Wins/(100 * 100);
       tiePoints = tiePoints + engine.WinAsBlack/(100 * 100 * 100);
       tiePoints = tiePoints + engine.Neustadtl/(100 * 100 * 1000);
+      tiePoints = tiePoints + engine.Rating/(100 * 100 * 1000 * 1000);
       plog ("tiePoints is :" + tiePoints, 0);
       arr[count] = engine.Score + tiePoints/10;
       count = count + 1;
@@ -2293,6 +2294,7 @@ function fixOrder()
       engine.Rank = ranks[count];
       count = count + 1;
       crosstableData.Order[engine.Rank-1] = key;
+      plog ("XXX: adding key to order:" + key, 0);
       });
 }
 
@@ -2348,6 +2350,7 @@ async function updateCrosstableData(data)
    fixOrder();
 
    _.each(crosstableData.Order, function(engine, key) {
+      plog ("ADding entry:" + engine, 0);
       engineDetails = _.get(crosstableData.Table, engine);
       var getEngRes = getEngRecSched(oldSchedData, engine);
       wins = (getEngRes.WinAsWhite + getEngRes.WinAsBlack);
@@ -2716,7 +2719,8 @@ function updateScheduleData(scdatainput)
 function updateSchedule() 
 {
     axios.get('schedule.json')
-    .then(function (response) {
+    .then(function (response) 
+    {
       updateScheduleData(response.data);
       updateH2hData(response.data);
     })
