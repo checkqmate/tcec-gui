@@ -216,7 +216,10 @@ var CSS = {
   sparePiecesBottom: 'spare-pieces-bottom-ae20f',
   sparePiecesTop: 'spare-pieces-top-4028b',
   square: 'square-55d63',
-  white: 'white-1e1d7'
+  white: 'white-1e1d7',
+  overlay: 'overlay-4fc5e',
+  overlayArrow: 'overlay-arrow-9d6ed',
+  overlayGroup: 'overlay-group-672a1'
 };
 
 //------------------------------------------------------------------------------
@@ -228,7 +231,8 @@ var containerEl,
   boardEl,
   draggedPieceEl,
   sparePiecesTopEl,
-  sparePiecesBottomEl;
+  sparePiecesBottomEl,
+  overlayEl;
 
 // constructor return object
 var widget = {};
@@ -255,6 +259,13 @@ var ANIMATION_HAPPENING = false,
 //------------------------------------------------------------------------------
 
 // http://tinyurl.com/3ttloxj
+function createId() {
+  return 'xxxx-xxxx-xxxx-xxxx-xxxx-xxxx-xxxx-xxxx'.replace(/x/g, function(c) {
+    var r = Math.random() * 16 | 0;
+    return r.toString(16);
+  });
+}
+
 function uuid() {
   return 'xxxx-xxxx-xxxx-xxxx-xxxx-xxxx-xxxx-xxxx'.replace(/x/g, function(c) {
     var r = Math.random() * 16 | 0;
@@ -554,6 +565,10 @@ function buildBoardContainer() {
       CSS.sparePiecesTop + '"></div>';
   }
 
+  if (cfg.overlay === true) {
+     html += '<svg class="' + CSS.overlay + '"></svg>';
+  }
+
   html += '<div class="' + CSS.board + '"></div>';
 
   if (cfg.sparePieces === true) {
@@ -565,6 +580,57 @@ function buildBoardContainer() {
 
   return html;
 }
+
+function createSvgEl(tag, attr) {
+  // jQuery seemingly can't handle namespaces or case-sensitive attributes,
+  // so we have to go old-skool.
+  var svgEl = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for(var key in attr) {
+    svgEl.setAttribute(key, attr[key]);
+  }
+  return $(svgEl);
+}
+
+function buildOverlay() {
+  if(cfg.hasOwnProperty("overlay") === true) {
+    var defsEl = createSvgEl("defs", {});
+    defsEl.append(
+      createSvgEl("marker", {
+        id: "arrowhead",
+        viewBox: "0 0 10 10",
+        refX: "0",
+        refY: "5",
+        markerUnits: "strokeWidth",
+        markerWidth: "3",
+        markerHeight: "2",
+        orient: "auto"
+      }).append(
+        createSvgEl("path", {
+          d: "M 0 0 L 5 5 L 0 10 Z"
+        })
+      ),
+      createSvgEl("marker", {
+        id: "bulb",
+        viewBox: "0 0 10 10",
+        refX: "5",
+        refY: "5",
+        markerUnits: "strokeWidth",
+        markerWidth: "3",
+        markerHeight: "2",
+        orient: "auto"
+      }).append(
+        createSvgEl("circle", {
+          cx: 5,
+          cy: 5,
+          r: 4
+        })
+      )
+    );
+    overlayEl.empty();
+    overlayEl.append(defsEl);
+  }
+};  
+
 
 /*
 var buildSquare = function(color, size, id) {
@@ -1309,6 +1375,57 @@ function stopDraggedPiece(location) {
 }
 
 //------------------------------------------------------------------------------
+// SVG Overlay
+//------------------------------------------------------------------------------
+
+/* 
+ * Construct an svg path string for an arrow drawn between two points.
+ */
+function computePath(s1, s2) {
+  function tristate(a,b) {
+    if(a < b) return -0.25;
+    if(a > b) return +0.25;
+    return 0;
+  }
+  
+  var start = { x: COLUMNS.indexOf(s1[0]), y: parseInt(s1[1], 10) -1 };
+  var end   = { x: COLUMNS.indexOf(s2[0]), y: parseInt(s2[1], 10) -1 };
+  
+  if(cfg.orientation == "white") {
+    start.y = 7 - start.y;
+    end.y   = 7 - end.y;
+  }
+  
+  var dist = { x: Math.abs(start.x - end.x), y: Math.abs(start.y - end.y) };
+  var corner;   // Point of the dog-leg for knight moves
+  var epsilon;  // To adjust the target coords to take account of the arrowhead.
+  
+  if(dist.x != 0 && dist.y != 0 && dist.x != dist.y) {
+    // Knight move; Calculate a corner point for the path, such that
+    // the path dog-legs first along the long side, then short.
+    if(dist.x > dist.y) {
+      corner  = {x: end.x, y: start.y};
+      epsilon = {x: 0, y: tristate(start.y, end.y) };
+    }
+    else {
+      corner  = {x: start.x, y: end.y};
+      epsilon = {x: tristate(start.x, end.x), y: 0 };
+    }
+  }
+  else {
+    epsilon = {x: tristate(start.x, end.x), y: tristate(start.y, end.y) };
+  }
+  
+  var path = ["M", SQUARE_SIZE * (start.x + 0.5), SQUARE_SIZE * (start.y + 0.5)];
+  if(corner !== undefined) {
+    path.push("L", SQUARE_SIZE * (corner.x + 0.5) , SQUARE_SIZE * (corner.y + 0.5));
+  } 
+  path.push("L", SQUARE_SIZE * (end.x + epsilon.x + 0.5), SQUARE_SIZE * (end.y + epsilon.y + 0.5));
+  
+  return path.join(" ");
+}
+
+//------------------------------------------------------------------------------
 // Public Methods
 //------------------------------------------------------------------------------
 
@@ -1456,6 +1573,9 @@ widget.resize = function() {
 
   // set board width
   boardEl.css('width', (SQUARE_SIZE * 8) + 'px');
+  overlayEl.css('width', (SQUARE_SIZE * 8) + 'px');
+  overlayEl.css('height', (SQUARE_SIZE * 8) + 'px');
+  overlayEl.css('padding', (BOARD_BORDER_SIZE) + 'px');
 
   // set drag piece size
   draggedPieceEl.css({
@@ -1477,6 +1597,83 @@ widget.resize = function() {
 widget.start = function(useAnimation) {
   widget.position('start', useAnimation);
 };
+
+widget.addArrowAnnotation = function(source, target, color, orientation) {
+  if(orientation == "black") {
+    source = reverseCoordinate(source);
+    target = reverseCoordinate(target);
+  }
+  if(cfg.overlay === true) {
+    var groupEl = overlayEl.find('> .square-' + source);
+    if(!groupEl.length) {
+      groupEl = createSvgEl("g", {
+        'class': CSS['overlayGroup'] + " square-" + source + " " + color
+      });
+      overlayEl.append(groupEl);
+    }
+    
+    var pathEl = overlayEl.find("> g.square-" + source + " > path.square-" + target);
+    if(!pathEl.length) {
+      console.log ("Came to arrow annotation:" + color);
+      var pathEl = createSvgEl("path", {
+        'class' :       CSS['overlayArrow'] + " square-" + target + " ",
+        'd':            computePath(source, target),
+        'stroke-width': (SQUARE_SIZE / 6)
+      });
+      groupEl.append(pathEl);
+    }
+  }
+}
+
+widget.removeArrowAnnotation = function(source, target) {
+  if(cfg.overlay === true) {
+    overlayEl.find(
+      '> g.square-' + source
+      + (target !== undefined ? ' > path.square-' + target : '')
+    ).remove();
+  }
+}
+
+widget.clearAnnotation = function() {
+  buildOverlay();
+}
+
+function reverseCoordinate(oldCoord)
+{
+  let newCoord = '';
+  let newRow = (Math.abs(8 - oldCoord.charAt(1)) + 1).toString();
+
+  switch(oldCoord.charAt(0).toLowerCase()) {
+    case 'a':
+      newCoord = 'h';
+      break;
+    case 'b':
+      newCoord = 'g';
+      break;
+    case 'c':
+      newCoord = 'f';
+      break;
+    case 'd':
+      newCoord = 'e';
+      break;
+    case 'e':
+      newCoord = 'd';
+      break;
+    case 'f':
+      newCoord = 'c';
+      break;
+    case 'g':
+      newCoord = 'b';
+      break;
+    case 'h':
+      newCoord = 'a';
+      break;
+  }
+
+  newCoord += newRow;
+
+  return newCoord;
+}
 
 //------------------------------------------------------------------------------
 // Browser Events
@@ -1684,7 +1881,10 @@ function initDom() {
 
   // build board and save it in memory
   containerEl.html(buildBoardContainer());
+  overlayEl = containerEl.find('.' + CSS.overlay);
   boardEl = containerEl.find('.' + CSS.board);
+
+  buildOverlay();
 
   if (cfg.sparePieces === true) {
     sparePiecesTopEl = containerEl.find('.' + CSS.sparePiecesTop);

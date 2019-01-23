@@ -1,39 +1,59 @@
 var evalChart;
 var timeChart;
 var speedChart;
+var nodesChart;
 var depthChart;
 var tbHitsChart;
+var engine2colorno = 0;
+var engine2color = '#FF0000';
+engine2color = '#66CC00';
+engine2color = '#A44BC0';
+var evalChartData = {};
+var engineColorArray = ['darkred', 'red', 'green', 'darkgreen', 'yellow', 'purple', 'orange'];
+var evalconstant = 10.0;
 
-var evalChartData = {
-  labels: [],
-  datasets: [{
-    label: 'White',
-    lineTension: 0,
-    borderColor: '#EFEFEF',
-    backgroundColor: '#EFEFEF',
-    fill: false,
-    data: [
-    ]
-  }, {
-    label: 'Black',
-    lineTension: 0,
-    borderColor: '#000000',
-    backgroundColor: '#000000',
-    fill: false,
-    data: [
-    ]
-  }, {
-    label: 'Live engine',
-    lineTension: 0,
-    borderColor: '#007bff',
-    backgroundColor: '#007bff',
-    
-    fill: false,
-    data: [
-    ]
-  }
-  ]
-};
+function setevalChartData()
+{
+   engine2color = engineColorArray[engine2colorno];
+   evalChartData = {
+     labels: [],
+     datasets: [{
+       label: 'White',
+       lineTension: 0,
+       borderColor: '#EFEFEF',
+       backgroundColor: '#EFEFEF',
+       fill: false,
+       data: [
+       ]
+     }, {
+       label: 'Black',
+       lineTension: 0,
+       borderColor: '#000000',
+       backgroundColor: '#000000',
+       fill: false,
+       data: [
+       ]
+     }, {
+       label: '176 Th',
+       lineTension: 0,
+       borderColor: '#007bff',
+       backgroundColor: '#007bff',
+       fill: false,
+       data: [
+       ]
+     }, {
+       label: '128 Core',
+       lineTension: 0,
+       borderColor: engine2color,
+       backgroundColor: engine2color,
+       fill: false,
+       data: [
+       ]
+     }
+     ]
+   };
+}
+setevalChartData();
 
 var timeChartData = {
   labels: [],
@@ -123,8 +143,32 @@ var tbHitsChartData = {
   }]
 };
 
+var nodesChartData = {
+  labels: [],
+  datasets: [{
+    label: 'White Engine Speeds',
+    lineTension: 0,
+    borderColor: '#EFEFEF',
+    backgroundColor: '#EFEFEF',
+    fill: false,
+    data: [
+    ],
+    yAxisID: 'y-axis-1',
+  }, {
+    label: 'Black Engine Speed',
+    lineTension: 0,
+    borderColor: '#000000',
+    backgroundColor: '#000000',
+    fill: false,
+    data: [
+    ],
+    yAxisID: 'y-axis-2'
+  }]
+};
 
-$(function() {
+function drawEval()
+{
+   setevalChartData();
 	evalChart = Chart.Line($('#eval-graph'), {
 	  data: evalChartData,
 	  options: {
@@ -154,7 +198,7 @@ $(function() {
 	            	if (typeof data.datasets[2].data[tooltipItem.index] != 'undefined') {
 	            		eval = _.union(eval, ['Live Eval: ' + data.datasets[2].data[tooltipItem.index].eval]);
 	            	}
-	                return eval;
+	               return eval;
 	            }
 	      } // end callbacks:
 	    },
@@ -174,7 +218,15 @@ $(function() {
 	    }
 	  }
 	});
+}
 
+$(function() {
+   drawEval();
+   initializeCharts();
+});
+
+function initializeCharts()
+{
 	timeChart = Chart.Line($('#time-graph'), {
 	  data: timeChartData,
 	  options: {
@@ -193,6 +245,90 @@ $(function() {
 	        display: true,
 	        position: 'left',
 	        id: 't-y-axis-1',
+	      }],
+	      xAxes: [{
+	      	ticks: {
+		        autoSkip: true,
+		        maxTicksLimit: 25
+		    }
+	      }]
+	    }
+	  }
+	});
+
+	nodesChart = Chart.Line($('#nodes-graph'), {
+	  data: nodesChartData,
+	  options: {
+	    responsive: true,
+	    hoverMode: 'index',
+	    stacked: false,
+	    legend: {
+	      display: false
+	    },
+	    title: {
+	      display: false
+	    },
+        tooltips: {
+	      callbacks: {
+	            label: function(tooltipItem, data) {
+				  	var nodes = parseInt(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].nodes);
+	                if (nodes >= 1000000000) {
+			  			nodes = Math.round (nodes / 100000000) / 10;
+				  		nodes += 'B'
+				  	} else {
+				  		nodes = Math.round (nodes / 100000) / 10;
+				  		nodes += 'M'
+				  	}
+				    return ' (' + nodes + ' nodes)';
+	            }
+	      } // end callbacks:
+	    },
+	    scales: {
+	      yAxes: [{
+	        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+	        display: true,
+	        position: 'left',
+	        id: 'y-axis-1',
+	        ticks: {
+			  callback: function(value, index, values) {
+			  	if (value >= (1000000*1000)) {
+			  		value = Math.round (value / (100000 * 1000)) / 10;
+			  		value += 'B';
+			  	} else if ((value >= (1000000*1))) {
+			  		value = Math.round (value / 100000) / 10;
+			  		value += 'M'
+			  	} else {
+			  		value = Math.round (value / 100) / 10;
+			  		value += 'K'
+			  	}
+			    return value;
+			  }
+			}
+	      }, {
+	        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+	        display: true,
+	        position: 'right',
+	        id: 'y-axis-2',
+
+	        // grid line settings
+	        gridLines: {
+	          drawOnChartArea: false, // only want the grid lines for one axis to show up
+	        },
+	        ticks: {
+			  callback: function(value, index, values) {
+			  	if (value >= 1000000*1000) {
+			  		value = Math.round (value / (100000 * 1000)) / 10;
+			  		value += 'B'
+			  	} else if ((value >= (1000000*1))) {
+			  		value = Math.round (value / 100000) / 10;
+			  		value += 'M'
+			  	} else {
+			  		value = Math.round (value / 100) / 10;
+			  		value += 'K'
+			  	}
+			    return value;
+			  }
+			}
 	      }],
 	      xAxes: [{
 	      	ticks: {
@@ -381,10 +517,11 @@ $(function() {
 	    }
 	  }
 	});
-});
+}
 
 function updateChartData()
 {
+   setevalChartData();
 	evalChart.data.labels = [];
 	evalChart.data.datasets[0].data = [];
 	evalChart.data.datasets[1].data = [];
@@ -396,6 +533,10 @@ function updateChartData()
 	speedChart.data.labels = [];
 	speedChart.data.datasets[0].data = [];
 	speedChart.data.datasets[1].data = [];
+
+	nodesChart.data.labels = [];
+	nodesChart.data.datasets[0].data = [];
+	nodesChart.data.datasets[1].data = [];
 
 	depthChart.data.labels = [];
 	depthChart.data.datasets[0].data = [];
@@ -410,13 +551,17 @@ function updateChartData()
 
 	whiteEval = [];
 	blackEval = [];
-	liveEval = [];
+	liveEval1 = [];
+	liveEval2 = [];
 
 	whiteTime = [];
 	blackTime = [];
 
 	whiteSpeed = [];
 	blackSpeed = [];
+
+	whiteNodes = [];
+	blackNodes = [];
 
 	whiteDepth = [];
 	blackDepth = [];
@@ -445,32 +590,28 @@ function updateChartData()
 				//depth = move.sd;
 			}
 
-         //arun: cap moves at 6.5
+         //arun: cap moves at evalconstant
          move.cwv = move.wv;
          if (!isNaN(move.wv)) 
          {
-            move.cwv = move.wv;
-            if (move.wv > 6.5) 
+            if (move.wv > evalconstant) 
             {
-               move.cwv = 6.5;
+               move.cwv = evalconstant;
             } 
-            else if (move.wv < -6.5) 
+            else if (move.wv < -evalconstant) 
             {
-               move.cwv = -6.5;
+               move.cwv = -evalconstant;
             }
          } 
          else 
          {
-            if (move.wv != undefined)
+            if (move.wv && move.wv.substring(0,1) == '-') 
             {
-               if (move.wv.substring(0,1) == '-') 
-               {
-                  move.cwv = -6.5;
-               } 
-               else 
-               {
-                  move.cwv = 6.5;
-               }
+               move.cwv = -evalconstant;
+            } 
+            else 
+            {
+               move.cwv = evalconstant;
             }
          }
          eval = [
@@ -515,6 +656,15 @@ function updateChartData()
 				}
 			];
 
+			nodes = [
+				{
+					'x': moveNumber,
+					'y': move.n,
+					'nodes': move.n,
+					'ply': plyNum
+				}
+			];
+
 			if (key % 2 == 0) {
 				labels = _.union(labels, [moveNumber]);
 				// evalLabels = _.union(evalLabels, [moveNumber]);
@@ -523,14 +673,22 @@ function updateChartData()
 				// whiteEval = _.union(whiteEval, [{'x': moveNumber + 0.5, 'y': move.wv, 'eval': evaluation}]);
 				whiteTime = _.union(whiteTime, time);
 				whiteSpeed = _.union(whiteSpeed, speed);
+				whiteNodes = _.union(whiteNodes, nodes);
 				whiteDepth = _.union(whiteDepth, depth);
 				whiteTBHits = _.union(whiteTBHits, tbHits);
 
-				evalObject = getLiveEval(key, moveNumber, false);
+				evalObject = getLiveEval(key, moveNumber, false, 1);
 
 				if (evalObject != -1) {
-					liveEval = _.union(liveEval, evalObject);
+					liveEval1 = _.union(liveEval1, evalObject);
 				}
+            evalObject = -1;
+				evalObject = getLiveEval(key, moveNumber, false, 2);
+
+				if (evalObject != -1) {
+					liveEval2 = _.union(liveEval2, evalObject);
+				}
+
 
 			} else {
 				// evalLabels = _.union(evalLabels, [moveNumber + 0.5]);
@@ -539,6 +697,7 @@ function updateChartData()
 				// blackEval = _.union(blackEval, [{'x': moveNumber + 0.5, 'y': move.wv, 'eval': evaluation}]);
 				blackTime = _.union(blackTime, time);
 				blackSpeed = _.union(blackSpeed, speed);
+				blackNodes = _.union(blackNodes, nodes);
 				blackDepth = _.union(blackDepth, depth);
 				blackTBHits = _.union(blackTBHits, tbHits);
 
@@ -554,7 +713,22 @@ function updateChartData()
 	evalChart.data.labels = labels;
 	evalChart.data.datasets[0].data = whiteEval;
 	evalChart.data.datasets[1].data = blackEval;
-	evalChart.data.datasets[2].data = liveEval;
+   if (showLivEng1)
+   {
+	   evalChart.data.datasets[2].data = liveEval1;
+   }
+   else
+   {
+      evalChart.data.datasets[2].data = [];
+   }
+   if (showLivEng2)
+   {
+	   evalChart.data.datasets[3].data = liveEval2;
+   }
+   else
+   {
+      evalChart.data.datasets[3].data = [];
+   }
 
 	timeChart.data.labels = labels;
 	timeChart.data.datasets[0].data = whiteTime;
@@ -563,6 +737,10 @@ function updateChartData()
 	speedChart.data.labels = labels;
 	speedChart.data.datasets[0].data = whiteSpeed;
 	speedChart.data.datasets[1].data = blackSpeed;
+
+	nodesChart.data.labels = labels;
+	nodesChart.data.datasets[0].data = whiteNodes;
+	nodesChart.data.datasets[1].data = blackNodes;
 
 	depthChart.data.labels = labels;
 	depthChart.data.datasets[0].data = whiteDepth;
@@ -575,31 +753,42 @@ function updateChartData()
     evalChart.update();
     timeChart.update();
     speedChart.update();
+    nodesChart.update();
     depthChart.update();
     tbHitsChart.update();
 }
 
-function getLiveEval(key, moveNumber, isBlack)
+function getLiveEval(key, moveNumber, isBlack, contno)
 {
 	key++;
+   var engineEval = null;
 
-	evalObject = _.find(liveEngineEval, function(ev) {
+   if (contno == 1)
+   {
+      engineEval = liveEngineEval1;
+   }
+   else
+   {
+      engineEval = liveEngineEval2;
+   }
+
+	evalObject = _.find(engineEval, function(ev) {
 		return ev.ply == key;
 	});
 
 	if (_.isObject(evalObject)) {
 		eval = evalObject.eval;
 		if (!isNaN(evalObject.eval)) {
-	        if (evalObject.eval > 6.5) {
-	        	evalObject.eval = 6.5;
-	        } else if (evalObject.eval < -6.5) {
-	        	evalObject.eval = -6.5;
+	        if (evalObject.eval > evalconstant) {
+	        	evalObject.eval = evalconstant;
+	        } else if (evalObject.eval < -evalconstant) {
+	        	evalObject.eval = -evalconstant;
 	        }
 	    } else {
 	    	if (evalObject.eval.substring(0,1) == '-') {
-	    		evalObject.eval = -6.5;
+	    		evalObject.eval = -evalconstant;
 	    	} else {
-	    		evalObject.eval = 6.5;
+	    		evalObject.eval = evalconstant;
 	    	}
 	    }
 
