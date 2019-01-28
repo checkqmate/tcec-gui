@@ -100,25 +100,48 @@ app.get('/api/currentPosition', function (req, res) {
 var count = 0;
 var socket = 0;
 var totalCount = 0;
+var socketArray = [];
+
+function arrayRemove(arr, value) {
+
+   return arr.filter(function(ele){
+       return ele != value;
+   });
+
+}
 
 listener.sockets.on('connection', function(s){
    socket = s;
-   count ++;
-   if (totalCount < count)
-   {
-      totalCount = count;
-   }
-   
-   //socket.emit('users', {'count': totalCount});
-   //socket.broadcast.emit('users', {'count': totalCount});
-   if (count % 50 == 0) {  
-      console.log ("count connected:" + count);
-   }
-   
+   var socketId = socket.id;
+   var clientIp = socket.request.connection.remoteAddress;
+   count = socketArray.length;
 
-   socket.on('disconnect', function(){
-       count--;
-       //socket.broadcast.emit('users', {'count': totalCount});
+   if (socketArray.indexOf(clientIp) === -1)
+   {
+      socketArray.push(clientIp);
+   }
+
+   if (socketArray.length < 600)
+   {
+      if (socketArray.length % 100 == 0)
+      {
+         console.log ("count connected:" + socketArray.length);
+         socket.broadcast.emit('users', {'count': socketArray.length});
+      }
+   }
+   else
+   {
+      if (socketArray.length % 10 == 0)
+      {
+         console.log ("count connected:" + socketArray.length);
+         socket.broadcast.emit('users', {'count': socketArray.length});
+      }
+   }
+
+   socket.on('disconnect', function()
+   {
+       socketArray = arrayRemove(socketArray, clientIp);
+       socket.broadcast.emit('users', {'count': socketArray.length});
    });
 
    //recieve client data
@@ -217,6 +240,8 @@ var prevliveData = 0;
 var prevevalData = 0;
 var prevliveData1 = 0;
 var prevevalData1 = 0;
+var prevCrossData = 0;
+var prevSchedData = 0;
 
 watcher.on('change', (path, stats) => {
    console.log ("path changed:" + path + ",count is " + count);
@@ -259,10 +284,6 @@ watcher.on('change', (path, stats) => {
             //broadCastData(socket, 'pgn', path, delta, delta);
             socket.broadcast.emit('pgn', delta);
             socket.emit('pgn', delta);
-            socket.broadcast.emit('users', {'count': totalCount}); 
-            socket.emit('users', {'count': totalCount}); 
-            //socket.broadcast.emit('pgn', delta);
-             
             console.log ("Sent pgn data:" + JSON.stringify(delta).length + ",orig" + JSON.stringify(data).length + ",changed" + delta.gameChanged);
             lastPgnTime = Date.now(); 
          }
@@ -270,11 +291,13 @@ watcher.on('change', (path, stats) => {
       }
       if (path.match(/crosstable/))
       {
-         socket.broadcast.emit('crosstable', data);
+         broadCastData(socket, 'crosstable', path, data, prevCrossData);
+         prevCrossData = data;
       }
       if (path.match(/schedule/))
       {
-         socket.broadcast.emit('schedule', data);
+         broadCastData(socket, 'schedule', path, data, prevSchedData);
+         prevSchedData = data;
       }
    }
    catch (error) 

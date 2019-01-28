@@ -3,6 +3,7 @@ var timeChart;
 var speedChart;
 var depthChart;
 var tbHitsChart;
+var evalLimit = 10;
 
 var evalChartData = {
   labels: [],
@@ -445,18 +446,18 @@ function updateChartData()
 				//depth = move.sd;
 			}
 
-         //arun: cap moves at 6.5
+         //arun: cap moves at evalLimit
          move.cwv = move.wv;
          if (!isNaN(move.wv)) 
          {
             move.cwv = move.wv;
-            if (move.wv > 6.5) 
+            if (move.wv > evalLimit) 
             {
-               move.cwv = 6.5;
+               move.cwv = evalLimit;
             } 
-            else if (move.wv < -6.5) 
+            else if (move.wv < -evalLimit) 
             {
-               move.cwv = -6.5;
+               move.cwv = -evalLimit;
             }
          } 
          else 
@@ -465,11 +466,11 @@ function updateChartData()
             {
                if (move.wv.substring(0,1) == '-') 
                {
-                  move.cwv = -6.5;
+                  move.cwv = -evalLimit;
                } 
                else 
                {
-                  move.cwv = 6.5;
+                  move.cwv = evalLimit;
                }
             }
          }
@@ -590,16 +591,16 @@ function getLiveEval(key, moveNumber, isBlack)
 	if (_.isObject(evalObject)) {
 		eval = evalObject.eval;
 		if (!isNaN(evalObject.eval)) {
-	        if (evalObject.eval > 6.5) {
-	        	evalObject.eval = 6.5;
-	        } else if (evalObject.eval < -6.5) {
-	        	evalObject.eval = -6.5;
+	        if (evalObject.eval > evalLimit) {
+	        	evalObject.eval = evalLimit;
+	        } else if (evalObject.eval < -evalLimit) {
+	        	evalObject.eval = -evalLimit;
 	        }
 	    } else {
 	    	if (evalObject.eval.substring(0,1) == '-') {
-	    		evalObject.eval = -6.5;
+	    		evalObject.eval = -evalLimit;
 	    	} else {
-	    		evalObject.eval = 6.5;
+	    		evalObject.eval = evalLimit;
 	    	}
 	    }
 

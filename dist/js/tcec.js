@@ -52,6 +52,7 @@ var eventCrossTableInitial = 0;
 var currentMatch = 0;
 var liveEngineEval = [];
 var livePVHist = 0;
+var gameDiff = 0;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -277,7 +278,7 @@ function setUsers(data)
 {
    userCount = data.count;
    lastGame = data.gamesdone;
-   plog ("Setting viewers to userCount:" + userCount, 0);
+   plog ("Setting viewers to userCount:" + userCount, 1);
    try
    {
       $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: userCount});
@@ -557,7 +558,7 @@ function setPgn(pgn)
   pgn.Headers.Roundx = gameNox;
   if (pgn.Headers.Event)
   {
-     var theMatch = pgn.Headers.Event.match(/TCEC Cup - Round .* - Match (.*)/);
+     var theMatch = pgn.Headers.Event.match(/TCEC Cup 2 - Round .* - Match (.*)/);
      if (theMatch)
      {
         currentMatch = parseInt(theMatch[1]);
@@ -1336,7 +1337,7 @@ function openCrossOrig(gamen)
    {
       gamen += getPrevGames(currentMatch);
    }
-   var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=" + div + "&ga=" + gamen;
+   var link = "http://legacy-tcec.chessdom.com/archive.php?se=141&di=" + div + "&ga=" + gamen;
    window.open(link,'_blank');
 }
 
@@ -1344,7 +1345,7 @@ function openCross(gamen, value)
 {
    var round = getRound(value);
    var div = round + 1;
-   var link = "http://legacy-tcec.chessdom.com/archive.php?se=131&di=" + div + "&ga=" + gamen;
+   var link = "http://legacy-tcec.chessdom.com/archive.php?se=141&di=" + div + "&ga=" + gamen;
    window.open(link,'_blank');
 }
 
@@ -1598,6 +1599,31 @@ function updateCrosstable()
    });
 }
 
+function getStartTimeData(data)
+{
+   var prevDate = 0;
+   var momentDate = 0;
+   var diff = 0;
+   var timezoneDiff = moment().utcOffset() * 60 * 1000 - 3600 * 1000;
+   plog ("Came to updateScheduleData:", 0);
+
+   _.each(data, function(engine, key)
+   {
+      engine.Gamesort = engine.Game;
+      if (engine.Start)
+      {
+         momentDate = moment(engine.Start, 'HH:mm:ss on YYYY.MM.DD');
+         if (prevDate)
+         {
+            diff = diff + momentDate.diff(prevDate);
+            gameDiff = diff/(engine.Game-1);
+         }
+         prevDate = momentDate;
+      }
+   });
+   plog ("Time diff is :" + gameDiff, 0);
+}
+
 function updateScheduleData(data)
 {
    var prevDate = 0;
@@ -1605,6 +1631,7 @@ function updateScheduleData(data)
    var diff = 0;
    var gameDiff = 0;
    var timezoneDiff = moment().utcOffset() * 60 * 1000 - 3600 * 1000;
+   plog ("Came to updateScheduleData:", 0);
 
    _.each(data, function(engine, key)
    {
@@ -1623,6 +1650,7 @@ function updateScheduleData(data)
       }
       else
       {
+         plog ("gameDiff: " + gameDiff, 0);
          if (gameDiff)
          {
             prevDate.add(gameDiff + timezoneDiff);
@@ -1640,6 +1668,18 @@ function updateScheduleData(data)
    var options = $('#schedule').bootstrapTable('getOptions');
    pageNum = parseInt(gamesDone/options.pageSize) + 1;
    $('#schedule').bootstrapTable('selectPage', pageNum);
+}
+
+function getStartTime()
+{
+   axios.get('schedule.json?no-cache' + (new Date()).getTime())
+    .then(function (response) {
+      getStartTimeData(response.data);
+    })
+    .catch(function (error) {
+      // handle error
+      plog(error);
+    });
 }
 
 function updateSchedule()
@@ -1814,6 +1854,7 @@ function eventCrosstableWrap()
 function updateTablesData(data)
 {
    plog("Came to updateTablesdata", 0);
+   getStartTime();
    try
    {
       updateCrosstableData(data);
@@ -1844,6 +1885,7 @@ function updateTablesData(data)
 function updateTables()
 {
    plog("Came to updateTables", 0);
+   getStartTime();
    try
    {
       updateCrosstable();
@@ -2765,7 +2807,7 @@ function getFileNames()
    for (var i = 1 ; i <= 34 ; i++)
    {
       var round = getRound (i) + 1;
-      filenames [i] = "archive/TCEC_Cup_-_Round_" + round + "_-_Match_" + i + "_crosstable.json";
+      filenames [i] = "json/TCEC_Cup_2_-_Round_" + round + "_-_Match_" + i + "_crosstable.json";
    }
 }
 
@@ -2822,7 +2864,7 @@ function getSeededName(name)
 {
    var engineName = '';
    _.each(teamsx, function(engine, key) {
-      if (getShortName(engine[0][0]) == getShortName(name))
+      if (getShortName(engine[0][0]).toUpperCase() == getShortName(name).toUpperCase())
       {
          //engineName = "S#" + engine[0][1] + " " + engine[0][0];
          engineName = engine[0][0];
@@ -2833,7 +2875,7 @@ function getSeededName(name)
          }
          return false;
       }
-      else if (getShortName(engine[1][0]) == getShortName(name))
+      else if (getShortName(engine[1][0]).toUpperCase() == getShortName(name).toUpperCase())
       {
          //engineName = "S#" + engine[1][1] + " " + engine[1][0];
          engineName = engine[1][0];
@@ -2894,14 +2936,9 @@ function getDateRound()
          }
          else
          {
-            if (y%2 == 1)
-            {
-               roundDate[x] = getCurrDate(startDateR1, 720 * (parseInt(y/2)));
-            }
-            else
-            {
-               roundDate[x] = getCurrDate(startDateR2, 720 * (parseInt((y-1)/2)));
-            }
+            var gameDiffL = gameDiff * 8 / (60 * 1000);
+            //gameDiffL = gameDiffL/1.5;
+            roundDate[x] = getCurrDate(startDateR1, gameDiffL * (x/2));
          }
       }
    }
@@ -3050,7 +3087,7 @@ function eventCrosstableMain(ii, filename)
    {
       updateCrosstableDataNew(ii, r.data);
       tablesLoaded[ii] = 1;
-      plog ("after trying to read file " + filename);
+      //plog ("after trying to read file " + filename, 0);
    })
    .catch(function (error)
    {
@@ -3398,6 +3435,18 @@ function formatterEvent(value, row, index, field) {
   return retStr;
 }
 
+function getNoSeedName(name)
+{
+   if (name)
+   {
+      var theMatch = name.match(/#(.*?) (.*)/)
+      if (theMatch)
+      {
+         return (getShortName(theMatch[2]).toUpperCase());
+      }
+   }
+}
+
 function drawBracket()
 {
    roundNo = 2;
@@ -3435,15 +3484,21 @@ function drawBracket()
           case "entry-complete":
             var roundM = getArrayIndexRound(ii);
             var index = -1;
-            if (roundResults[localRound][0].name == data.name)
+            if (roundResults[localRound][0].name)
             {
-               index = 0;
+               if (getShortName(roundResults[localRound][0].name).toUpperCase() == getNoSeedName(data.name))
+               {
+                  index = 0;
+               }
             }
-            if (roundResults[localRound][1].name == data.name)
+            if (roundResults[localRound][1].name)
             {
-               index = 1;
+               if (getShortName(roundResults[localRound][1].name).toUpperCase() == getNoSeedName(data.name))
+               {
+                  index = 1;
+               }
             }
-            plog ("Round is " + round + ",localround:" + localRound + ",data.name:" + data.name + ", match#:" + ii, 1);
+            plog ("Round is " + round + ",localround:" + localRound + ",data.name:" + data.name + ", match#:" + ii + ",index:" + index, 1);
             plog ("RoundM is " + roundM + ",score:" + bigData.results[0][round][roundM][index] + ", name:" + roundResults[localRound][0].name, 1);
             plog ("RoundM is " + roundM + ",score:" + bigData.results[0][round][roundM][index] + ", name:" + roundResults[localRound][1].name, 1);
 
@@ -3458,7 +3513,7 @@ function drawBracket()
                   roundResults[localRound][0] = roundResults[localRound][1];
                   roundResults[localRound][1] = temp;
                   isChanged = round;
-                  plog ("Swappting for Round is " + round + ",data.name:" + data.name + ", match#:" + ii, 1);
+                  plog ("Swappting for Round is " + round + ",data.name:" + data.name + ", match#:" + ii, 0);
                }
             }
             return;
@@ -3562,7 +3617,7 @@ function drawBracket1()
                   else if (lead == 0)
                   {
                      appendStr = '<div class="bracket-name"> <a> ' + data.name + '</a> </div>' +
-                                 '<div class="bracket-score red small"> <a> (' + scoreL + ')</a> </div>'
+                                 '<div class="bracket-score red "> <a> (' + scoreL + ')</a> </div>'
                      $(container).parent().addClass('bracket-name-red');
                   }
                   else if (lead == 1)

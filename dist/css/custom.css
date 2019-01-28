@@ -97,11 +97,11 @@ body {
    margin-bottom: 10px;
 }
 
-.smallfont
-{
-   font-size: small;
-   text-align: center;
-}
+.smallfont                                                                                                                                                                                            
+{                                                                                                                                                                                                     
+   font-size: small;                                                                                                                                                                                  
+   text-align: center;                                                                                                                                                                                
+}     
 
 #crosstable th,
 #standtable th,
@@ -329,12 +329,6 @@ canvas {
    font-family: monospace; 
    font-size: large;
    text-align: left;
-}
-
-.small
-{
-   font-family: monospace;
-   font-size: small;
 }
 
 .copied {
