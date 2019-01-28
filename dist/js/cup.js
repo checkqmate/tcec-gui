@@ -37,11 +37,11 @@ var roundDateMan = [
 0, /* 34 */
 ];
 
-var startDateR1 = '12:30:00 on 2019.01.21';
-var startDateR2 = '18:00:00 on 2019.01.21';
+var startDateR1 = '17:00:00 on 2019.01.21';
+var startDateR2 = 0;
 var roundNo = 2;
 var teamsx = 
- [[["Stockfish ", 1], ["RodentIII ", 32]],
+ [[["Stockfish ", 1], ["Rodent III ", 32]],
  [["Booot ", 16], ["Nirvana ", 17]],
  [["Fizbo ", 9], ["rofChade ", 24]],
  [["KomodoMCTS ", 8], ["Nemorino ",25]],
@@ -49,7 +49,7 @@ var teamsx =
  [["Fritz ", 13], ["Texel ", 20]],
  [["Jonny ", 12], ["Arasan ", 21]],
  [["Fire ", 5], ["Pirarucu ", 28]],
- [["Lc0 ", 2], ["Tucano ", 31]],
+ [["LcZero ", 2], ["Tucano ", 31]],
  [["Xiphos ", 15], ["ChessBrainVB ", 18]],
  [["Chiron ", 10], ["Pedone ", 23]],
  [["Andscacs ", 7], ["Hannibal ", 26]],
