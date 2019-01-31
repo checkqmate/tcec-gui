@@ -1452,6 +1452,7 @@ function updateCrosstableData(data)
      gameNox = engineDetails.Games + 1;
 
      var scoreEntry = {"name": engine, "score": engineDetails.Score};
+     plog ("engine,:" + engine + ",score:" + engineDetails.Score, 0);
      var entry = {
        rank: engineDetails.Rank,
        name: engine,
@@ -3087,7 +3088,7 @@ function eventCrosstableMain(ii, filename)
    {
       updateCrosstableDataNew(ii, r.data);
       tablesLoaded[ii] = 1;
-      //plog ("after trying to read file " + filename, 0);
+      plog ("after trying to read file " + filename, 1);
    })
    .catch(function (error)
    {

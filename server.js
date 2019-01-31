@@ -110,38 +110,68 @@ function arrayRemove(arr, value) {
 
 }
 
+function showDuplicates(names)
+{
+   var uniq = names
+   .map((name) => {
+     return {count: 1, name: name}
+   })
+   .reduce((a, b) => {
+     a[b.name] = (a[b.name] || 0) + b.count
+     return a
+   }, {})
+   
+   var duplicates = Object.keys(uniq).filter((a) => uniq[a] > 1)
+   
+   console.log(duplicates) // [ 'Nancy' ]
+}
+
 listener.sockets.on('connection', function(s){
    socket = s;
    var socketId = socket.id;
    var clientIp = socket.request.connection.remoteAddress;
    count = socketArray.length;
-
    if (socketArray.indexOf(clientIp) === -1)
    {
       socketArray.push(clientIp);
-   }
-
-   if (socketArray.length < 600)
-   {
-      if (socketArray.length % 100 == 0)
+      if (socketArray.length < 600)
       {
-         console.log ("count connected:" + socketArray.length);
-         socket.broadcast.emit('users', {'count': socketArray.length});
+         if (socketArray.length % 100 == 0)
+         {
+            console.log ("count connected:" + socketArray.length);
+            socket.broadcast.emit('users', {'count': socketArray.length});
+         }
+         else
+         {
+            socket.emit('users', {'count': socketArray.length});
+         }
+      }
+      else
+      {
+         if (socketArray.length % 10 == 0)
+         {
+            console.log ("count connected:" + socketArray.length);
+            socket.broadcast.emit('users', {'count': socketArray.length});
+         }
+         else
+         {
+            socket.emit('users', {'count': socketArray.length});
+         }
       }
    }
    else
    {
-      if (socketArray.length % 10 == 0)
-      {
-         console.log ("count connected:" + socketArray.length);
-         socket.broadcast.emit('users', {'count': socketArray.length});
-      }
+      console.log ("duplicate Connected socket:" + clientIp);
    }
+   //showDuplicates(socketArray);
 
    socket.on('disconnect', function()
    {
        socketArray = arrayRemove(socketArray, clientIp);
-       socket.broadcast.emit('users', {'count': socketArray.length});
+       if (socketArray.length % 10 == 0)
+       { 
+          socket.broadcast.emit('users', {'count': socketArray.length});
+       }
    });
 
    //recieve client data
@@ -152,7 +182,7 @@ listener.sockets.on('connection', function(s){
 
 });
 
-var liveChartInterval = setInterval(function() { process.send({'workers': count}) }, 15000);
+//var liveChartInterval = setInterval(function() { process.send({'workers': count}) }, 15000);
 
 function broadCastData(socket, message, file, currData, prevData)
 {
@@ -190,7 +220,7 @@ var numMovesToSend = 4;
 function getDeltaPgn(pgnX)
 {
    var pgn = {};
-   var count = 0;
+   var countPgn = 0;
    console.log ("came here");
 
    if (prevData && JSON.stringify(prevData.Headers) != JSON.stringify(pgnX.Headers))
@@ -217,7 +247,7 @@ function getDeltaPgn(pgnX)
    pgn.Moves = [];
    _.eachRight(pgnX.Moves, function(move, key) {
       pgn.Moves[key] = {};
-      if (count <= numMovesToSend)
+      if (countPgn <= numMovesToSend)
       {
          pgn.Moves[key]= pgnX.Moves[key];
          pgn.Moves[key].Moveno = key + 1;
@@ -228,7 +258,7 @@ function getDeltaPgn(pgnX)
       {
          pgn.Moves[key].Moveno = 0;
       }
-      count = count + 1;
+       countPgn = countPgn + 1;
    });
 
    return pgn;
