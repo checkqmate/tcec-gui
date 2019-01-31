@@ -1,0 +1,7 @@
+#!/bin/bash
+
+COUNTER=1
+while [  $COUNTER -gt 0 ]; do
+  ./copypgnevent
+  sleep 60
+done

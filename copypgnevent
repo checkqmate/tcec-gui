@@ -1,0 +1,7 @@
+#!/usr/bin/expect -f
+
+spawn rsync -av json/event.pgn webadmin@legacy-tcec.chessdom.com:/var/www/tcec/live
+expect "assword:"
+send "B1gSecret4FTP\r"
+interact
+
