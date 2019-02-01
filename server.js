@@ -100,25 +100,78 @@ app.get('/api/currentPosition', function (req, res) {
 var count = 0;
 var socket = 0;
 var totalCount = 0;
+var socketArray = [];
+
+function arrayRemove(arr, value) {
+
+   return arr.filter(function(ele){
+       return ele != value;
+   });
+
+}
+
+function showDuplicates(names)
+{
+   var uniq = names
+   .map((name) => {
+     return {count: 1, name: name}
+   })
+   .reduce((a, b) => {
+     a[b.name] = (a[b.name] || 0) + b.count
+     return a
+   }, {})
+   
+   var duplicates = Object.keys(uniq).filter((a) => uniq[a] > 1)
+   
+   console.log(duplicates) // [ 'Nancy' ]
+}
 
 listener.sockets.on('connection', function(s){
    socket = s;
-   count ++;
-   if (totalCount < count)
+   var socketId = socket.id;
+   var clientIp = socket.request.connection.remoteAddress;
+   count = socketArray.length;
+   if (socketArray.indexOf(clientIp) === -1)
    {
-      totalCount = count;
+      socketArray.push(clientIp);
+      if (socketArray.length < 600)
+      {
+         if (socketArray.length % 100 == 0)
+         {
+            console.log ("count connected:" + socketArray.length);
+            socket.broadcast.emit('users', {'count': socketArray.length});
+         }
+         else
+         {
+            socket.emit('users', {'count': socketArray.length});
+         }
+      }
+      else
+      {
+         if (socketArray.length % 10 == 0)
+         {
+            console.log ("count connected:" + socketArray.length);
+            socket.broadcast.emit('users', {'count': socketArray.length});
+         }
+         else
+         {
+            socket.emit('users', {'count': socketArray.length});
+         }
+      }
    }
-   
-   //socket.emit('users', {'count': totalCount});
-   //socket.broadcast.emit('users', {'count': totalCount});
-   if (count % 50 == 0) {  
-      console.log ("count connected:" + count);
+   else
+   {
+      console.log ("duplicate Connected socket:" + clientIp);
    }
-   
+   //showDuplicates(socketArray);
 
-   socket.on('disconnect', function(){
-       count--;
-       //socket.broadcast.emit('users', {'count': totalCount});
+   socket.on('disconnect', function()
+   {
+       socketArray = arrayRemove(socketArray, clientIp);
+       if (socketArray.length % 10 == 0)
+       { 
+          socket.broadcast.emit('users', {'count': socketArray.length});
+       }
    });
 
    //recieve client data
@@ -129,7 +182,7 @@ listener.sockets.on('connection', function(s){
 
 });
 
-var liveChartInterval = setInterval(function() { process.send({'workers': count}) }, 15000);
+//var liveChartInterval = setInterval(function() { process.send({'workers': count}) }, 15000);
 
 function broadCastData(socket, message, file, currData, prevData)
 {
@@ -167,7 +220,7 @@ var numMovesToSend = 4;
 function getDeltaPgn(pgnX)
 {
    var pgn = {};
-   var count = 0;
+   var countPgn = 0;
    console.log ("came here");
 
    if (prevData && JSON.stringify(prevData.Headers) != JSON.stringify(pgnX.Headers))
@@ -194,7 +247,7 @@ function getDeltaPgn(pgnX)
    pgn.Moves = [];
    _.eachRight(pgnX.Moves, function(move, key) {
       pgn.Moves[key] = {};
-      if (count <= numMovesToSend)
+      if (countPgn <= numMovesToSend)
       {
          pgn.Moves[key]= pgnX.Moves[key];
          pgn.Moves[key].Moveno = key + 1;
@@ -205,7 +258,7 @@ function getDeltaPgn(pgnX)
       {
          pgn.Moves[key].Moveno = 0;
       }
-      count = count + 1;
+       countPgn = countPgn + 1;
    });
 
    return pgn;
@@ -217,6 +270,8 @@ var prevliveData = 0;
 var prevevalData = 0;
 var prevliveData1 = 0;
 var prevevalData1 = 0;
+var prevCrossData = 0;
+var prevSchedData = 0;
 
 watcher.on('change', (path, stats) => {
    console.log ("path changed:" + path + ",count is " + count);
@@ -259,10 +314,6 @@ watcher.on('change', (path, stats) => {
             //broadCastData(socket, 'pgn', path, delta, delta);
             socket.broadcast.emit('pgn', delta);
             socket.emit('pgn', delta);
-            socket.broadcast.emit('users', {'count': totalCount}); 
-            socket.emit('users', {'count': totalCount}); 
-            //socket.broadcast.emit('pgn', delta);
-             
             console.log ("Sent pgn data:" + JSON.stringify(delta).length + ",orig" + JSON.stringify(data).length + ",changed" + delta.gameChanged);
             lastPgnTime = Date.now(); 
          }
@@ -270,11 +321,13 @@ watcher.on('change', (path, stats) => {
       }
       if (path.match(/crosstable/))
       {
-         socket.broadcast.emit('crosstable', data);
+         broadCastData(socket, 'crosstable', path, data, prevCrossData);
+         prevCrossData = data;
       }
       if (path.match(/schedule/))
       {
-         socket.broadcast.emit('schedule', data);
+         broadCastData(socket, 'schedule', path, data, prevSchedData);
+         prevSchedData = data;
       }
    }
    catch (error) 
