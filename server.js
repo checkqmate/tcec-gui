@@ -131,6 +131,7 @@ listener.sockets.on('connection', function(s){
    var socketId = socket.id;
    var clientIp = socket.request.connection.remoteAddress;
    count = socketArray.length;
+   console.log ("added :" + clientIp);
    if (socketArray.indexOf(clientIp) === -1)
    {
       socketArray.push(clientIp);
