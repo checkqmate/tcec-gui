@@ -2,6 +2,7 @@
 
 COUNTER=1
 while [  $COUNTER -gt 0 ]; do
+  sed -n '/TCEC Cup 2 - Round 5/,$p' json/event.pgn > event.pgn
   ./copypgnevent
-  sleep 60
+  sleep 5
 done

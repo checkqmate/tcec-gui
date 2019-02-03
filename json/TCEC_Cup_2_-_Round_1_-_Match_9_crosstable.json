@@ -1,0 +1,133 @@
+{
+	"Event" : "TCEC Cup 2 - Round 1 - Match 9",
+	"Order" : [
+		"LCZero v20.1-32742",
+		"Tucano 7.06"
+	],
+	"Table" : {
+		"LCZero v20.1-32742" : {
+			"Abbreviation" : "Lc",
+			"Elo" : 4.016721511333799,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 0,
+			"Performance" : 100,
+			"Rank" : 1,
+			"Rating" : 3404,
+			"Results" : {
+				"Tucano 7.06" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 2,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 3,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 4,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 5,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 6,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 7,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 8,
+							"Result" : 1,
+							"Winner" : "White"
+						}
+					],
+					"Text" : "11111111"
+				}
+			},
+			"Score" : 8,
+			"Strikes" : 0,
+			"WinsAsBlack" : 4,
+			"WinsAsWhite" : 4
+		},
+		"Tucano 7.06" : {
+			"Abbreviation" : "Tu",
+			"Elo" : -4.016721511333799,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 0,
+			"Performance" : 0,
+			"Rank" : 2,
+			"Rating" : 2685,
+			"Results" : {
+				"LCZero v20.1-32742" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 2,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 5,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0,
+							"Winner" : "White"
+						}
+					],
+					"Text" : "00000000"
+				}
+			},
+			"Score" : 0,
+			"Strikes" : 0,
+			"WinsAsBlack" : 0,
+			"WinsAsWhite" : 0
+		}
+	}
+}

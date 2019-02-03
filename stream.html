@@ -620,7 +620,7 @@
         setDark();
       });
 
-      var socket = io.connect('http://tcec.chessdom.com:8888');
+      var socket = io.connect('http://tcec.chessdom.com:8000');
      
       socket.on('crosstable', function(data){
          updateCrosstableData(data);

@@ -510,6 +510,8 @@ function setPgn(pgn)
   $(document).attr("title", title);
 
   var termination = pgn.Headers.Termination;
+  var lastAdj = 0;
+
   if (pgn.Moves.length > 0) {
     var adjudication = pgn.Moves[pgn.Moves.length - 1].adjudication;
     if (termination == 'unterminated' && typeof adjudication != 'undefined') {
@@ -517,10 +519,14 @@ function setPgn(pgn)
       var movesToDraw = 50;
       var movesToResignOrWin = 50;
       var movesTo50R = 50;
-      if (Math.abs(adjudication.Draw) <= 10 && pgn.Moves.length > 68) {
+      if (pgn.Moves.length <= 58)
+      {
+         lastAdj = 0;
+      }
+      if (Math.abs(adjudication.Draw) <= 10 && pgn.Moves.length > 58) {
         movesToDraw = Math.abs(adjudication.Draw);
       }
-      if (Math.abs(adjudication.ResignOrWin) < 9) {
+      if (Math.abs(adjudication.ResignOrWin) < 11) {
         movesToResignOrWin = Math.abs(adjudication.ResignOrWin);
       }
       if (adjudication.FiftyMoves < 51) {
@@ -533,6 +539,7 @@ function setPgn(pgn)
         } else {
           termination = movesToDraw + ' plies draw';
         }
+        lastAdj = 1;
       }
       if (movesTo50R < 50 && movesTo50R < movesToDraw && movesTo50R < movesToResignOrWin) {
         if(movesTo50R == 1) {
@@ -2950,7 +2957,7 @@ async function eventCrosstable(mandata)
    var divname = '#crosstableevent';
    var startVar = 1;
 
-   plog ("Ca,e tp eventCrosstable");
+   plog ("Camee tp eventCrosstable", 0);
 
    if (mandata != undefined)
    {
@@ -3088,12 +3095,12 @@ function eventCrosstableMain(ii, filename)
    {
       updateCrosstableDataNew(ii, r.data);
       tablesLoaded[ii] = 1;
-      plog ("after trying to read file " + filename, 1);
+      plog ("after trying to read file " + filename, 0);
    })
    .catch(function (error)
    {
       plog(error);
-      plog ("failed trying to read file " + filename + ", error: " + error);
+      plog ("failed trying to read file " + filename + ", error: " + error, 0);
       tablesLoaded[ii] = 0;
    });
 }
@@ -3522,14 +3529,14 @@ function drawBracket()
         return;
    }
 
-   for (var i = 0 ; i < 4 ; i ++)
+   for (var i = 0 ; i < 5 ; i ++)
    {
       roundNo = 2;
       startRound = i;
       $('#bracket').bracket({
          centerConnectors: true,
          init: bigData,
-         skipConsolationRound: true,
+         //skipConsolationRound: true,
          decorator: {edit: edit_fn,
                      render: render_fn}
       });

@@ -1,0 +1,133 @@
+{
+	"Event" : "TCEC Cup 2 - Round 2 - Match 23",
+	"Order" : [
+		"Komodo 2246.00",
+		"Ginkgo 2.18"
+	],
+	"Table" : {
+		"Ginkgo 2.18" : {
+			"Abbreviation" : "Gi",
+			"Elo" : 25.187294576427654,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 15,
+			"Performance" : 37.5,
+			"Rank" : 2,
+			"Rating" : 3345,
+			"Results" : {
+				"Komodo 2246.00" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 2,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 5,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 7,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0.5,
+							"Winner" : "None"
+						}
+					],
+					"Text" : "=0=00=1="
+				}
+			},
+			"Score" : 3,
+			"Strikes" : 1,
+			"WinsAsBlack" : 0,
+			"WinsAsWhite" : 1
+		},
+		"Komodo 2246.00" : {
+			"Abbreviation" : "Ko",
+			"Elo" : -25.187294576427654,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 15,
+			"Performance" : 62.5,
+			"Rank" : 1,
+			"Rating" : 3512,
+			"Results" : {
+				"Ginkgo 2.18" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 2,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 4,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 5,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0.5,
+							"Winner" : "None"
+						}
+					],
+					"Text" : "=1=11=0="
+				}
+			},
+			"Score" : 5,
+			"Strikes" : 0,
+			"WinsAsBlack" : 1,
+			"WinsAsWhite" : 2
+		}
+	}
+}

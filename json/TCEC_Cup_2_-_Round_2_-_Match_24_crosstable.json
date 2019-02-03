@@ -1,0 +1,133 @@
+{
+	"Event" : "TCEC Cup 2 - Round 2 - Match 24",
+	"Order" : [
+		"Ethereal 11.24",
+		"Laser 160119"
+	],
+	"Table" : {
+		"Ethereal 11.24" : {
+			"Abbreviation" : "Et",
+			"Elo" : -30.738018681541604,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 15.75,
+			"Performance" : 56.25,
+			"Rank" : 1,
+			"Rating" : 3361,
+			"Results" : {
+				"Laser 160119" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 2,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 3,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 5,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0.5,
+							"Winner" : "None"
+						}
+					],
+					"Text" : "=11=0==="
+				}
+			},
+			"Score" : 4.5,
+			"Strikes" : 0,
+			"WinsAsBlack" : 1,
+			"WinsAsWhite" : 1
+		},
+		"Laser 160119" : {
+			"Abbreviation" : "La",
+			"Elo" : 30.738018681541604,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 15.75,
+			"Performance" : 43.75,
+			"Rank" : 2,
+			"Rating" : 3228,
+			"Results" : {
+				"Ethereal 11.24" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 2,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 5,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0.5,
+							"Winner" : "None"
+						}
+					],
+					"Text" : "=00=1==="
+				}
+			},
+			"Score" : 3.5,
+			"Strikes" : 0,
+			"WinsAsBlack" : 0,
+			"WinsAsWhite" : 1
+		}
+	}
+}

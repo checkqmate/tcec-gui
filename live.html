@@ -30,8 +30,9 @@
 !-->
 </div> 
   <body>
-   <div id="note" style="display:none">
-      Incomplete Chiron-Andscacs match interrupted by cutechess crash will be resumed once Komodo-Ginkgo match is over. 
+   <div id="note" 
+      style="display:none">
+      SF vs H ended in a draw with 4-4 and tiebreaker will be played after Lc0-Komodo match.
         <a id="close" style="color: whitesmoke !important;" href="#alert">[x]</a>
     </div>
     <script>
@@ -1137,7 +1138,7 @@ Pro 256gb, Battery backup: CP1350PFCLCD PFC Sinewave UPS System, Temperature: te
         });
       });
 
-      var socket = io.connect('https://tcec.chessdom.com:8888');
+      var socket = io.connect('https://tcec.chessdom.com:8000');
 
       socket.on('crosstable', function(data){
          updateTablesData(data);

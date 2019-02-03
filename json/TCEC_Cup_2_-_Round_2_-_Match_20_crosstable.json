@@ -1,0 +1,133 @@
+{
+	"Event" : "TCEC Cup 2 - Round 2 - Match 20",
+	"Order" : [
+		"Fire 011819",
+		"Jonny 8.1"
+	],
+	"Table" : {
+		"Fire 011819" : {
+			"Abbreviation" : "Fi",
+			"Elo" : -40.89204061418767,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 15.75,
+			"Performance" : 56.25,
+			"Rank" : 1,
+			"Rating" : 3406,
+			"Results" : {
+				"Jonny 8.1" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 2,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 5,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 7,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0.5,
+							"Winner" : "None"
+						}
+					],
+					"Text" : "======1="
+				}
+			},
+			"Score" : 4.5,
+			"Strikes" : 0,
+			"WinsAsBlack" : 0,
+			"WinsAsWhite" : 1
+		},
+		"Jonny 8.1" : {
+			"Abbreviation" : "Jo",
+			"Elo" : 40.89204061418767,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 15.75,
+			"Performance" : 43.75,
+			"Rank" : 2,
+			"Rating" : 3240,
+			"Results" : {
+				"Fire 011819" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 2,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 5,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0.5,
+							"Winner" : "None"
+						}
+					],
+					"Text" : "======0="
+				}
+			},
+			"Score" : 3.5,
+			"Strikes" : 0,
+			"WinsAsBlack" : 0,
+			"WinsAsWhite" : 0
+		}
+	}
+}

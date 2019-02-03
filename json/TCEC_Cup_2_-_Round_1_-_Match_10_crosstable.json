@@ -1,0 +1,133 @@
+{
+	"Event" : "TCEC Cup 2 - Round 1 - Match 10",
+	"Order" : [
+		"Xiphos 0.4.19",
+		"ChessBrainVB 3.72"
+	],
+	"Table" : {
+		"ChessBrainVB 3.72" : {
+			"Abbreviation" : "Ch",
+			"Elo" : -35.87877938025865,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 13.75,
+			"Performance" : 31.25,
+			"Rank" : 2,
+			"Rating" : 3148,
+			"Results" : {
+				"Xiphos 0.4.19" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 2,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 5,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0,
+							"Winner" : "White"
+						}
+					],
+					"Text" : "====00=0"
+				}
+			},
+			"Score" : 2.5,
+			"Strikes" : 0,
+			"WinsAsBlack" : 0,
+			"WinsAsWhite" : 0
+		},
+		"Xiphos 0.4.19" : {
+			"Abbreviation" : "Xi",
+			"Elo" : 35.87877938025865,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 13.75,
+			"Performance" : 68.75,
+			"Rank" : 1,
+			"Rating" : 3181,
+			"Results" : {
+				"ChessBrainVB 3.72" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 2,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 5,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 6,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 8,
+							"Result" : 1,
+							"Winner" : "White"
+						}
+					],
+					"Text" : "====11=1"
+				}
+			},
+			"Score" : 5.5,
+			"Strikes" : 0,
+			"WinsAsBlack" : 1,
+			"WinsAsWhite" : 2
+		}
+	}
+}

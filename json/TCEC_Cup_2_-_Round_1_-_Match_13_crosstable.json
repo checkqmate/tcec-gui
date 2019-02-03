@@ -1,0 +1,133 @@
+{
+	"Event" : "TCEC Cup 2 - Round 1 - Match 13",
+	"Order" : [
+		"Komodo 2246.00",
+		"Demolito 20181029"
+	],
+	"Table" : {
+		"Demolito 20181029" : {
+			"Abbreviation" : "De",
+			"Elo" : 11.13143383819133,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 3.75,
+			"Performance" : 6.25,
+			"Rank" : 2,
+			"Rating" : 2827,
+			"Results" : {
+				"Komodo 2246.00" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 2,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 5,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0,
+							"Winner" : "White"
+						}
+					],
+					"Text" : "00000=00"
+				}
+			},
+			"Score" : 0.5,
+			"Strikes" : 0,
+			"WinsAsBlack" : 0,
+			"WinsAsWhite" : 0
+		},
+		"Komodo 2246.00" : {
+			"Abbreviation" : "Ko",
+			"Elo" : -11.13143383819133,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 3.75,
+			"Performance" : 93.75,
+			"Rank" : 1,
+			"Rating" : 3512,
+			"Results" : {
+				"Demolito 20181029" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 2,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 3,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 4,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 5,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 7,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 8,
+							"Result" : 1,
+							"Winner" : "White"
+						}
+					],
+					"Text" : "11111=11"
+				}
+			},
+			"Score" : 7.5,
+			"Strikes" : 0,
+			"WinsAsBlack" : 4,
+			"WinsAsWhite" : 3
+		}
+	}
+}

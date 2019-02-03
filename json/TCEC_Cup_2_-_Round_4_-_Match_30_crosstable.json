@@ -1,0 +1,233 @@
+{
+	"Event" : "TCEC Cup 2 - Round 4 - Match 30",
+	"Order" : [
+		"LCZero v20.1-32742",
+		"Komodo 2246.00"
+	],
+	"Table" : {
+		"Komodo 2246.00" : {
+			"Abbreviation" : "Ko",
+			"Elo" : -118.7482656899106,
+			"Games" : 18,
+			"GamesAsBlack" : 9,
+			"GamesAsWhite" : 9,
+			"Neustadtl" : 80,
+			"Performance" : 44.44444444444444,
+			"Rank" : 2,
+			"Rating" : 3512,
+			"Results" : {
+				"LCZero v20.1-32742" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 2,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 5,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 9,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 10,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 11,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 12,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 13,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 14,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 15,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 16,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 17,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 18,
+							"Result" : 0,
+							"Winner" : "White"
+						}
+					],
+					"Text" : "================00"
+				}
+			},
+			"Score" : 8,
+			"Strikes" : 0,
+			"WinsAsBlack" : 0,
+			"WinsAsWhite" : 0
+		},
+		"LCZero v20.1-32742" : {
+			"Abbreviation" : "Lc",
+			"Elo" : 118.7482656899106,
+			"Games" : 18,
+			"GamesAsBlack" : 9,
+			"GamesAsWhite" : 9,
+			"Neustadtl" : 80,
+			"Performance" : 55.55555555555556,
+			"Rank" : 1,
+			"Rating" : 3404,
+			"Results" : {
+				"Komodo 2246.00" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 2,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 5,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 9,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 10,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 11,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 12,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 13,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 14,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 15,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 16,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 17,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 18,
+							"Result" : 1,
+							"Winner" : "White"
+						}
+					],
+					"Text" : "================11"
+				}
+			},
+			"Score" : 10,
+			"Strikes" : 0,
+			"WinsAsBlack" : 1,
+			"WinsAsWhite" : 1
+		}
+	}
+}

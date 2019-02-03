@@ -1,0 +1,133 @@
+{
+	"Event" : "TCEC Cup 2 - Round 1 - Match 12",
+	"Order" : [
+		"Andscacs 095045",
+		"Hannibal 20181202"
+	],
+	"Table" : {
+		"Andscacs 095045" : {
+			"Abbreviation" : "An",
+			"Elo" : -32.1545391720943,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 12,
+			"Performance" : 75,
+			"Rank" : 1,
+			"Rating" : 3372,
+			"Results" : {
+				"Hannibal 20181202" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 2,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 4,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 5,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 6,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 8,
+							"Result" : 1,
+							"Winner" : "White"
+						}
+					],
+					"Text" : "10=111=1"
+				}
+			},
+			"Score" : 6,
+			"Strikes" : 0,
+			"WinsAsBlack" : 2,
+			"WinsAsWhite" : 3
+		},
+		"Hannibal 20181202" : {
+			"Abbreviation" : "Ha",
+			"Elo" : 32.1545391720943,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 12,
+			"Performance" : 25,
+			"Rank" : 2,
+			"Rating" : 3033,
+			"Results" : {
+				"Andscacs 095045" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 2,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 5,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0,
+							"Winner" : "White"
+						}
+					],
+					"Text" : "01=000=0"
+				}
+			},
+			"Score" : 2,
+			"Strikes" : 0,
+			"WinsAsBlack" : 1,
+			"WinsAsWhite" : 0
+		}
+	}
+}

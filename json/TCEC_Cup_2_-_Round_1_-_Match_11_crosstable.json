@@ -1,0 +1,133 @@
+{
+	"Event" : "TCEC Cup 2 - Round 1 - Match 11",
+	"Order" : [
+		"Chiron S14",
+		"Pedone 191118"
+	],
+	"Table" : {
+		"Chiron S14" : {
+			"Abbreviation" : "Ch",
+			"Elo" : -31.15724735637454,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 13.75,
+			"Performance" : 68.75,
+			"Rank" : 1,
+			"Rating" : 3323,
+			"Results" : {
+				"Pedone 191118" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 2,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 5,
+							"Result" : 1,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 6,
+							"Result" : 1,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0.5,
+							"Winner" : "None"
+						}
+					],
+					"Text" : "1===11=="
+				}
+			},
+			"Score" : 5.5,
+			"Strikes" : 0,
+			"WinsAsBlack" : 1,
+			"WinsAsWhite" : 2
+		},
+		"Pedone 191118" : {
+			"Abbreviation" : "Pe",
+			"Elo" : 31.15724735637454,
+			"Games" : 8,
+			"GamesAsBlack" : 4,
+			"GamesAsWhite" : 4,
+			"Neustadtl" : 13.75,
+			"Performance" : 31.25,
+			"Rank" : 2,
+			"Rating" : 3072,
+			"Results" : {
+				"Chiron S14" : {
+					"Scores" : [
+						{
+							"Game" : 1,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 2,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 3,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 4,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 5,
+							"Result" : 0,
+							"Winner" : "White"
+						},
+						{
+							"Game" : 6,
+							"Result" : 0,
+							"Winner" : "Black"
+						},
+						{
+							"Game" : 7,
+							"Result" : 0.5,
+							"Winner" : "None"
+						},
+						{
+							"Game" : 8,
+							"Result" : 0.5,
+							"Winner" : "None"
+						}
+					],
+					"Text" : "0===00=="
+				}
+			},
+			"Score" : 2.5,
+			"Strikes" : 0,
+			"WinsAsBlack" : 0,
+			"WinsAsWhite" : 0
+		}
+	}
+}
