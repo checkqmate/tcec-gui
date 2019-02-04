@@ -1762,12 +1762,8 @@ function openCross(gamen)
       {
          div = engine;
       }
-      if (key == "typeno")
-      {
-         divno = engine;
-      }
    });
-   link = link + "?se=" + season + "&" + div + "=" + divno + "&ga=" + gamen;
+   link = link + "?se=" + season + "&" + div + "&ga=" + gamen;
    window.open(link,'_blank');
 }
 

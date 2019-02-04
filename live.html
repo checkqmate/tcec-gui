@@ -24,6 +24,19 @@
 
   <body>
 
+   <div id="note" 
+      style="display:inline">
+      TCEC Cup2 ended. Lc0 was the winner. Season 14 SUFI starts 14:00 GMT Feb 4th.
+        <a id="close" style="color: whitesmoke !important;" href="#alert">[x]</a>
+    </div>
+    <script>
+      close = document.getElementById("close");
+      close.addEventListener('click', function() 
+      {
+        note = document.getElementById("note");
+        note.style.display = 'none';
+      }, false);
+    </script>
     <nav class="navbar navbar-expand-md navbar-toggle navbar-dark bg-dark">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -1496,6 +1509,12 @@ To play the games a special version of cutechess-cli is used. This is a command 
              setTwitch();
           }, 10000);
           window.setTimeout(function() 
+          { 
+             close = document.getElementById("close");
+             note = document.getElementById("note");
+             note.style.display = 'none';
+          }, 15000);
+          window.setTimeout(function() 
                             { 
                                updateLiveChart();
                                updateLiveEval();
@@ -1526,7 +1545,7 @@ To play the games a special version of cutechess-cli is used. This is a command 
         });
       });
 
-      var socket = io.connect('https://tcec.chessdom.com:8080');
+      var socket = io.connect('https://tcec.chessdom.com:8001');
      
       socket.on('crosstable', function(data){
          updateCrosstableData(data);

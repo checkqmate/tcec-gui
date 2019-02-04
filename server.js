@@ -59,7 +59,7 @@ watcher.add('data1.json');
 watcher.add('liveeval1.json');
 watcher.add(liveeval);
 watcher.add('live.json');
-watcher.add('schedule.json');
+//watcher.add('schedule.json');
 watcher.add('liveeval.json');
 
 app.get('/api/gameState', function (req, res) {
@@ -131,7 +131,6 @@ listener.sockets.on('connection', function(s){
    var socketId = socket.id;
    var clientIp = socket.request.connection.remoteAddress;
    count = socketArray.length;
-   console.log ("added :" + clientIp);
    if (socketArray.indexOf(clientIp) === -1)
    {
       socketArray.push(clientIp);
@@ -160,10 +159,6 @@ listener.sockets.on('connection', function(s){
          }
       }
    }
-   else
-   {
-      console.log ("duplicate Connected socket:" + clientIp);
-   }
    //showDuplicates(socketArray);
 
    socket.on('disconnect', function()
@@ -177,8 +172,7 @@ listener.sockets.on('connection', function(s){
 
    //recieve client data
    socket.on('getLastmovetime', function(data){
-      socket.broadcast.emit('lastpgntime', lastPgnTime);
-      process.stdout.write('req came' + lastPgnTime);
+      console.log('XXXXXX: req came' + lastPgnTime);
    });
 
 });
@@ -222,7 +216,6 @@ function getDeltaPgn(pgnX)
 {
    var pgn = {};
    var countPgn = 0;
-   console.log ("came here");
 
    if (prevData && JSON.stringify(prevData.Headers) != JSON.stringify(pgnX.Headers))
    {
