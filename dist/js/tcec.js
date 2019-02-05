@@ -644,16 +644,18 @@ function setPgn(pgn)
          pgn.Headers.movesToDraw = movesToDraw + 'p';
       }
 
-      if (pgn.Headers.Termination == 'unterminated')
-      {
-         $('#event-overview').bootstrapTable('hideColumn', 'Termination');
-      }
-      else
-      {
-         $('#event-overview').bootstrapTable('showColumn', 'Termination');
-      }
+      plog ("pgn.Headers.Termination: no" + pgn.Headers.Termination, 0);
+      $('#event-overview').bootstrapTable('hideColumn', 'Termination');
+      $('#event-overview').bootstrapTable('showColumn', 'movesToDraw');
+      $('#event-overview').bootstrapTable('showColumn', 'movesToResignOrWin');
+      $('#event-overview').bootstrapTable('showColumn', 'movesTo50R');
     } else {
       pgn.Headers.Termination = pgn.Headers.TerminationDetails;
+      plog ("pgn.Headers.Termination: yes" + pgn.Headers.Termination, 0);
+      $('#event-overview').bootstrapTable('showColumn', 'Termination');
+      $('#event-overview').bootstrapTable('hideColumn', 'movesToDraw');
+      $('#event-overview').bootstrapTable('hideColumn', 'movesToResignOrWin');
+      $('#event-overview').bootstrapTable('hideColumn', 'movesTo50R');
     }
   }
 
