@@ -589,39 +589,69 @@ function setPgn(pgn)
       var movesToDraw = 50;
       var movesToResignOrWin = 50;
       var movesTo50R = 50;
-      if (Math.abs(adjudication.Draw) <= 10 && pgn.Moves.length > 58) {
-        movesToDraw = Math.max(Math.abs(adjudication.Draw), 69 - pgn.Moves.length);
-      }
-      if (Math.abs(adjudication.ResignOrWin) < 11) {
-        movesToResignOrWin = Math.abs(adjudication.ResignOrWin);
-      }
-      if (adjudication.FiftyMoves < 51) {
-        movesTo50R = adjudication.FiftyMoves;
+
+      if (Math.abs(adjudication.Draw) <= 10 && pgn.Moves.length > 58) 
+      {
+         movesToDraw = Math.max(Math.abs(adjudication.Draw), 69 - pgn.Moves.length);
       }
 
-      if (movesToDraw < 50 && movesToDraw <= movesTo50R && movesToDraw <= movesToResignOrWin) {
-        if (movesToDraw == 1) {
-          termination = movesToDraw + ' ply draw';
-        } else {
-          termination = movesToDraw + ' plies draw';
-        }
-      }
-      if (movesTo50R < 50 && movesTo50R < movesToDraw && movesTo50R < movesToResignOrWin) {
-        if(movesTo50R == 1) {
-          termination = movesTo50R + ' move 50mr'
-        } else {
-          termination = movesTo50R + ' moves 50mr'
-        }
-      }
-      if (movesToResignOrWin < 50 && movesToResignOrWin < movesToDraw && movesToResignOrWin < movesTo50R) {
-        if(movesToResignOrWin == 1) {
-          termination = movesToResignOrWin + ' ply win';
-        } else {
-          termination = movesToResignOrWin + ' plies win';
-        }
+      if (Math.abs(adjudication.ResignOrWin) < 11) 
+      {
+         movesToResignOrWin = Math.abs(adjudication.ResignOrWin);
       }
 
-      pgn.Headers.Termination = termination;
+      if (adjudication.FiftyMoves < 51) 
+      {
+         movesTo50R = adjudication.FiftyMoves;
+      }
+
+      if (movesTo50R < 50 && movesTo50R < movesToResignOrWin) 
+      {
+         if(movesTo50R == 1) 
+         {
+            termination = movesTo50R + ' move 50mr'
+         } 
+         else 
+         {
+            termination = movesTo50R + ' moves 50mr'
+         }
+         pgn.Headers.movesTo50R = movesTo50R;
+      }
+
+      if (movesToResignOrWin < 50 && movesToResignOrWin < movesToDraw && movesToResignOrWin < movesTo50R) 
+      {
+         if(movesToResignOrWin == 1) 
+         {
+            termination = movesToResignOrWin + ' ply win';
+         } 
+         else 
+         {
+            termination = movesToResignOrWin + ' plies win';
+         }
+         pgn.Headers.movesToResignOrWin = movesToResignOrWin;
+      }
+
+      if (movesToDraw < 50 && movesToDraw <= movesTo50R && movesToDraw <= movesToResignOrWin) 
+      {
+         if (movesToDraw == 1) 
+         {
+            termination = movesToDraw + ' ply draw';
+         } 
+         else 
+         {
+            termination = movesToDraw + ' plies draw';
+         }
+         pgn.Headers.movesToDraw = movesToDraw + 'p';
+      }
+
+      if (pgn.Headers.Termination == 'unterminated')
+      {
+         $('#event-overview').bootstrapTable('hideColumn', 'Termination');
+      }
+      else
+      {
+         $('#event-overview').bootstrapTable('showColumn', 'Termination');
+      }
     } else {
       pgn.Headers.Termination = pgn.Headers.TerminationDetails;
     }
@@ -4314,8 +4344,19 @@ function initTables()
        },
        {
            field: 'Termination',
-           title: 'Adj Rule',
-           width: '20%'
+           title: 'Adj Rule'
+       },
+       {
+           field: 'movesTo50R',
+           title: '50'
+       },
+       {
+           field: 'movesToDraw',
+           title: 'Draw'
+       },
+       {
+           field: 'movesToResignOrWin',
+           title: 'Win'
        },
        {
            field: 'Result',
