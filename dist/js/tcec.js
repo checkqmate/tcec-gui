@@ -77,7 +77,7 @@ var boardNotation = true;
 var boardNotationPv = true;
 var boardArrows = true;
 var tcecElo = 1;
-var engGlobData = {};
+var engGlobData = 0;
 var tourInfo = {};
 var btheme = "chess24";
 var ptheme = "chess24";
@@ -2172,31 +2172,23 @@ function eliminateCrash(data)
    });
 }
 
-function updateScoreHeaders() 
+function updateScoreHeaders(data) 
 {
    plog ("Inside updateScoreHeaders", 0);
-   axios.get('crosstable.json')
-   .then(function (response)
+   var retry = updateScoreHeadersData(data);
+   if (retry)
    {
-      var retry = updateScoreHeadersData(response.data);
-      if (retry)
-      {
-         setTimeout(function() 
-         { 
-            plog ("Second time updated failed, waiting for 30 seconds", 0);
-            updateScoreHeaders();
-         }, 30000);
-      }
-      else
-      {
-         plog ("Second time updated succeeded", 0);
-      }
-   })
-   .catch(function (error) 
+      setTimeout(function() 
+      { 
+         plog ("Second time updated failed, waiting for 30 seconds", 0);
+         prevwhiteEngineFull = null;
+         updateScoreHeaders(data);
+      }, 30000);
+   }
+   else
    {
-      // handle error
-      plog(error, 0);
-   });
+      plog ("Second time updated succeeded", 0);
+   }
 }
 
 function updateScoreHeadersData(crosstableData)
@@ -2382,7 +2374,7 @@ async function updateCrosstableData(data)
       }
    }
 
-   eliminateCrash(oldSchedData);
+   //eliminateCrash(oldSchedData);
 
    if (tcecElo)
    {
@@ -2394,7 +2386,7 @@ async function updateCrosstableData(data)
    if (retryScore)
    {
       plog ("Giving time to header to get updated", 0);
-      setTimeout(function() { updateScoreHeaders(); }, 10000);
+      setTimeout(function() { updateScoreHeaders(crosstableData); }, 10000);
    }
 
    _.each(crosstableData.Order, function(engine, key) {
