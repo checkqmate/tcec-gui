@@ -1,7 +1,7 @@
 var evalChart;
 var timeChart;
 var speedChart;
-var nodesChart;
+var nodesChart = null;
 var depthChart;
 var tbHitsChart;
 var engine2colorno = 0;
@@ -256,89 +256,93 @@ function initializeCharts()
 	  }
 	});
 
-	nodesChart = Chart.Line($('#nodes-graph'), {
-	  data: nodesChartData,
-	  options: {
-	    responsive: true,
-	    hoverMode: 'index',
-	    stacked: false,
-	    legend: {
-	      display: false
-	    },
-	    title: {
-	      display: false
-	    },
-        tooltips: {
-	      callbacks: {
-	            label: function(tooltipItem, data) {
-				  	var nodes = parseInt(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].nodes);
-	                if (nodes >= 1000000000) {
-			  			nodes = Math.round (nodes / 100000000) / 10;
-				  		nodes += 'B'
-				  	} else {
-				  		nodes = Math.round (nodes / 100000) / 10;
-				  		nodes += 'M'
-				  	}
-				    return ' (' + nodes + ' nodes)';
-	            }
-	      } // end callbacks:
-	    },
-	    scales: {
-	      yAxes: [{
-	        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-	        display: true,
-	        position: 'left',
-	        id: 'y-axis-1',
-	        ticks: {
-			  callback: function(value, index, values) {
-			  	if (value >= (1000000*1000)) {
-			  		value = Math.round (value / (100000 * 1000)) / 10;
-			  		value += 'B';
-			  	} else if ((value >= (1000000*1))) {
-			  		value = Math.round (value / 100000) / 10;
-			  		value += 'M'
-			  	} else {
-			  		value = Math.round (value / 100) / 10;
-			  		value += 'K'
-			  	}
-			    return value;
-			  }
-			}
-	      }, {
-	        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-	        display: true,
-	        position: 'right',
-	        id: 'y-axis-2',
+   var nodeChartIs = document.getElementById("nodes-graph");
+   if (nodeChartIs)
+   {
+	   nodesChart = Chart.Line($('#nodes-graph'), {
+	     data: nodesChartData,
+	     options: {
+	       responsive: true,
+	       hoverMode: 'index',
+	       stacked: false,
+	       legend: {
+	         display: false
+	       },
+	       title: {
+	         display: false
+	       },
+           tooltips: {
+	         callbacks: {
+	               label: function(tooltipItem, data) {
+	   			  	var nodes = parseInt(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].nodes);
+	                   if (nodes >= 1000000000) {
+	   		  			nodes = Math.round (nodes / 100000000) / 10;
+	   			  		nodes += 'B'
+	   			  	} else {
+	   			  		nodes = Math.round (nodes / 100000) / 10;
+	   			  		nodes += 'M'
+	   			  	}
+	   			    return ' (' + nodes + ' nodes)';
+	               }
+	         } // end callbacks:
+	       },
+	       scales: {
+	         yAxes: [{
+	           type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+	           display: true,
+	           position: 'left',
+	           id: 'y-axis-1',
+	           ticks: {
+	   		  callback: function(value, index, values) {
+	   		  	if (value >= (1000000*1000)) {
+	   		  		value = Math.round (value / (100000 * 1000)) / 10;
+	   		  		value += 'B';
+	   		  	} else if ((value >= (1000000*1))) {
+	   		  		value = Math.round (value / 100000) / 10;
+	   		  		value += 'M'
+	   		  	} else {
+	   		  		value = Math.round (value / 100) / 10;
+	   		  		value += 'K'
+	   		  	}
+	   		    return value;
+	   		  }
+	   		}
+	         }, {
+	           type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+	           display: true,
+	           position: 'right',
+	           id: 'y-axis-2',
 
-	        // grid line settings
-	        gridLines: {
-	          drawOnChartArea: false, // only want the grid lines for one axis to show up
-	        },
-	        ticks: {
-			  callback: function(value, index, values) {
-			  	if (value >= 1000000*1000) {
-			  		value = Math.round (value / (100000 * 1000)) / 10;
-			  		value += 'B'
-			  	} else if ((value >= (1000000*1))) {
-			  		value = Math.round (value / 100000) / 10;
-			  		value += 'M'
-			  	} else {
-			  		value = Math.round (value / 100) / 10;
-			  		value += 'K'
-			  	}
-			    return value;
-			  }
-			}
-	      }],
-	      xAxes: [{
-	      	ticks: {
-		        autoSkip: true,
-		        maxTicksLimit: 25
-		    }
-	      }]
-	    }
-	  }
-	});
+	           // grid line settings
+	           gridLines: {
+	             drawOnChartArea: false, // only want the grid lines for one axis to show up
+	           },
+	           ticks: {
+	   		  callback: function(value, index, values) {
+	   		  	if (value >= 1000000*1000) {
+	   		  		value = Math.round (value / (100000 * 1000)) / 10;
+	   		  		value += 'B'
+	   		  	} else if ((value >= (1000000*1))) {
+	   		  		value = Math.round (value / 100000) / 10;
+	   		  		value += 'M'
+	   		  	} else {
+	   		  		value = Math.round (value / 100) / 10;
+	   		  		value += 'K'
+	   		  	}
+	   		    return value;
+	   		  }
+	   		}
+	         }],
+	         xAxes: [{
+	         	ticks: {
+	   	        autoSkip: true,
+	   	        maxTicksLimit: 25
+	   	    }
+	         }]
+	       }
+	     }
+	   });
+   }
 
 	speedChart = Chart.Line($('#speed-graph'), {
 	  data: speedChartData,
@@ -534,9 +538,12 @@ function updateChartData()
 	speedChart.data.datasets[0].data = [];
 	speedChart.data.datasets[1].data = [];
 
-	nodesChart.data.labels = [];
-	nodesChart.data.datasets[0].data = [];
-	nodesChart.data.datasets[1].data = [];
+   if (nodesChart)
+   {
+	   nodesChart.data.labels = [];
+   	nodesChart.data.datasets[0].data = [];
+	   nodesChart.data.datasets[1].data = [];
+   }
 
 	depthChart.data.labels = [];
 	depthChart.data.datasets[0].data = [];
@@ -738,9 +745,12 @@ function updateChartData()
 	speedChart.data.datasets[0].data = whiteSpeed;
 	speedChart.data.datasets[1].data = blackSpeed;
 
-	nodesChart.data.labels = labels;
-	nodesChart.data.datasets[0].data = whiteNodes;
-	nodesChart.data.datasets[1].data = blackNodes;
+   if (nodesChart)
+   {
+	   nodesChart.data.labels = labels;
+   	nodesChart.data.datasets[0].data = whiteNodes;
+	   nodesChart.data.datasets[1].data = blackNodes;
+   }
 
 	depthChart.data.labels = labels;
 	depthChart.data.datasets[0].data = whiteDepth;
@@ -753,7 +763,11 @@ function updateChartData()
     evalChart.update();
     timeChart.update();
     speedChart.update();
-    nodesChart.update();
+    var nodeChartIs = document.getElementById("nodes-graph");
+    if (nodeChartIs)
+    {
+       nodesChart.update();
+    }
     depthChart.update();
     tbHitsChart.update();
 }

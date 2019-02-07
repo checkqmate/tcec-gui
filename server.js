@@ -59,7 +59,7 @@ watcher.add('data1.json');
 watcher.add('liveeval1.json');
 watcher.add(liveeval);
 watcher.add('live.json');
-//watcher.add('schedule.json');
+watcher.add('schedule.json');
 watcher.add('liveeval.json');
 
 app.get('/api/gameState', function (req, res) {
@@ -101,6 +101,7 @@ var count = 0;
 var socket = 0;
 var totalCount = 0;
 var socketArray = [];
+var userCountFactor = 1;
 
 function arrayRemove(arr, value) {
 
@@ -123,7 +124,12 @@ function showDuplicates(names)
    
    var duplicates = Object.keys(uniq).filter((a) => uniq[a] > 1)
    
-   console.log(duplicates) // [ 'Nancy' ]
+   console.log(duplicates);
+}
+
+function userCount()
+{
+   return (parseInt(socketArray.length/userCountFactor));
 }
 
 listener.sockets.on('connection', function(s){
@@ -134,29 +140,11 @@ listener.sockets.on('connection', function(s){
    if (socketArray.indexOf(clientIp) === -1)
    {
       socketArray.push(clientIp);
-      if (socketArray.length < 600)
+      if (socketArray.length % 200 == 0)
       {
-         if (socketArray.length % 100 == 0)
-         {
-            console.log ("count connected:" + socketArray.length);
-            socket.broadcast.emit('users', {'count': socketArray.length});
-         }
-         else
-         {
-            socket.emit('users', {'count': socketArray.length});
-         }
-      }
-      else
-      {
-         if (socketArray.length % 10 == 0)
-         {
-            console.log ("count connected:" + socketArray.length);
-            socket.broadcast.emit('users', {'count': socketArray.length});
-         }
-         else
-         {
-            socket.emit('users', {'count': socketArray.length});
-         }
+         console.log ("count connected:" + userCount());
+         socket.broadcast.emit('users', {'count': userCount()});
+         socket.emit('users', {'count': userCount()});
       }
    }
    //showDuplicates(socketArray);
@@ -166,7 +154,7 @@ listener.sockets.on('connection', function(s){
        socketArray = arrayRemove(socketArray, clientIp);
        if (socketArray.length % 10 == 0)
        { 
-          socket.broadcast.emit('users', {'count': socketArray.length});
+          //socket.broadcast.emit('users', {'count': socketArray.length});
        }
    });
 
@@ -268,7 +256,7 @@ var prevCrossData = 0;
 var prevSchedData = 0;
 
 watcher.on('change', (path, stats) => {
-   console.log ("path changed:" + path + ",count is " + count);
+   console.log ("path changed:" + path + ",count is " + userCount());
    if (!socket)
    {
       return;
@@ -308,6 +296,8 @@ watcher.on('change', (path, stats) => {
             //broadCastData(socket, 'pgn', path, delta, delta);
             socket.broadcast.emit('pgn', delta);
             socket.emit('pgn', delta);
+            socket.broadcast.emit('users', {'count': userCount()});
+            socket.emit('users', {'count': userCount()});
             console.log ("Sent pgn data:" + JSON.stringify(delta).length + ",orig" + JSON.stringify(data).length + ",changed" + delta.gameChanged);
             lastPgnTime = Date.now(); 
          }

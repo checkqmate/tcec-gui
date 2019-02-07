@@ -644,7 +644,6 @@ function setPgn(pgn)
          pgn.Headers.movesToDraw = movesToDraw + 'p';
       }
 
-      plog ("pgn.Headers.Termination: no" + pgn.Headers.Termination, 0);
       $('#event-overview').bootstrapTable('hideColumn', 'Termination');
       $('#event-overview').bootstrapTable('showColumn', 'movesToDraw');
       $('#event-overview').bootstrapTable('showColumn', 'movesToResignOrWin');
@@ -652,10 +651,21 @@ function setPgn(pgn)
     } else {
       pgn.Headers.Termination = pgn.Headers.TerminationDetails;
       plog ("pgn.Headers.Termination: yes" + pgn.Headers.Termination, 0);
-      $('#event-overview').bootstrapTable('showColumn', 'Termination');
-      $('#event-overview').bootstrapTable('hideColumn', 'movesToDraw');
-      $('#event-overview').bootstrapTable('hideColumn', 'movesToResignOrWin');
-      $('#event-overview').bootstrapTable('hideColumn', 'movesTo50R');
+      if ((pgn.Headers.Termination == 'undefined') ||
+          (pgn.Headers.Termination == undefined))  
+      {
+         $('#event-overview').bootstrapTable('hideColumn', 'Termination');
+         $('#event-overview').bootstrapTable('showColumn', 'movesToDraw');
+         $('#event-overview').bootstrapTable('showColumn', 'movesToResignOrWin');
+         $('#event-overview').bootstrapTable('showColumn', 'movesTo50R');
+      }
+      else
+      {
+         $('#event-overview').bootstrapTable('showColumn', 'Termination');
+         $('#event-overview').bootstrapTable('hideColumn', 'movesToDraw');
+         $('#event-overview').bootstrapTable('hideColumn', 'movesToResignOrWin');
+         $('#event-overview').bootstrapTable('hideColumn', 'movesTo50R');
+      }
     }
   }
 
@@ -2162,7 +2172,34 @@ function eliminateCrash(data)
    });
 }
 
-function updateScoreHeaders(crosstableData)
+function updateScoreHeaders() 
+{
+   plog ("Inside updateScoreHeaders", 0);
+   axios.get('crosstable.json')
+   .then(function (response)
+   {
+      var retry = updateScoreHeadersData(response.data);
+      if (retry)
+      {
+         setTimeout(function() 
+         { 
+            plog ("Second time updated failed, waiting for 30 seconds", 0);
+            updateScoreHeaders();
+         }, 30000);
+      }
+      else
+      {
+         plog ("Second time updated succeeded", 0);
+      }
+   })
+   .catch(function (error) 
+   {
+      // handle error
+      plog(error, 0);
+   });
+}
+
+function updateScoreHeadersData(crosstableData)
 {
    var data = crosstableData;
    whiteScore = 0;
@@ -2285,7 +2322,7 @@ function fixOrder()
                }
                else
                {
-                  plog ("engine.Strikes: " + engine.Results[ikey].Text, 0);
+                  plog ("engine.Strikes: " + engine.Results[ikey].Text, 1);
                   if (sbCount > engine.Results[ikey].Text.length/2)
                   {
                      plog ("key won:" + key, 0);
@@ -2322,7 +2359,7 @@ function fixOrder()
       engine.Rank = ranks[count];
       count = count + 1;
       crosstableData.Order[engine.Rank-1] = key;
-      plog ("XXX: adding key to order:" + key, 0);
+      plog ("XXX: adding key to order:" + key, 1);
       });
 }
 
@@ -2352,12 +2389,12 @@ async function updateCrosstableData(data)
       getOverallElo(data);
    }
 
-   retryScore = updateScoreHeaders(crosstableData);
+   retryScore = updateScoreHeadersData(crosstableData);
 
    if (retryScore)
    {
       plog ("Giving time to header to get updated", 0);
-      setTimeout(function() { updateScoreHeaders(crosstableData); }, 10000);
+      setTimeout(function() { updateScoreHeaders(); }, 10000);
    }
 
    _.each(crosstableData.Order, function(engine, key) {
@@ -3340,7 +3377,7 @@ function updateLiveEvalData(datum, update, fen, contno, initial)
       clearedAnnotation = 1;
    }
 
-   plog ("Annotation did not get cleared" + clearedAnnotation + ",contno:" + contno, 0);
+   plog ("Annotation did not get cleared" + clearedAnnotation + ",contno:" + contno, 1);
    if ((clearedAnnotation < 1) && (contno == 2))
    {
       board.clearAnnotation();
