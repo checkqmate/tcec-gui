@@ -144,8 +144,9 @@ listener.sockets.on('connection', function(s){
       {
          console.log ("count connected:" + userCount());
          socket.broadcast.emit('users', {'count': userCount()});
-         socket.emit('users', {'count': userCount()});
       }
+      // if you put this here, it will immediately tell the new connection what the viewer count is
+      socket.emit('users', {'count': userCount()});
    }
    //showDuplicates(socketArray);
 
