@@ -145,9 +145,10 @@ listener.sockets.on('connection', function(s){
          console.log ("count connected:" + userCount());
          socket.broadcast.emit('users', {'count': userCount()});
          socket.emit('users', {'count': userCount()});
+         showDuplicates(socketArray);
       }
+      socket.emit('users', {'count': userCount()});
    }
-   //showDuplicates(socketArray);
 
    socket.on('disconnect', function()
    {
