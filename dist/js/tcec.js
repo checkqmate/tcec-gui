@@ -2374,7 +2374,7 @@ async function updateCrosstableData(data)
       }
    }
 
-   //eliminateCrash(oldSchedData);
+   eliminateCrash(oldSchedData);
 
    if (tcecElo)
    {
