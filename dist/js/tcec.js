@@ -2109,7 +2109,6 @@ function updateResData(engineName)
       if (key == engineName)
       {
          value.Strikes = parseInt(value.Strikes) + 1;
-         plog ("value is " + engineName + ",key is :" + key, 1);
       }
       if (value.Strikes > 2)
       {
@@ -2126,6 +2125,7 @@ function engineDisqualified(engineName)
    {
       if (key == engineName)
       {
+         plog ("value is " + engineName + ",key is :" + key + " ,value.Strikes:" + value.Strikes, 0);
          if (value.Strikes > 2)
          {
             crashed = value.Strikes;
@@ -2382,7 +2382,7 @@ async function updateCrosstableData(data)
       }
    }
 
-   eliminateCrash(oldSchedData);
+   //eliminateCrash(oldSchedData);
 
    if (tcecElo)
    {
