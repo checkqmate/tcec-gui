@@ -3086,6 +3086,7 @@ function setDark()
   $('#standtable').addClass('table-dark');
   $('#infotable').addClass('table-dark');
   $('#h2h').addClass('table-dark');
+  $('#themecheck').prop('checked', false);
   setDarkMode(1);
 }
 
@@ -3102,6 +3103,7 @@ function setLight()
   $('#standtable').removeClass('table-dark');
   $('#infotable').removeClass('table-dark');
   $('#h2h').removeClass('table-dark');
+  $('#themecheck').prop('checked', true);
   setDarkMode(0);
 }
 
@@ -4642,4 +4644,17 @@ function showTabDefault()
    {
       $('#v-pills-pv-top-tab').click();
    }
+}
+
+function toggleTheme()
+{
+   var darkMode = localStorage.getItem('tcec-dark-mode');
+   if (darkMode == 20) {
+     localStorage.setItem('tcec-dark-mode', 10);
+   } else {
+     localStorage.setItem('tcec-dark-mode', 20);
+   }
+   setDefaultThemes();
+   updateTables();
+   $(".navbar-toggle").click();
 }
