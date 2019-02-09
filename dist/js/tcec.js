@@ -58,6 +58,7 @@ var prevblackEngineFull = null
 var prevwhiteEngineFullSc = null;
 var prevblackEngineFullSc = null   
 var h2hRetryCount = 0;
+var scrRetryCount = 0;
 
 var livePVHist = [];
 var whitePv = [];
@@ -352,9 +353,11 @@ function listPosition()
       var getPos = board.position();
       if (getPos != null)
       {
-         plog ("Number of pieces for leela:" + Object.keys(getPos).length);
+         plog ("Number of pieces for leela:" + Object.keys(getPos).length, 0);
+         return (Object.keys(getPos).length - 3);
       }
    }
+   return '-'
 }
 
 function setPgn(pgn)
@@ -584,6 +587,8 @@ function setPgn(pgn)
   var termination = pgn.Headers.Termination;
   if (pgn.Moves.length > 0) {
     var adjudication = pgn.Moves[pgn.Moves.length - 1].adjudication;
+    var piecesleft = listPosition();
+    pgn.Headers.piecesleft = piecesleft;
     if (termination == 'unterminated' && typeof adjudication != 'undefined') {
       termination = '-';
       var movesToDraw = 50;
@@ -2175,19 +2180,24 @@ function eliminateCrash(data)
 function updateScoreHeaders(data) 
 {
    plog ("Inside updateScoreHeaders", 0);
-   var retry = updateScoreHeadersData(data);
-   if (retry)
+   if (scrRetryCount < 10)
    {
-      setTimeout(function() 
-      { 
-         plog ("Second time updated failed, waiting for 30 seconds", 0);
-         prevwhiteEngineFull = null;
-         updateScoreHeaders(data);
-      }, 30000);
+      plog ("Score header update failed:" + scrRetryCount + " , waiting for 30 seconds", 0);
+      scrRetryCount = scrRetryCount + 1;
+      var retry = updateScoreHeadersData(data);
+      if (retry)
+      {
+         setTimeout(function() { updateScoreHeaders(data); }, 10000);
+      }
+      else
+      {
+         scrRetryCount = 0;
+      }
    }
    else
    {
-      plog ("Second time updated succeeded", 0);
+      plog ("Score header update failed:" + scrRetryCount + " , giving up", 0);
+      scrRetryCount = 0;
    }
 }
 
@@ -2242,6 +2252,7 @@ function updateScoreHeadersData(crosstableData)
          }
       }); 
    });
+   plog ("Updated png elo:, whiteEngineFull:" + whiteEngineFull + " ,blackEngineFull:" + blackEngineFull, 0);
    
    prevwhiteEngineFull = whiteEngineFull;
    prevblackEngineFull = blackEngineFull;                                                                                                                                                        
@@ -2379,14 +2390,6 @@ async function updateCrosstableData(data)
    if (tcecElo)
    {
       getOverallElo(data);
-   }
-
-   retryScore = updateScoreHeadersData(crosstableData);
-
-   if (retryScore)
-   {
-      plog ("Giving time to header to get updated", 0);
-      setTimeout(function() { updateScoreHeaders(crosstableData); }, 10000);
    }
 
    _.each(crosstableData.Order, function(engine, key) {
@@ -2538,6 +2541,15 @@ async function updateCrosstableData(data)
      crossTableInitialized = true;
    }
    $('#crosstable').bootstrapTable('load', standings);
+
+   retryScore = updateScoreHeadersData(crosstableData);
+
+   if (retryScore)
+   {
+      plog ("Giving time to header to get updated", 0);
+      setTimeout(function() { updateScoreHeaders(crosstableData); }, 10000);
+   }
+
    oldSchedData = null;
    updateStandtableData(crosstableData);
 }
@@ -2650,6 +2662,9 @@ function updateH2hData(h2hdataip)
          momentDate.add(timezoneDiff);
          engine.Start = momentDate.format('HH:mm:ss on YYYY.MM.DD');
          prevDate = momentDate;
+         var CurrentDate1 = moment().unix();
+         var CurrentDate2 = moment(engine.Start, 'HH:mm:ss on YYYY.MM.DD').unix();
+         //plog ("diff is :" + (CurrentDate2 - CurrentDate1), 0);
       }
       else
       {
@@ -4390,6 +4405,10 @@ function initTables()
        {
            field: 'movesToResignOrWin',
            title: 'Win'
+       },
+       {
+           field: 'piecesleft',
+           title: 'TB'
        },
        {
            field: 'Result',
