@@ -102,7 +102,7 @@ var speedChartData = {
 var depthChartData = {
   labels: [],
   datasets: [{
-    label: 'White Engine Depth',
+    label: 'White Depth',
     lineTension: 0,
     borderColor: '#EFEFEF',
     backgroundColor: '#EFEFEF',
@@ -110,10 +110,28 @@ var depthChartData = {
     data: [
     ]
   }, {
-    label: 'Black Engine Depth',
+    label: 'Black Depth',
     lineTension: 0,
-    borderColor: '#000000',
-    backgroundColor: '#000000',
+    borderColor: '#1a1a1a',
+    backgroundColor: '#1a1a1a',
+    borderDash: [10,5],
+    fill: false,
+    data: [
+    ]
+  }, {
+    label: 'W. Sel Depth',
+    lineTension: 0,
+    borderColor: '#b1b1b1',
+    backgroundColor: '#b1b1b1',
+    fill: false,
+    data: [
+    ]
+  }, {
+    label: 'B. Sel Depth',
+    lineTension: 0,
+    borderColor: '#7e7e7e',
+    backgroundColor: '#7e7e7e',
+    borderDash: [10,5],
     fill: false,
     data: [
     ]
@@ -440,7 +458,12 @@ function initializeCharts()
 	    hoverMode: 'index',
 	    stacked: false,
 	    legend: {
-	      display: false
+	      display: true,
+         position: 'bottom',     
+         fontSize: 5,
+         labels: {
+            boxWidth: 1
+         },
 	    },
 	    title: {
 	      display: false
@@ -550,6 +573,8 @@ function updateChartData()
 	depthChart.data.labels = [];
 	depthChart.data.datasets[0].data = [];
 	depthChart.data.datasets[1].data = [];
+	depthChart.data.datasets[2].data = [];
+	depthChart.data.datasets[3].data = [];
 
 	tbHitsChart.data.labels = [];
 	tbHitsChart.data.datasets[0].data = [];
@@ -574,6 +599,9 @@ function updateChartData()
 
 	whiteDepth = [];
 	blackDepth = [];
+
+	whiteSelDepth = [];
+	blackSelDepth = [];
 
 	whiteTBHits = [];
 	blackTBHits = [];
@@ -657,6 +685,14 @@ function updateChartData()
 				}
 			];
 
+         seldepth = [
+				{
+					'x': moveNumber,
+					'y': move.sd,
+					'ply': plyNum
+				}
+			];
+
 			tbHits = [
 				{
 					'x': moveNumber,
@@ -684,6 +720,7 @@ function updateChartData()
 				whiteSpeed = _.union(whiteSpeed, speed);
 				whiteNodes = _.union(whiteNodes, nodes);
 				whiteDepth = _.union(whiteDepth, depth);
+            whiteSelDepth = _.union(whiteSelDepth, seldepth);
 				whiteTBHits = _.union(whiteTBHits, tbHits);
 
 				evalObject = getLiveEval(key, moveNumber, false, 1);
@@ -708,6 +745,7 @@ function updateChartData()
 				blackSpeed = _.union(blackSpeed, speed);
 				blackNodes = _.union(blackNodes, nodes);
 				blackDepth = _.union(blackDepth, depth);
+            blackSelDepth = _.union(blackSelDepth, seldepth);
 				blackTBHits = _.union(blackTBHits, tbHits);
 
 				// evalObject = getLiveEval(key, moveNumber, true);
@@ -757,6 +795,8 @@ function updateChartData()
 	depthChart.data.labels = labels;
 	depthChart.data.datasets[0].data = whiteDepth;
 	depthChart.data.datasets[1].data = blackDepth;
+	depthChart.data.datasets[2].data = whiteSelDepth;
+	depthChart.data.datasets[3].data = blackSelDepth;
 
 	tbHitsChart.data.labels = labels;
 	tbHitsChart.data.datasets[0].data = whiteTBHits;
