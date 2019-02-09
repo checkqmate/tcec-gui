@@ -353,9 +353,11 @@ function listPosition()
       var getPos = board.position();
       if (getPos != null)
       {
-         plog ("Number of pieces for leela:" + Object.keys(getPos).length);
+         plog ("Number of pieces for leela:" + Object.keys(getPos).length, 0);
+         return (Object.keys(getPos).length - 3);
       }
    }
+   return '-'
 }
 
 function setPgn(pgn)
@@ -585,6 +587,8 @@ function setPgn(pgn)
   var termination = pgn.Headers.Termination;
   if (pgn.Moves.length > 0) {
     var adjudication = pgn.Moves[pgn.Moves.length - 1].adjudication;
+    var piecesleft = listPosition();
+    pgn.Headers.piecesleft = piecesleft;
     if (termination == 'unterminated' && typeof adjudication != 'undefined') {
       termination = '-';
       var movesToDraw = 50;
@@ -4401,6 +4405,10 @@ function initTables()
        {
            field: 'movesToResignOrWin',
            title: 'Win'
+       },
+       {
+           field: 'piecesleft',
+           title: 'TB'
        },
        {
            field: 'Result',
