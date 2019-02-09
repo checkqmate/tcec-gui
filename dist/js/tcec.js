@@ -101,6 +101,8 @@ var twitchAccount = 'TCEC_Chess_TV';
 var twitchChatUrl = 'https://www.twitch.tv/embed/' + twitchAccount + '/chat';
 var twitchSRCIframe = 'https://player.twitch.tv/?channel=' + twitchAccount;
 
+var eventNameHeader = 0;
+
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
     .addClass(highlightClass);
@@ -353,8 +355,8 @@ function listPosition()
       var getPos = board.position();
       if (getPos != null)
       {
-         plog ("Number of pieces for leela:" + Object.keys(getPos).length, 0);
-         return (Object.keys(getPos).length - 3);
+         plog ("Number of pieces for leela:" + Object.keys(getPos).length, 1);
+         return (Object.keys(getPos).length - 6);
       }
    }
    return '-'
@@ -589,6 +591,16 @@ function setPgn(pgn)
     var adjudication = pgn.Moves[pgn.Moves.length - 1].adjudication;
     var piecesleft = listPosition();
     pgn.Headers.piecesleft = piecesleft;
+    if (eventNameHeader == 0)
+    {
+       eventNameHeader = pgn.Headers.Event;
+       if (eventTmp = eventNameHeader.match(/TCEC Season (.*)/))
+       {
+          plog (eventTmp[1], 0);
+          pgn.Headers.Event = "S" + eventTmp[1]; 
+          eventNameHeader = pgn.Headers.Event;
+       }
+    }
     if (termination == 'unterminated' && typeof adjudication != 'undefined') {
       termination = '-';
       var movesToDraw = 50;
@@ -2369,6 +2381,7 @@ function fixOrder()
 async function updateCrosstableData(data) 
 {
    crosstableData = data;
+   eventNameHeader = 0;
    plog ("Updating crosstable:", 0);
    var abbreviations = [];
    var standings = [];
@@ -4423,12 +4436,12 @@ function initTables()
            title: 'Opening'
        },
        {
-           field: 'Event',
-           title: 'Event'
-       },
-       {
            field: 'ECO',
            title: 'ECO'
+       },
+       {
+           field: 'Event',
+           title: 'Event'
        },
        {
            field: 'Viewers',

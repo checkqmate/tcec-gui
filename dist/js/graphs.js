@@ -178,6 +178,8 @@ function drawEval()
 	    stacked: false,
 	    legend: {
 	      display: true,
+         position: 'bottom',     
+         fontSize: 5,
          labels: {
             boxWidth: 1
          },
