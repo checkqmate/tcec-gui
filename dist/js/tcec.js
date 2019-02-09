@@ -1765,7 +1765,7 @@ $('.pv-board-reverse1').click(function(e) {
 });
 
 $('.pv-board-reverse2').click(function(e) {
-  pvBoard.flip();
+  pvBoardb.flip();
   e.preventDefault();
   return false;
 });
