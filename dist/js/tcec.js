@@ -1760,12 +1760,20 @@ $('.pv-board-to-last2').click(function(e) {
 
 $('.pv-board-reverse1').click(function(e) {
   pvBoardw.flip();
+  pvBoardwc.flip();
   e.preventDefault();
   return false;
 });
 
 $('.pv-board-reverse2').click(function(e) {
   pvBoardb.flip();
+  pvBoardbc.flip();
+  e.preventDefault();
+  return false;
+});
+
+$('#pv-board-reverse').click(function(e) {
+  pvBoarda.flip();
   e.preventDefault();
   return false;
 });
