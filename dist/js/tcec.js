@@ -3386,6 +3386,7 @@ function updateLiveEvalDataHistory(engineDatum, fen, container, contno)
 }
 
 var clearedAnnotation = 0;
+var lastCont2MoveNo = 0;
 function updateLiveEvalData(datum, update, fen, contno, initial)
 {
    var container = '#live-eval-cont' + contno;
@@ -3405,6 +3406,7 @@ function updateLiveEvalData(datum, update, fen, contno, initial)
    {
       board.clearAnnotation();
       clearedAnnotation = 1;
+      plog ("XXX: cleared annotation", 0);
    }
 
    plog ("Annotation did not get cleared" + clearedAnnotation + ",contno:" + contno, 1);
@@ -3538,6 +3540,10 @@ function updateLiveEvalData(datum, update, fen, contno, initial)
                plog ("pvlocation not defined");
             }
             moveCount++;
+            if (contno == 2)
+            {
+               lastCont2MoveNo = moveCount;
+            }
           } else {
             moveContainer = _.union(moveContainer, [move]);
           }
@@ -3556,6 +3562,17 @@ function updateLiveEvalData(datum, update, fen, contno, initial)
           else
           {
              color = 'blues';
+          }
+          if (contno == 1)
+          {
+             if (moveCount > lastCont2MoveNo)
+             {
+                board.clearAnnotation();
+             }
+             else
+             {
+                plog ("XXX: Should not clear annotation", 0);
+             }
           }
           board.addArrowAnnotation(livePv[0].from, livePv[0].to, color, board.orientation());
         }

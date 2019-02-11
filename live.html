@@ -25,7 +25,7 @@
   <body>
 
    <div id="note" 
-      style="display:inline">
+      style="display:none">
       TCEC had 2403 viewers. This is a MEGA record. Thanks to all the supporters and viewers. Twitch was 1800 viewers.
         <a id="close" style="color: whitesmoke !important;" href="#alert">[x]</a>
     </div>
@@ -1551,7 +1551,7 @@ To play the games a special version of cutechess-cli is used. This is a command 
         });
       });
 
-      var socket = io.connect('https://tcec.chessdom.com:8001');
+      var socket = io.connect('https://tcec.chessdom.com:8000');
      
       socket.on('crosstable', function(data){
          updateCrosstableData(data);

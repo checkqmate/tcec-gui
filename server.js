@@ -101,7 +101,7 @@ var count = 0;
 var socket = 0;
 var totalCount = 0;
 var socketArray = [];
-var userCountFactor = 1;
+var userCountFactor = 3.4;
 
 function arrayRemove(arr, value) {
 
@@ -129,7 +129,7 @@ function showDuplicates(names)
 
 function userCount()
 {
-   return (parseInt(socketArray.length/userCountFactor));
+   return (parseInt(socketArray.length * userCountFactor));
 }
 
 listener.sockets.on('connection', function(s){
@@ -145,7 +145,7 @@ listener.sockets.on('connection', function(s){
          console.log ("count connected:" + userCount());
          socket.broadcast.emit('users', {'count': userCount()});
          socket.emit('users', {'count': userCount()});
-         showDuplicates(socketArray);
+         //showDuplicates(socketArray);
       }
       socket.emit('users', {'count': userCount()});
    }
@@ -257,7 +257,7 @@ var prevCrossData = 0;
 var prevSchedData = 0;
 
 watcher.on('change', (path, stats) => {
-   console.log ("path changed:" + path + ",count is " + userCount());
+   console.log ("path changed:" + path + ",count is:" + userCount() + " ,server is :" + pid);
    if (!socket)
    {
       return;
