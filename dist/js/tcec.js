@@ -1007,6 +1007,11 @@ function getABPct(engineName, egEval)
 function getPct(engineName, eval)
 {
    var shortName = getShortEngineName(engineName);
+
+   if (isNaN(eval)) {
+      return (engineName + ' ' + eval);
+      }
+
    if (shortName == "LCZero")              
    {
       return (getNNPct(shortName, eval));
@@ -3599,7 +3604,6 @@ function updateLiveEvalData(datum, update, fen, contno, initial)
     } else {
       parseScore = (engineDatum.eval * 1).toFixed(2);
     }
-
    
     var evalStr = getPct(engineDatum.engine, parseScore);
     
