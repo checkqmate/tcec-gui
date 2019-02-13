@@ -941,6 +941,82 @@ function getEvalFromPly(ply)
   };
 }
 
+function getScorePct(reverse, engineName, draEval, winEval, egEval)
+{
+   var retStr = engineName;
+   retStr = retStr + ' ' + egEval + ' ';
+
+   if (!reverse)
+   {
+      if (winEval == 0)
+      {
+         retStr += " [" + draEval + "% D]";
+      }
+      else
+      {
+         retStr += " [" + winEval + "% W | " + draEval + "% D]";
+      }
+   }
+   else
+   {
+      if (winEval == 0)
+      {
+         retStr += " [" + draEval + "% D]";
+      }
+      else
+      {
+         retStr += " [" + winEval + "% B | " + draEval + "% D]";
+      }
+   }
+
+   return retStr;
+}
+
+function getNNPct(engineName, egEval)
+{
+   var reverse = 0;
+   var whiteWinPct = (((((Math.atan((egEval * 100)/290.680623072))/3.096181612)+0.5) * 100)-50);
+   if (egEval < 0)
+   {
+      reverse = 1;
+      whiteWinPct = -whiteWinPct;
+   }
+   var winEval = parseFloat(Math.max(0, whiteWinPct * 2)).toFixed(1);
+   var losEval = 0;
+   var draEval = parseFloat(100 - Math.max(winEval, losEval)).toFixed(1);
+   var retStr = getScorePct(reverse, engineName, draEval, winEval, egEval);
+   return (retStr);
+}
+
+function getABPct(engineName, egEval)
+{
+   var reverse = 0;
+   var whiteWinPct = (50 - (100/(1 + Math.pow(10, egEval/4))));
+   if (egEval <= 0)
+   {
+      reverse = 1;
+      whiteWinPct = -whiteWinPct;
+   }
+   var winEval = parseFloat(Math.max(0, whiteWinPct * 2)).toFixed(1);
+   var losEval = 0;
+   var draEval = parseFloat(100 - Math.max(winEval, losEval)).toFixed(1);
+   var retStr = getScorePct(reverse, engineName, draEval, winEval, egEval);
+   return (retStr);
+}
+
+function getPct(engineName, eval)
+{
+   var shortName = getShortEngineName(engineName);
+   if (shortName == "LCZero")              
+   {
+      return (getNNPct(shortName, eval));
+   }
+   else
+   {
+      return (getABPct(shortName, eval));
+   }
+}
+
 function updateMoveValues(whiteToPlay, whiteEval, blackEval)
 {
    /* Ben: Not sure why we need to update only if we are not viewing active move */
@@ -966,6 +1042,13 @@ function updateMoveValues(whiteToPlay, whiteEval, blackEval)
    }
 
    $('.white-engine-eval').html(whiteEval.eval);
+
+   var blackEvalPt = getPct(loadedPgn.Headers.Black, blackEval.eval);
+   var whiteEvalPt = getPct(loadedPgn.Headers.White, whiteEval.eval);
+   $('.black-engine-name-full-new').html(blackEvalPt);
+   $('.white-engine-name-full-new').html(whiteEvalPt);
+   //$(eval a=(((((Math.atan(($(query)100)/290.680623072))/3.096181612)+0.5)100)-50); 
+   //lose=Math.max(0,a-2); draw=(100-Math.max(win,lose)).toFixed(2); win=win.toFixed(2); lose=lose.toFixed(2); 
    $('.white-engine-speed').html(whiteEval.speed);
    $('.white-engine-nodes').html(whiteEval.nodes);
    $('.white-engine-depth').html(whiteEval.depth);
@@ -3516,8 +3599,11 @@ function updateLiveEvalData(datum, update, fen, contno, initial)
     } else {
       parseScore = (engineDatum.eval * 1).toFixed(2);
     }
+
+   
+    var evalStr = getPct(engineDatum.engine, parseScore);
     
-    $(container).append('<h6>' + engineDatum.engine + ' PV ' + parseScore + '</h6><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
+    $(container).append('<h6>' + evalStr + ' PV ' + '</h6><small>[D: ' + engineDatum.depth + ' | TB: ' + engineDatum.tbhits + ' | Sp: ' + engineDatum.speed + ' | N: ' + engineDatum.nodes +']</small>');
     var moveContainer = [];
     if (livePvsC.length > 0) {
       _.each(livePvsC, function(livePv, pvKey) {
