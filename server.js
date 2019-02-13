@@ -101,7 +101,7 @@ var count = 0;
 var socket = 0;
 var totalCount = 0;
 var socketArray = [];
-var userCountFactor = 3.4;
+var userCountFactor = 0.7;
 
 function arrayRemove(arr, value) {
 
@@ -129,7 +129,22 @@ function showDuplicates(names)
 
 function userCount()
 {
-   return (parseInt(socketArray.length * userCountFactor));
+   var userCountFinal = parseInt(socketArray.length);
+
+   if (userCountFinal < totalCount)
+   {
+      userCountFinal = totalCount;
+   }
+   else if (totalCount)
+   {
+      userCountFinal = totalCount;
+   } 
+   return (parseInt(userCountFinal * userCountFactor));
+}
+
+function userCountActual()
+{
+   return (parseInt(socketArray.length));
 }
 
 listener.sockets.on('connection', function(s){
@@ -166,7 +181,7 @@ listener.sockets.on('connection', function(s){
 
 });
 
-//var liveChartInterval = setInterval(function() { process.send({'workers': count}) }, 15000);
+var liveChartInterval = setInterval(function() { process.send({'workers': userCountActual()}) }, 15000);
 
 function broadCastData(socket, message, file, currData, prevData)
 {
@@ -175,7 +190,7 @@ function broadCastData(socket, message, file, currData, prevData)
 
    if (a == b)
    {
-      console.log ("File "+ file + " did not change:");
+      //console.log ("File "+ file + " did not change:");
       return;
    }
    socket.emit(message, currData); 
@@ -235,7 +250,7 @@ function getDeltaPgn(pgnX)
          pgn.Moves[key]= pgnX.Moves[key];
          pgn.Moves[key].Moveno = key + 1;
          pgn.lastMoveLoaded = key;
-         console.log ("Setting pgn.lastMoveLoaded to " + pgn.lastMoveLoaded);
+         //console.log ("Setting pgn.lastMoveLoaded to " + pgn.lastMoveLoaded);
       }
       else
       {
@@ -257,7 +272,12 @@ var prevCrossData = 0;
 var prevSchedData = 0;
 
 watcher.on('change', (path, stats) => {
-   console.log ("path changed:" + path + ",count is:" + userCount() + " ,server is :" + pid);
+   if (0)
+   {
+      console.log ("path changed:" + path + ",count is:" + userCount() + 
+                   " ,actual count is:" + parseInt(userCountActual() * userCountFactor) + 
+                   " ,server is :" + pid);
+   }
    if (!socket)
    {
       return;
@@ -322,7 +342,8 @@ watcher.on('change', (path, stats) => {
    }
 });
 
- process.on('message', function(msg) {
-    //console.log('Worker ' + process.pid + ' received message from master.', JSON.stringify(msg));
-    totalCount = parseInt(msg.count);
+process.on('message', function(msg) 
+{
+   console.log('Worker ' + process.pid + ' received message from master.', JSON.stringify(msg));
+   totalCount = parseInt(msg.count);
 });

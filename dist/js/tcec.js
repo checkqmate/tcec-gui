@@ -3569,11 +3569,14 @@ function updateLiveEvalData(datum, update, fen, contno, initial)
    // handle success
 }
 
+var engine2LiveData = undefined;
+
 function updateLiveEval() {
    axios.get('data.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
       updateLiveEvalData(response.data, 1, null, 1, 1);
+      updateLiveEvalData(engine2LiveData, 1, null, 2, 1);
    })
    .catch(function (error) {
       // handle error
@@ -3582,7 +3585,7 @@ function updateLiveEval() {
    axios.get('data1.json?no-cache' + (new Date()).getTime())
    .then(function (response)
    {
-      updateLiveEvalData(response.data, 1, null, 2, 1);
+      engine2LiveData = response.data;
    })
    .catch(function (error) {
       // handle error
