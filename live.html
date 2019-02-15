@@ -26,7 +26,7 @@
 
    <div id="note" 
       style="display:none">
-      TCEC had 2403 viewers. This is a MEGA record. Thanks to all the supporters and viewers. Twitch was 1800 viewers.
+        <span id="notetext"></span>
         <a id="close" style="color: whitesmoke !important;" href="#alert">[x]</a>
     </div>
     <script>
@@ -1531,12 +1531,7 @@ To play the games a special version of cutechess-cli is used. This is a command 
           { 
              updateWinners();
           }, 1000);
-          window.setTimeout(function() 
-          { 
-             close = document.getElementById("close");
-             note = document.getElementById("note");
-             note.style.display = 'none';
-          }, 30000);
+          hideBanner();
           window.setTimeout(function() 
                             { 
                                updateLiveChart();
@@ -1568,7 +1563,7 @@ To play the games a special version of cutechess-cli is used. This is a command 
         });
       });
 
-      var socket = io.connect('https://tcec.chessdom.com:8000');
+      var socket = io.connect('https://tcecbeta.club:8001');
      
       socket.on('crosstable', function(data){
          updateCrosstableData(data);
@@ -1599,6 +1594,10 @@ To play the games a special version of cutechess-cli is used. This is a command 
       socket.on('users', function(data){
         setUsers(data);
         });
+      socket.on('banner', function(data){
+        showBanner(data);
+        });
+
 
     </script>
     <audio id="move_sound">

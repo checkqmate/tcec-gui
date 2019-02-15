@@ -61,6 +61,7 @@ watcher.add(liveeval);
 watcher.add('live.json');
 watcher.add('schedule.json');
 watcher.add('liveeval.json');
+watcher.add('banner.txt');
 
 app.get('/api/gameState', function (req, res) {
    console.log('api gameState request');
@@ -333,6 +334,10 @@ watcher.on('change', (path, stats) => {
       {
          broadCastData(socket, 'schedule', path, data, prevSchedData);
          prevSchedData = data;
+      }
+      if (path.match(/banner/))
+      {
+         socket.broadcast.emit('banner', data);
       }
    }
    catch (error) 

@@ -4857,3 +4857,27 @@ function toggleTheme()
    updateTables();
    $(".navbar-toggle").click();
 }
+
+function hideBanner(timeDispl)
+{
+   if (timeDispl == undefined)
+   {
+      timeDispl = 30000;
+   }
+
+   setTimeout(function() 
+   { 
+      close = document.getElementById("close");
+      note = document.getElementById("note");
+      note.style.display = 'none';
+   }, timeDispl);
+}
+
+function showBanner(data)
+{
+   close = document.getElementById("close");
+   note = document.getElementById("note");
+   note.style.display = 'inline';
+   document.getElementById("notetext").textContent = data.message;
+   hideBanner(60000);
+}
