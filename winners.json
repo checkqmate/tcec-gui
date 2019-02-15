@@ -1,6 +1,6 @@
 [
    {
-      "name": "14C2",
+      "name": "Cup2",
       "winner": "LCZero v20.1-32742",
       "runner": "Houdini 6.03",
       "date": "Feb 03, 2019",
@@ -14,7 +14,7 @@
       "link": "http://legacy-tcec.chessdom.com/archive.php?se=13&sf&ga=1"
    },
    {
-      "name": "13C1",
+      "name": "Cup1",
       "winner": "Stockfish 270918",
       "runner": "Houdini 6.03",
       "date": "Oct 21, 2018",
@@ -82,6 +82,13 @@
       "runner": "Stockfish 250413",
       "date": "May 09, 2013",
       "link": "http://legacy-tcec.chessdom.com/archive.php?se=4&sf&ga=1"
+   },
+   {
+      "name": "3",
+      "winner": "Abandonded",
+      "runner": "Abandonded",
+      "date": "May 18, 2011",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=3&st=2a&ga=1"
    },
    {
       "name": "2",

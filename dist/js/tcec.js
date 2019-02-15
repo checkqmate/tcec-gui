@@ -1969,11 +1969,11 @@ function crossFormatter(value, row, index, field) {
       }
       if (retStr == '')
       {
-         retStr = '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
+         retStr = '<a title="' + engine.Game + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
       }
       else
       {
-         retStr += ' ' + '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
+         retStr += ' ' + '<a title="' + engine.Game + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
       }
       countGames = countGames + 1;
       if (countGames%10 == 0)
@@ -2010,11 +2010,11 @@ function formatter(value, row, index, field) {
       }
       if (retStr == '')
       {
-         retStr = '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
+         retStr = '<a title="' + engine.Game + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
       }
       else
       {
-         retStr += ' ' + '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
+         retStr += ' ' + '<a title="' + engine.Game + '" style="cursor:pointer; color: ' + gameArrayClass[gameXColor] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Result + '</a>';
       }
       countGames = countGames + 1;
       if (countGames%10 == 0)
@@ -3239,6 +3239,7 @@ function setDark()
   $('#info-frame').attr('src', 'info.html?body=dark');
   $('#crosstable').addClass('table-dark');
   $('#schedule').addClass('table-dark');
+  $('#winner').addClass('table-dark');
   $('#standtable').addClass('table-dark');
   $('#infotable').addClass('table-dark');
   $('#h2h').addClass('table-dark');
@@ -3257,6 +3258,7 @@ function setLight()
   setTwitchBackground(1);
   $('#info-frame').attr('src', 'info.html?body=light');
   $('#standtable').removeClass('table-dark');
+  $('#winner').removeClass('table-dark');
   $('#infotable').removeClass('table-dark');
   $('#h2h').removeClass('table-dark');
   $('#themecheck').prop('checked', true);
@@ -4487,19 +4489,15 @@ function tcecHandleKey(e)
     switch (keycode)
     {  
         case 37:
-        case 74:
             backButton();
             break;
         case 38:
-        case 72:
             firstButton();
             break;
         case 39:
-        case 75:
             forwardButton();
             break;
         case 40:
-        case 76:
             endButton();
             break;
         default:
@@ -4789,7 +4787,7 @@ function initTables()
        },
        {
            field: 'runner',
-           title: 'Runner',
+           title: 'Runner-up',
            sortable: true
        }, 
        {
