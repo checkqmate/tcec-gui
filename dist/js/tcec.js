@@ -2871,7 +2871,6 @@ function updateScheduleData(scdatainput)
       {
          gamesDone = engine.Game;
          engine.Game = '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass[3] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Game + '</a>';
-         console.log ("XXX: engine.Game is :" + engine.Game);
       }
       engine.FixWhite = engine.White;
       engine.FixBlack = engine.Black;
@@ -2919,7 +2918,6 @@ function updateWinnersData(winnerData)
       var redColor = 'darkred';
       var link = "\'" + engine.link + "\'";
       engine.name = '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass [0] + ';"onclick="openLinks(' + link + ')">' + engine.name + '</a>';
-      console.log ("XXX: link is :" + engine.link + "," + link + ",nu:" + engine.name);
       scdata = _.union(scdata, [engine]);
    });
 

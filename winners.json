@@ -1,0 +1,100 @@
+[
+   {
+      "name": "14C2",
+      "winner": "LCZero v20.1-32742",
+      "runner": "Houdini 6.03",
+      "date": "Feb 03, 2019",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=141&di=6&ga=1"
+   },
+   {
+      "name": "13",
+      "winner": "Stockfish 18102108",
+      "runner": "Komodo 2155.00",
+      "date": "Nov 07, 2018",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=13&sf&ga=1"
+   },
+   {
+      "name": "13C1",
+      "winner": "Stockfish 270918",
+      "runner": "Houdini 6.03",
+      "date": "Oct 21, 2018",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=131&di=5&ga=1"
+   },
+   {
+      "name": "12",
+      "winner": "Stockfish 180614",
+      "runner": "Komodo 12.1.1",
+      "date": "Jul 05, 2018",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=12&sf&ga=1"
+   },
+   {
+      "name": "11",
+      "winner": "Stockfish 260318",
+      "runner": "Houdini 6.03",
+      "date": "Apr 15, 2018",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=11&sf&ga=1"
+   },
+   {
+      "name": "10",
+      "winner": "Houdini 6.03",
+      "runner": "Komodo 1970.00",
+      "date": "Dec 07, 2017",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=10&sf&ga=1"
+   },
+   {
+      "name": "9",
+      "winner": "Stockfish 8",
+      "runner": "Houdini 5",
+      "date": "Dec 05, 2016",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=9&sf&ga=1"
+   },
+   {
+      "name": "8",
+      "winner": "Komodo 9.3x",
+      "runner": "Stockfish 021115",
+      "date": "Nov 30, 2015",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=8&sf&ga=1"
+   },
+   {
+      "name": "7",
+      "winner": "Komodo 1333",
+      "runner": "Stockfish 141214",
+      "date": "Dec 27, 2014",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=7&sf&ga=1"
+   },
+   {
+      "name": "6",
+      "winner": "Stockfish 170514",
+      "runner": "Komodo 7x",
+      "date": "May 30, 2014",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=6&sf&ga=1"
+   },
+   {
+      "name": "5",
+      "winner": "Komodo 1142",
+      "runner": "Stockfish 191113",
+      "date": "Dec 01, 2013",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=5&sf&ga=1"
+   },
+   {
+      "name": "4",
+      "winner": "Houdini 3",
+      "runner": "Stockfish 250413",
+      "date": "May 09, 2013",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=4&sf&ga=1"
+   },
+   {
+      "name": "2",
+      "winner": "Houdini 1.5a",
+      "runner": "Rybka 4.1",
+      "date": "Apr 21, 2011",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=2&em&ga=1"
+   },
+   {
+      "name": "1",
+      "winner": "Houdini 1.5a",
+      "runner": "Rybka 4.0",
+      "date": "Feb 06, 2011",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=1&em&ga=1"
+   }
+]
