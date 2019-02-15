@@ -906,7 +906,7 @@ function getEvalFromPly(ply)
   clockPreviousMove = selectedMove;
   speed = selectedMove.s;
   if (speed < 1000000) {
-    speed = Math.round(speed / 1000) + ' Knps';
+    speed = Math.round(speed / 1000) + ' knps';
   } else {
     speed = Math.round(speed / 1000000) + ' Mnps';
   }

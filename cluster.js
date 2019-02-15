@@ -1,11 +1,12 @@
 const cluster = require('cluster');
 const os = require('os');
-const numServer = 5;
+const numServer = 2;
 
 if (cluster.isMaster) 
 {
    const cpus = os.cpus().length;
    var count = 0;
+   var clientCount = 0;
    for (let i = 0; i < numServer; i++) 
    {
       console.log(`Forking for ${cpus} CPUs`);
@@ -15,8 +16,9 @@ if (cluster.isMaster)
       {
          if (typeof msg.workers != 'undefined')
          {
-            console.log ("CLUSTER: Count is :" + count + " ,got count:" + parseInt(msg.workers));
+            console.log ("CLUSTER: Count is :" + count + " ,got count:" + parseInt(msg.workers) + ",clientCount:" + clientCount);
             count = parseInt(count) + parseInt(msg.workers);
+            clientCount = clientCount + 1;
          }
       });
    }
@@ -31,12 +33,13 @@ if (cluster.isMaster)
 
    const updateWorkers = () => {
      eachWorker(worker => {
-       if (count > 0)
+       if (clientCount == numServer)
        {
           worker.send({'count':count});
        }
      });
      count = 0;
+     clientCount = 0;
    };
    
    updateWorkers();
