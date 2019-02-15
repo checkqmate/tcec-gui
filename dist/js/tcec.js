@@ -1922,6 +1922,11 @@ function openCross(gamen)
    window.open(link,'_blank');
 }
 
+function openLinks(link)
+{
+   window.open(link,'_blank');
+}
+
 var gameArrayClass = ['#39FF14', 'red', 'whitesmoke', 'orange'];
 
 function setDarkMode(value)
@@ -2866,6 +2871,7 @@ function updateScheduleData(scdatainput)
       {
          gamesDone = engine.Game;
          engine.Game = '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass[3] + ';"onclick="openCross(' + engine.Game + ')">' + engine.Game + '</a>';
+         console.log ("XXX: engine.Game is :" + engine.Game);
       }
       engine.FixWhite = engine.White;
       engine.FixBlack = engine.Black;
@@ -2894,6 +2900,43 @@ function updateScheduleData(scdatainput)
    var options = $('#schedule').bootstrapTable('getOptions');
    pageNum = parseInt(gamesDone/options.pageSize) + 1;
    $('#schedule').bootstrapTable('selectPage', pageNum);
+}
+
+function updateWinnersData(winnerData) 
+{
+   plog ("Updating winners:", 0);
+   var scdata = [];
+   var prevDate = 0;
+   var momentDate = 0;
+   var diff = 0;
+   var gameDiff = 0;
+   var timezoneDiff = moment().utcOffset() * 60 * 1000 - 3600 * 1000;
+   var schedEntry = {};
+   var data = shallowCopy(winnerData);
+
+   _.each(data, function(engine, key) 
+   {
+      var redColor = 'darkred';
+      var link = "\'" + engine.link + "\'";
+      engine.name = '<a title="TBD" style="cursor:pointer; color: ' + gameArrayClass [0] + ';"onclick="openLinks(' + link + ')">' + engine.name + '</a>';
+      console.log ("XXX: link is :" + engine.link + "," + link + ",nu:" + engine.name);
+      scdata = _.union(scdata, [engine]);
+   });
+
+   $('#winner').bootstrapTable('load', scdata);
+}
+
+function updateWinners() 
+{
+    axios.get('winners.json')
+    .then(function (response) 
+    {
+      updateWinnersData(response.data);
+    })
+    .catch(function (error) {
+      // handle error
+      plog(error, 0);
+    });
 }
 
 function updateSchedule() 
@@ -4720,6 +4763,41 @@ function initTables()
        {
          field: 'Start',
          title: 'Start'
+       }
+     ]
+   });
+
+   $('#winner').bootstrapTable({
+       classes: 'table table-striped table-no-bordered',
+       pagination: true,
+       paginationLoop: true,
+       striped: true,
+       smartDisplay: true,
+       sortable: true,
+       pageList: [10,20,50,100],
+       pageSize:10,
+       rememberOrder: true,
+       search: true,   
+       columns: [
+       {
+           field: 'name',
+           title: 'S#',
+           visible: true
+       },
+       {
+           field: 'winner',
+           title: 'Champion',
+           sortable: true
+       },
+       {
+           field: 'runner',
+           title: 'Runner',
+           sortable: true
+       }, 
+       {
+         field: 'date',
+         title: 'Date',
+         sortable: false
        }
      ]
    });
