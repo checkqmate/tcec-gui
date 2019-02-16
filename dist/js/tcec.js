@@ -4879,5 +4879,13 @@ function showBanner(data)
    note = document.getElementById("note");
    note.style.display = 'inline';
    document.getElementById("notetext").textContent = data.message;
-   hideBanner(60000);
+   if (data.timeout == undefined)
+   {
+      data.timeout = 30000;
+   }
+   else
+   {
+      data.timeout = data.timeout * 1000;
+   }
+   hideBanner(data.timeout);
 }
