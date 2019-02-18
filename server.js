@@ -102,7 +102,7 @@ var count = 0;
 var socket = 0;
 var totalCount = 0;
 var socketArray = [];
-var userCountFactor = 0.7;
+var userCountFactor = 1.0;
 
 function arrayRemove(arr, value) {
 
