@@ -183,6 +183,7 @@ listener.sockets.on('connection', function(s){
 });
 
 var liveChartInterval = setInterval(function() { process.send({'workers': userCountActual()}) }, 15000);
+var sendUserounct = setTimeout(function() { socket.broadcast.emit('users', {'count': userCount()});}, 30000);
 
 function broadCastData(socket, message, file, currData, prevData)
 {
@@ -319,7 +320,6 @@ watcher.on('change', (path, stats) => {
             socket.broadcast.emit('pgn', delta);
             socket.emit('pgn', delta);
             socket.broadcast.emit('users', {'count': userCount()});
-            socket.emit('users', {'count': userCount()});
             console.log ("Sent pgn data:" + JSON.stringify(delta).length + ",orig" + JSON.stringify(data).length + ",changed" + delta.gameChanged);
             lastPgnTime = Date.now(); 
          }

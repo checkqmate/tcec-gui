@@ -3279,6 +3279,7 @@ function setDefaults()
    setMoveArrowsDefault();
    setBoard();
    setCrash();
+   loadBoardMiddle();
 }
 
 function setDefaultThemes()
@@ -4888,4 +4889,46 @@ function showBanner(data)
       data.timeout = data.timeout * 1000;
    }
    hideBanner(data.timeout);
+}
+
+function setCheckBoardMiddle(value, id)
+{
+   if (value)
+   {
+      $('#middle-data-column').addClass('order-first');
+      $(id).prop('checked', true);
+      localStorage.setItem('tcec-board-middle', 1);
+   }
+   else
+   {
+      $('#middle-data-column').removeClass('order-first');
+      $(id).prop('checked', false);
+      localStorage.setItem('tcec-board-middle', 0);
+   }
+}
+
+function checkBoardMiddle(checkbox)
+{
+   if (checkbox.checked)
+   {
+      setCheckBoardMiddle(1, '#middlecheck');
+   }
+   else
+   {
+      setCheckBoardMiddle(0, '#middlecheck');
+   }
+}
+
+function loadBoardMiddle()
+{
+   var midd = localStorage.getItem('tcec-board-middle');
+
+   if ((midd == undefined) || (midd == 0))
+   {
+      setCheckBoardMiddle(0, '#middlecheck');
+   }
+   else
+   {
+      setCheckBoardMiddle(1, '#middlecheck');
+   }
 }
