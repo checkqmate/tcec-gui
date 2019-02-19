@@ -163,7 +163,10 @@ listener.sockets.on('connection', function(s){
          socket.emit('users', {'count': userCount()});
          //showDuplicates(socketArray);
       }
-      socket.emit('users', {'count': userCount()});
+      else
+      {
+         socket.emit('users', {'count': userCount()});
+      }
    }
 
    socket.on('disconnect', function()
@@ -183,7 +186,7 @@ listener.sockets.on('connection', function(s){
 });
 
 var liveChartInterval = setInterval(function() { process.send({'workers': userCountActual()}) }, 15000);
-var sendUserounct = setTimeout(function() { socket.broadcast.emit('users', {'count': userCount()});}, 30000);
+var sendUserounct = setTimeout(function() { socket.broadcast.emit('users', {'count': userCount()});}, 15000);
 
 function broadCastData(socket, message, file, currData, prevData)
 {
