@@ -348,6 +348,18 @@ canvas {
    color:whitesmoke;
 }
 
+.whiteFill
+{
+   background-color: whitesmoke;
+   color: black;
+}
+
+.blackFill
+{
+   background-color: black;
+   color: whitesmoke;
+}
+
 .slow-spin {
   -webkit-animation: fa-spin 6s infinite linear;
   animation: fa-spin 6s infinite linear;
@@ -479,4 +491,8 @@ canvas {
     -webkit-animation: slideDown 2.5s 1.0s 1 ease forwards;
     -moz-transform:    translateY(-50px);
     -moz-animation:    slideDown 2.5s 1.0s 1 ease forwards;
+}
+
+.containernav {
+max-width: 900px;
 }

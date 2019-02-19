@@ -1429,6 +1429,10 @@ $(document).on('click', '#board-reverse', function(e) {
   $('.board-top-engine-eval.' + newOrientation + '-time-remaining').removeClass(newOrientation + '-time-remaining').addClass(oldOrientation + '-time-remaining');
   $('.board-top-engine-eval.' + newOrientation + '-time-used').removeClass(newOrientation + '-time-used').addClass(oldOrientation + '-time-used');
   $('.board-top-engine-eval.' + newOrientation + '-engine-eval').removeClass(newOrientation + '-engine-eval').addClass(oldOrientation + '-engine-eval');
+  $('#board-top-engine-eval').addClass(oldOrientation + 'Fill');
+  $('#board-top-engine-eval').removeClass(newOrientation + 'Fill');
+  $('#board-bottom-engine-eval').addClass(newOrientation + 'Fill');
+  $('#board-bottom-engine-eval').removeClass(oldOrientation + 'Fill');
 
   setInfoFromCurrentHeaders();
   handlePlyChange(false);
