@@ -38,9 +38,8 @@ var server = https.createServer(options, app).listen(parseInt(portnum), function
 });
 var listener = io.listen(server);                                                                                                 
 io.attach(server, {
-  pingInterval: 10000,
-  pingTimeout: 5000,
-  cookie: false
+  pingInterval: 25000,
+  pingTimeout: 5000
 });
 var watcher = chokidar.watch('crosstable.json', {
       persistent: true,
@@ -161,13 +160,9 @@ io.on ('connection', function(s){
    if (socketArray.indexOf(clientIp) === -1)
    {
       socketArray.push(clientIp);
-      if (socketArray.length % 200 == 0)
+      if (socketArray.length % 500 == 0)
       {
          console.log ("count connected:" + userCount());
-         io.sockets.emit('users', {'count': userCount()});
-      }
-      else
-      {
          io.sockets.emit('users', {'count': userCount()});
       }
    }
@@ -175,10 +170,6 @@ io.on ('connection', function(s){
    socket.on('disconnect', function()
    {
        socketArray = arrayRemove(socketArray, clientIp);
-       if (socketArray.length % 10 == 0)
-       { 
-          //socket.broadcast.emit('users', {'count': socketArray.length});
-       }
    });
 
    //recieve client data
@@ -189,7 +180,7 @@ io.on ('connection', function(s){
 });
 
 var liveChartInterval = setInterval(function() { process.send({'workers': userCountActual()}) }, 30000);
-var sendUserounct = setTimeout(function() { socket.broadcast.emit('users', {'count': userCount()});}, 150000);
+var sendUserounct = setInterval(function() { io.sockets.emit('users', {'count': userCount()});}, 300000);
 
 function broadCastData(socket, message, file, currData, prevData)
 {
@@ -323,7 +314,6 @@ watcher.on('change', (path, stats) => {
             delta = getDeltaPgn(data, prevData);
             //broadCastData(socket, 'pgn', path, delta, delta);
             io.sockets.emit('pgn', delta); 
-            io.sockets.emit('users', {'count': userCount()});
             console.log ("Sent pgn data:" + JSON.stringify(delta).length + ",orig" + JSON.stringify(data).length + ",changed" + delta.gameChanged);
             lastPgnTime = Date.now(); 
          }

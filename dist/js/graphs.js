@@ -12,7 +12,7 @@ var evalChartData = {};
 var engineColorArray = ['darkred', 'red', 'green', 'darkgreen', 'yellow', 'purple', 'orange'];
 var evalconstant = 10.0;
 var eng1L = 'Bluefish';
-var eng2L = 'Redthereal'
+var eng2L = 'Redmodo';
 
 function setevalChartData()
 {
@@ -37,6 +37,7 @@ function setevalChartData()
        ]
      }, {
        label: eng1L,
+       lineTension: 0,
        borderColor: '#007bff',
        backgroundColor: '#007bff',
        fill: false,
