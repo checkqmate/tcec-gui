@@ -168,7 +168,6 @@ function updatePgn(resettime)
          var lastMod = new Date(response.headers["last-modified"]);
          var currTime = new Date(response.headers["date"]);
          timeDiff = currTime.getTime() - lastMod.getTime();
-         console.log ("XXX: Timediff is :" + timeDiff);
       }
       prevPgnData = 0;
       updatePgnDataMain(response.data);
@@ -400,6 +399,7 @@ function setPgn(pgn)
       prevPgnData.BlackEngineOptions = pgn.BlackEngineOptions;
       prevPgnData.WhiteEngineOptions = pgn.WhiteEngineOptions;
       prevPgnData.Headers = pgn.Headers;
+      prevPgnData.Users = pgn.Users;
       pgn = prevPgnData;
       loadedPgn = prevPgnData;
    }
@@ -673,7 +673,7 @@ function setPgn(pgn)
   }
 
   $('#event-overview').bootstrapTable('load', [pgn.Headers]);
-  $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: userCount});
+  $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: pgn.Users});
   $('#event-name').html(pgn.Headers.Event);
 
   if (viewingActiveMove) {

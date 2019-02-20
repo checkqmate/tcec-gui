@@ -160,10 +160,14 @@ io.on ('connection', function(s){
    if (socketArray.indexOf(clientIp) === -1)
    {
       socketArray.push(clientIp);
-      if (socketArray.length % 500 == 0)
+      if (socketArray.length % 100 == 0)
       {
          console.log ("count connected:" + userCount());
-         io.sockets.emit('users', {'count': userCount()});
+         //io.sockets.emit('users', {'count': userCount()});
+      }
+      else
+      {
+         //socket.emit('users', {'count': userCount()});
       }
    }
 
@@ -179,8 +183,7 @@ io.on ('connection', function(s){
 
 });
 
-var liveChartInterval = setInterval(function() { process.send({'workers': userCountActual()}) }, 30000);
-var sendUserounct = setInterval(function() { io.sockets.emit('users', {'count': userCount()});}, 300000);
+//var liveChartInterval = setInterval(function() { process.send({'workers': userCountActual()}) }, 30000);
 
 function broadCastData(socket, message, file, currData, prevData)
 {
@@ -225,6 +228,7 @@ function getDeltaPgn(pgnX)
       return pgnX;
    }
    pgnX.gameChanged = 0;
+   pgnX.Users = userCount();
    
    console.log ("Found prev data");
 
@@ -314,7 +318,7 @@ watcher.on('change', (path, stats) => {
             delta = getDeltaPgn(data, prevData);
             //broadCastData(socket, 'pgn', path, delta, delta);
             io.sockets.emit('pgn', delta); 
-            console.log ("Sent pgn data:" + JSON.stringify(delta).length + ",orig" + JSON.stringify(data).length + ",changed" + delta.gameChanged);
+            console.log ("Sent pgn data:" + JSON.stringify(delta).length + ",orig" + JSON.stringify(data).length + ",changed" + delta.Users);
             lastPgnTime = Date.now(); 
          }
          prevData = data;
