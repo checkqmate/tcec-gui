@@ -804,7 +804,7 @@
                            <td>
                              <span class="white-engine-depth"></span>
                            </td>
-                           <td>Depth</td>
+                           <td>Depth/SD</td>
                            <td>
                              <span class="black-engine-depth"></span>
                            </td>
@@ -1492,7 +1492,7 @@ To play the games a special version of cutechess-cli is used. This is a command 
       });
 
       $('.refreshBoard').on('click', function() {
-        updateAll(2);
+        updateAll();
       });
 
       $(document).ready(function () {
@@ -1522,7 +1522,7 @@ To play the games a special version of cutechess-cli is used. This is a command 
         });
 
         initToolTip();
-        updatePgn();
+        updatePgn(0);
         updateLiveEvalInit();
         $(document).ready(function () {
           setDefaults();
@@ -1579,7 +1579,7 @@ To play the games a special version of cutechess-cli is used. This is a command 
          updateLiveEvalData(data, 1, null, 2);
          });
       socket.on('pgn', function(data){
-         updatePgnData(data, 1);
+         updatePgnData(data, 0);
          });
       socket.on('schedule', function(data){
          updateScheduleData(data);

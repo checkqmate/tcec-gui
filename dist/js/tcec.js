@@ -113,19 +113,9 @@ var onMoveEndPv = function() {
     .addClass(highlightClassPv);
 }
 
-function updateAll(refresh)
+function updateAll()
 {
-   var uppgn;
-
-   if (refresh)
-   {
-      uppgn = refresh;
-   }
-   else
-   {
-      uppgn = 1;
-   }
-   updatePgn(uppgn);
+   updatePgn(1);
    setTimeout(function() { updateTables(); }, 5000);
 }
 
@@ -142,10 +132,9 @@ function plog(message, debugl)
    }
 }
 
-function updatePgnData(data, read)
+function updatePgnDataMain(data)
 {
    loadedPgn = data;
-   timeDiffRead = read;
 
    if (!prevPgnData)
    {
@@ -158,34 +147,31 @@ function updatePgnData(data, read)
       {
          updateEngineInfo('#whiteenginetable', '#white-engine-info', data.WhiteEngineOptions);
       }
-      if (data.BlackEngineOptions != prevPgnData.BlackEngineOptions)
-      {
-         updateEngineInfo('#blackenginetable', '#black-engine-info', data.BlackEngineOptions);
-      }
    }
    setPgn(data);
 }
 
+function updatePgnData(data, read)
+{
+   timeDiff = 0;
+   updatePgnDataMain(data);
+}
+
 function updatePgn(resettime)
 {
-   if (resettime != undefined && resettime != 2)
-   {
-      timeDiffRead = 0;
-      timeDiff = 0;
-   }
-
    axios.get('live.json?no-cache' + (new Date()).getTime())
    .then(function (response) 
    {
-      if (timeDiffRead == 0)
+      if (!resettime)
       {
          var milliseconds = (new Date).getTime();
          var lastMod = new Date(response.headers["last-modified"]);
          var currTime = new Date(response.headers["date"]);
          timeDiff = currTime.getTime() - lastMod.getTime();
+         console.log ("XXX: Timediff is :" + timeDiff);
       }
       prevPgnData = 0;
-      updatePgnData(response.data, 0);
+      updatePgnDataMain(response.data);
    })
    .catch(function (error) {
      // handle error

@@ -11,6 +11,8 @@ engine2color = '#A44BC0';
 var evalChartData = {};
 var engineColorArray = ['darkred', 'red', 'green', 'darkgreen', 'yellow', 'purple', 'orange'];
 var evalconstant = 10.0;
+var eng1L = 'Bluefish';
+var eng2L = 'Redthereal'
 
 function setevalChartData()
 {
@@ -34,15 +36,14 @@ function setevalChartData()
        data: [
        ]
      }, {
-       label: '176 Th',
-       lineTension: 0,
+       label: eng1L,
        borderColor: '#007bff',
        backgroundColor: '#007bff',
        fill: false,
        data: [
        ]
      }, {
-       label: '128 Core',
+       label: eng2L,
        lineTension: 0,
        borderColor: engine2color,
        backgroundColor: engine2color,

@@ -1,7 +1,7 @@
 var https = require("https");
 var url = require('url');
 var fs = require('fs');
-var io = require('socket.io');
+var io = require('socket.io')();
 var express = require('express');
 var app = express();
 var path = require('path');
@@ -37,6 +37,11 @@ var server = https.createServer(options, app).listen(parseInt(portnum), function
    console.log('Express server listening on port ' + portnum);
 });
 var listener = io.listen(server);                                                                                                 
+io.attach(server, {
+  pingInterval: 10000,
+  pingTimeout: 5000,
+  cookie: false
+});
 var watcher = chokidar.watch('crosstable.json', {
       persistent: true,
       ignoreInitial: false,
@@ -148,7 +153,7 @@ function userCountActual()
    return (parseInt(socketArray.length));
 }
 
-listener.sockets.on('connection', function(s){
+io.on ('connection', function(s){    
    socket = s;
    var socketId = socket.id;
    var clientIp = socket.request.connection.remoteAddress;
@@ -159,13 +164,11 @@ listener.sockets.on('connection', function(s){
       if (socketArray.length % 200 == 0)
       {
          console.log ("count connected:" + userCount());
-         socket.broadcast.emit('users', {'count': userCount()});
-         socket.emit('users', {'count': userCount()});
-         //showDuplicates(socketArray);
+         io.sockets.emit('users', {'count': userCount()});
       }
       else
       {
-         socket.emit('users', {'count': userCount()});
+         io.sockets.emit('users', {'count': userCount()});
       }
    }
 
@@ -185,8 +188,8 @@ listener.sockets.on('connection', function(s){
 
 });
 
-var liveChartInterval = setInterval(function() { process.send({'workers': userCountActual()}) }, 15000);
-var sendUserounct = setTimeout(function() { socket.broadcast.emit('users', {'count': userCount()});}, 15000);
+var liveChartInterval = setInterval(function() { process.send({'workers': userCountActual()}) }, 30000);
+var sendUserounct = setTimeout(function() { socket.broadcast.emit('users', {'count': userCount()});}, 150000);
 
 function broadCastData(socket, message, file, currData, prevData)
 {
@@ -198,8 +201,7 @@ function broadCastData(socket, message, file, currData, prevData)
       //console.log ("File "+ file + " did not change:");
       return;
    }
-   socket.emit(message, currData); 
-   socket.broadcast.emit(message, currData); 
+   io.sockets.emit(message, currData);
 }
 
 function checkSend(currData, prevData)
@@ -320,9 +322,8 @@ watcher.on('change', (path, stats) => {
          {
             delta = getDeltaPgn(data, prevData);
             //broadCastData(socket, 'pgn', path, delta, delta);
-            socket.broadcast.emit('pgn', delta);
-            socket.emit('pgn', delta);
-            socket.broadcast.emit('users', {'count': userCount()});
+            io.sockets.emit('pgn', delta); 
+            io.sockets.emit('users', {'count': userCount()});
             console.log ("Sent pgn data:" + JSON.stringify(delta).length + ",orig" + JSON.stringify(data).length + ",changed" + delta.gameChanged);
             lastPgnTime = Date.now(); 
          }
@@ -340,7 +341,7 @@ watcher.on('change', (path, stats) => {
       }
       if (path.match(/banner/))
       {
-         socket.broadcast.emit('banner', data);
+         io.sockets.emit('banner', data); 
       }
    }
    catch (error) 
