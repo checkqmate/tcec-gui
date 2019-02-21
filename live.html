@@ -29,6 +29,14 @@
         <span id="notetext"></span>
         <a id="close" style="color: whitesmoke !important;" href="#alert">[x]</a>
     </div>
+    <script>
+      close = document.getElementById("close");
+      close.addEventListener('click', function() 
+      {
+        note = document.getElementById("note");
+        note.style.display = 'none';
+      }, false);
+    </script>
     <nav class="navbar navbar-expand-md navbar-toggle navbar-dark bg-dark">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

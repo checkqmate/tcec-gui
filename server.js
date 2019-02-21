@@ -183,7 +183,7 @@ io.on ('connection', function(s){
 
 });
 
-//var liveChartInterval = setInterval(function() { process.send({'workers': userCountActual()}) }, 30000);
+var liveChartInterval = setInterval(function() { process.send({'workers': userCountActual()}) }, 30000);
 
 function broadCastData(socket, message, file, currData, prevData)
 {
