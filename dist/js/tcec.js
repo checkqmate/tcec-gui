@@ -185,7 +185,9 @@ function startClock(color, currentMove, previousMove) {
   currentTime = currentMove.tl;
 
   if (color == 'white') {
-    whiteTimeRemaining = Math.ceil(previousTime / 1000) * 1000;
+    whiteTimeRemaining = Math.ceil(previousTime / 1000) * 1000 + 2000;
+    console.log ("XXX: blackTimeRemaining:" + blackTimeRemaining);
+    console.log ("XXX: whiteTimeRemaining:" + whiteTimeRemaining);
     blackTimeRemaining = Math.ceil(currentTime / 1000) * 1000;
 
     if (isNaN(blackTimeRemaining))
@@ -212,7 +214,9 @@ function startClock(color, currentMove, previousMove) {
     $('.white-to-move').show();
   } else {
     whiteTimeRemaining = Math.ceil(currentTime / 1000) * 1000;
-    blackTimeRemaining = Math.ceil(previousTime / 1000) * 1000;
+    blackTimeRemaining = Math.ceil(previousTime / 1000) * 1000 + 2000;
+    console.log ("XXX:Y blackTimeRemaining:" + previousTime);
+    console.log ("XXX:Y whiteTimeRemaining:" + whiteTimeRemaining);
 
     if (isNaN(blackTimeRemaining))
     {
