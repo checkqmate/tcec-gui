@@ -152,8 +152,7 @@ function userCountActual()
    return (parseInt(socketArray.length));
 }
 
-io.on ('connection', function(s){    
-   socket = s;
+io.sockets.on ('connection', function(socket){    
    var socketId = socket.id;
    var clientIp = socket.request.connection.remoteAddress;
    count = socketArray.length;
@@ -163,7 +162,7 @@ io.on ('connection', function(s){
       if (socketArray.length % 100 == 0)
       {
          console.log ("count connected:" + userCount());
-         //io.sockets.emit('users', {'count': userCount()});
+         //io.local.emit('users', {'count': userCount()});
       }
       else
       {
@@ -177,13 +176,20 @@ io.on ('connection', function(s){
    });
 
    //recieve client data
-   socket.on('getLastmovetime', function(data){
+   socket.on('refreshdata', function(data){
+      if (prevData)
+      {
+         prevData.refresh = 1;
+         socket.emit('pgn', prevData); 
+         prevData.refresh = 0;
+         console.log ("Sent pgn data to connected socket:" + JSON.stringify(prevData).length + ",changed" + clientIp);
+      }
       console.log('XXXXXX: req came' + lastPgnTime);
    });
 
 });
 
-var liveChartInterval = setInterval(function() { process.send({'workers': userCountActual()}) }, 30000);
+//var liveChartInterval = setInterval(function() { process.send({'workers': userCountActual()}) }, 30000);
 
 function broadCastData(socket, message, file, currData, prevData)
 {
@@ -195,7 +201,7 @@ function broadCastData(socket, message, file, currData, prevData)
       //console.log ("File "+ file + " did not change:");
       return;
    }
-   io.sockets.emit(message, currData);
+   io.local.emit(message, currData);
 }
 
 function checkSend(currData, prevData)
@@ -244,6 +250,7 @@ function getDeltaPgn(pgnX)
       }
   });
 
+   var maxKey = 0;
    pgn.Moves = [];
    _.eachRight(pgnX.Moves, function(move, key) {
       pgn.Moves[key] = {};
@@ -252,18 +259,21 @@ function getDeltaPgn(pgnX)
          pgn.Moves[key]= pgnX.Moves[key];
          pgn.Moves[key].Moveno = key + 1;
          pgn.lastMoveLoaded = key;
-         //console.log ("Setting pgn.lastMoveLoaded to " + pgn.lastMoveLoaded);
+         if (maxKey == 0)
+         {
+            maxKey = key + 1;
+         }
       }
       else
       {
          pgn.Moves[key].Moveno = 0;
       }
-       countPgn = countPgn + 1;
+      countPgn = countPgn + 1;
    });
+   console.log ("Setting pgn.lastMoveLoaded to " + maxKey);
 
    return pgn;
 }
-
 
 var prevData = 0;
 var prevliveData = 0;
@@ -272,6 +282,7 @@ var prevliveData1 = 0;
 var prevevalData1 = 0;
 var prevCrossData = 0;
 var prevSchedData = 0;
+var delta = {};
 
 watcher.on('change', (path, stats) => {
    if (0)
@@ -279,10 +290,6 @@ watcher.on('change', (path, stats) => {
       console.log ("path changed:" + path + ",count is:" + userCount() + 
                    " ,actual count is:" + parseInt(userCountActual() * userCountFactor) + 
                    " ,server is :" + pid);
-   }
-   if (!socket)
-   {
-      return;
    }
    var content = fs.readFileSync(path, "utf8");
    try 
@@ -311,13 +318,12 @@ watcher.on('change', (path, stats) => {
       if (path.match(/live.json/))
       {
          console.log ("json changed");
-         var delta = {};
          var changed = checkSend(data, prevData);
          if (changed)
          {
             delta = getDeltaPgn(data, prevData);
             //broadCastData(socket, 'pgn', path, delta, delta);
-            io.sockets.emit('pgn', delta); 
+            io.local.emit('pgn', delta); 
             console.log ("Sent pgn data:" + JSON.stringify(delta).length + ",orig" + JSON.stringify(data).length + ",changed" + delta.Users);
             lastPgnTime = Date.now(); 
          }
@@ -335,7 +341,7 @@ watcher.on('change', (path, stats) => {
       }
       if (path.match(/banner/))
       {
-         io.sockets.emit('banner', data); 
+         io.local.emit('banner', data); 
       }
    }
    catch (error) 

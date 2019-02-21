@@ -1500,7 +1500,7 @@ To play the games a special version of cutechess-cli is used. This is a command 
       });
 
       $('.refreshBoard').on('click', function() {
-        updateAll();
+        updateRefresh();
       });
 
       $(document).ready(function () {
@@ -1574,7 +1574,8 @@ To play the games a special version of cutechess-cli is used. This is a command 
         });
       });
 
-      var socket = io.connect('https://tcec.chessdom.com:8080');
+      var socket = io.connect('https://tcecbeta.club:8000');
+      //var socket = io.connect('https://tcec.chessdom.com:8080');
      
       socket.on('crosstable', function(data){
          updateCrosstableData(data);
@@ -1587,6 +1588,7 @@ To play the games a special version of cutechess-cli is used. This is a command 
          updateLiveEvalData(data, 1, null, 2);
          });
       socket.on('pgn', function(data){
+         console.log ('Got pgn update:' + data.refresh);
          updatePgnData(data, 0);
          });
       socket.on('schedule', function(data){
@@ -1608,7 +1610,6 @@ To play the games a special version of cutechess-cli is used. This is a command 
       socket.on('banner', function(data){
         showBanner(data);
         });
-
 
     </script>
     <audio id="move_sound">
