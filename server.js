@@ -176,6 +176,10 @@ io.sockets.on ('connection', function(socket){
    });
 
    //recieve client data
+   socket.on('getusers', function(data){
+      socket.emit('users', {'count': userCount()});
+   });
+
    socket.on('refreshdata', function(data){
       if (delta)
       {
@@ -199,6 +203,15 @@ io.sockets.on ('connection', function(socket){
 });
 
 //var liveChartInterval = setInterval(function() { process.send({'workers': userCountActual()}) }, 30000);
+function sendUsers()
+{
+   setTimeout(function() { broadCastUsers(); }, 5000);
+}
+
+function broadCastUsers()
+{
+   io.local.emit('users', {'count': userCount()});
+}
 
 function broadCastData(socket, message, file, currData, prevData)
 {

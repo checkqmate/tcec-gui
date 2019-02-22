@@ -114,6 +114,11 @@ var onMoveEndPv = function() {
     .addClass(highlightClassPv);
 }
 
+function getUserS()
+{
+   socket.emit('getusers', 'd');
+}
+
 function updateRefresh()
 {
    if (lastRefreshTime)
@@ -397,29 +402,27 @@ function setPgn(pgn)
       $('#newmove').attr('data-count', 0);
    }
 
+   if (typeof pgn.Moves != 'undefined')
+   {
+      plog ("XXX: Entered for pgn.Moves.length:" + pgn.Moves.length + " , round is :" + pgn.Headers.Round, 0);
+   }
+
    if (crosstableData)
    {
       updateScoreHeadersData();
    }
 
-   if (pgn.gameChanged)
+   if (prevPgnData)
    {
-      prevPgnData = 0;
-   }
-   else
-   {
-      if (prevPgnData)
+      if (prevPgnData.Moves.length < pgn.lastMoveLoaded)
       {
-         if (prevPgnData.Moves.length < pgn.lastMoveLoaded)
-         {
-            setTimeout(function() { updateAll(); }, 100);
-            return;
-         }
-         else if (parseFloat(prevPgnData.Headers.Round) != parseFloat(pgn.Headers.Round))
-         {
-            setTimeout(function() { updateAll(); }, 100);
-            return;
-         }
+         setTimeout(function() { updateAll(); }, 100);
+         return;
+      }
+      else if (parseFloat(prevPgnData.Headers.Round) != parseFloat(pgn.Headers.Round))
+      {
+         setTimeout(function() { updateAll(); }, 100);
+         return;
       }
    }
 
@@ -478,7 +481,8 @@ function setPgn(pgn)
     }
   }
 
-  plog ("XXX: loadedPlies: " + loadedPlies + " ,currentPlyCount:" + currentPlyCount + " ,currentGameActive:" + currentGameActive + " ,gameActive:" + gameActive, 0);
+  plog ("XXX: loadedPlies: " + loadedPlies + " ,currentPlyCount:" + currentPlyCount + 
+        " ,currentGameActive:" + currentGameActive + " ,gameActive:" + gameActive + " :gamechanged:" + pgn.gameChanged , 0);
   if (loadedPlies == currentPlyCount && (currentGameActive == gameActive)) {
     return;
   }
@@ -2717,8 +2721,6 @@ function shallowCopy(data)
 
 function updateH2hData(h2hdataip) 
 {
-   plog ("Updating h2h:", 0);
-
    if (h2hRetryCount < 10 &&
        ((prevwhiteEngineFullSc != null &&
          prevwhiteEngineFullSc == whiteEngineFull) &&
@@ -2729,10 +2731,14 @@ function updateH2hData(h2hdataip)
             prevwhiteEngineFullSc + 
             " ,whiteEngineFull:" + whiteEngineFull + 
             " ,h2hRetryCount:" + h2hRetryCount +
-            " ,prevblackEngineFull:" + prevblackEngineFullSc + " ,blackEngineFull:" + blackEngineFull, 1);
+            " ,prevblackEngineFull:" + prevblackEngineFullSc + " ,blackEngineFull:" + blackEngineFull, 0);
       h2hRetryCount = h2hRetryCount + 1;
       setTimeout(function() { updateH2hData(h2hdataip); }, 5000);
       return;
+   }
+   else
+   {
+      plog ("H2h got updated", 0);
    }
 
    h2hRetryCount = 0;

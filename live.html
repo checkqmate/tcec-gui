@@ -1540,8 +1540,12 @@ To play the games a special version of cutechess-cli is used. This is a command 
           }, 10000);
           window.setTimeout(function() 
           { 
+             getUserS();
+          }, 5000);
+          window.setTimeout(function() 
+          { 
              updateWinners();
-          }, 1000);
+          }, 12000);
           hideBanner();
           window.setTimeout(function() 
                             { 
@@ -1588,8 +1592,8 @@ To play the games a special version of cutechess-cli is used. This is a command 
          updateLiveEvalData(data, 1, null, 2);
          });
       socket.on('pgn', function(data){
-         updatePgnData(data, 0);
          setUsersMain(data.Users);
+         updatePgnData(data, 0);
          });
       socket.on('schedule', function(data){
          updateScheduleData(data);
