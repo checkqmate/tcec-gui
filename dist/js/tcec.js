@@ -397,6 +397,11 @@ function setPgn(pgn)
       $('#newmove').attr('data-count', 0);
    }
 
+   if (crosstableData)
+   {
+      updateScoreHeadersData();
+   }
+
    if (pgn.gameChanged)
    {
       prevPgnData = 0;
@@ -2315,46 +2320,11 @@ function eliminateCrash(data)
    });
 }
 
-function updateScoreHeaders(data) 
-{
-   plog ("Inside updateScoreHeaders", 0);
-   if (scrRetryCount < 10)
-   {
-      plog ("Score header update failed:" + scrRetryCount + " , waiting for 30 seconds", 0);
-      scrRetryCount = scrRetryCount + 1;
-      var retry = updateScoreHeadersData(data);
-      if (retry)
-      {
-         setTimeout(function() { updateScoreHeaders(data); }, 10000);
-      }
-      else
-      {
-         scrRetryCount = 0;
-      }
-   }
-   else
-   {
-      plog ("Score header update failed:" + scrRetryCount + " , giving up", 0);
-      scrRetryCount = 0;
-   }
-}
-
-function updateScoreHeadersData(crosstableData)
+function updateScoreHeadersData()
 {
    var data = crosstableData;
    whiteScore = 0;
    blackScore = 0;
-
-   if ((prevwhiteEngineFull != null &&
-        prevwhiteEngineFull == whiteEngineFull) &&
-       (prevblackEngineFull != null &&
-        blackEngineFull == prevblackEngineFull))
-   {
-      plog ("Header did not get updated, lets retry later: prevwhiteEngineFull:" + 
-            prevwhiteEngineFull + " ,whiteEngineFull:" + whiteEngineFull + " ,prevblackEngineFull:" + prevblackEngineFull + " ,blackEngineFull:" + blackEngineFull +
-            " ,prevblackEngineFull:" + prevblackEngineFull, 0);
-      return 1;
-   }
 
    _.each(crosstableData.Table, function(engine, key) {
       _.each(engine.Results, function(oppEngine, oppkey)
@@ -2680,14 +2650,7 @@ async function updateCrosstableData(data)
    }
    $('#crosstable').bootstrapTable('load', standings);
 
-   retryScore = updateScoreHeadersData(crosstableData);
-
-   if (retryScore)
-   {
-      plog ("Giving time to header to get updated", 0);
-      setTimeout(function() { updateScoreHeaders(crosstableData); }, 10000);
-   }
-
+   retryScore = updateScoreHeadersData();
    oldSchedData = null;
    updateStandtableData(crosstableData);
 }

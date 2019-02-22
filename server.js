@@ -182,7 +182,6 @@ io.sockets.on ('connection', function(socket){
          delta.refresh = 1;
          delta.Users = userCount();
          socket.emit('pgn', delta); 
-         socket.emit('crosstable', prevCrossData);
          delta.refresh = 0;
          console.log ("Sent delta pgn data to connected socket:" + JSON.stringify(delta).length + ",changed" + clientIp + ", from serverXXXX:" + pid);
       }
@@ -191,7 +190,6 @@ io.sockets.on ('connection', function(socket){
          prevData.refresh = 1;
          prevData.Users = userCount();
          socket.emit('pgn', prevData); 
-         socket.emit('crosstable', prevCrossData);
          prevData.refresh = 0;
          console.log ("Sent full pgn data to connected socket:" + JSON.stringify(delta).length + ",changed" + clientIp + ", from serverXXXX:" + pid);
       }
