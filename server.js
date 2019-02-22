@@ -47,10 +47,10 @@ var watcher = chokidar.watch('crosstable.json', {
       followSymlinks: true,
       disableGlobbing: false,
       usePolling: true,
-      interval: 100,
+      interval: 50,
       binaryInterval: 100,
       alwaysStat: false,
-      depth: 99,
+      depth: 3,
       //awaitWriteFinish: {
         //stabilityThreshold: 2000,
         //pollInterval: 100
@@ -161,7 +161,7 @@ io.sockets.on ('connection', function(socket){
       socketArray.push(clientIp);
       if (socketArray.length % 100 == 0)
       {
-         console.log ("count connected:" + userCount());
+         console.log ("count connected:" + userCount() + " , from serverXXXX:" + pid);
          //io.local.emit('users', {'count': userCount()});
       }
       else
@@ -177,12 +177,23 @@ io.sockets.on ('connection', function(socket){
 
    //recieve client data
    socket.on('refreshdata', function(data){
-      if (prevData)
+      if (delta)
+      {
+         delta.refresh = 1;
+         delta.Users = userCount();
+         socket.emit('pgn', delta); 
+         socket.emit('crosstable', prevCrossData);
+         delta.refresh = 0;
+         console.log ("Sent delta pgn data to connected socket:" + JSON.stringify(delta).length + ",changed" + clientIp + ", from serverXXXX:" + pid);
+      }
+      else if (prevData)
       {
          prevData.refresh = 1;
+         prevData.Users = userCount();
          socket.emit('pgn', prevData); 
+         socket.emit('crosstable', prevCrossData);
          prevData.refresh = 0;
-         console.log ("Sent pgn data to connected socket:" + JSON.stringify(prevData).length + ",changed" + clientIp);
+         console.log ("Sent full pgn data to connected socket:" + JSON.stringify(delta).length + ",changed" + clientIp + ", from serverXXXX:" + pid);
       }
       console.log('XXXXXX: req came' + lastPgnTime);
    });
@@ -227,6 +238,7 @@ function getDeltaPgn(pgnX)
 {
    var pgn = {};
    var countPgn = 0;
+   pgnX.Users = userCount();
 
    if (prevData && JSON.stringify(prevData.Headers) != JSON.stringify(pgnX.Headers))
    {
@@ -234,7 +246,6 @@ function getDeltaPgn(pgnX)
       return pgnX;
    }
    pgnX.gameChanged = 0;
-   pgnX.Users = userCount();
    
    console.log ("Found prev data");
 

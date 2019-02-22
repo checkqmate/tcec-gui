@@ -102,6 +102,7 @@ var twitchChatUrl = 'https://www.twitch.tv/embed/' + twitchAccount + '/chat';
 var twitchSRCIframe = 'https://player.twitch.tv/?channel=' + twitchAccount;
 
 var eventNameHeader = 0;
+var lastRefreshTime = 0;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -115,7 +116,27 @@ var onMoveEndPv = function() {
 
 function updateRefresh()
 {
-   socket.emit('refreshdata', 'data is emitted');
+   if (lastRefreshTime)
+   {
+      var ms = moment().diff(lastRefreshTime);
+      ms = parseInt (ms/1000);
+      if (ms >= 60)
+      {
+         socket.emit('refreshdata', 'data is emitted');
+         lastRefreshTime = 0;
+      }
+      else
+      {
+         ms = 60 - ms;
+         alert ("Please wait for " + ms + " seconds before trying to resync"); 
+         //showBanner({'message': "Please wait " + ms + " seconds before trying to resync", 'timeout': 300});
+      }
+   }
+   else
+   {
+      socket.emit('refreshdata', 'data is emitted');
+      lastRefreshTime = moment();
+   }
 }
 
 function updateAll()
@@ -190,7 +211,7 @@ function startClock(color, currentMove, previousMove) {
   currentTime = currentMove.tl;
 
   if (color == 'white') {
-    whiteTimeRemaining = Math.ceil(previousTime / 1000) * 1000 + 2000;
+    whiteTimeRemaining = Math.ceil(previousTime / 1000) * 1000 + 1000;
     blackTimeRemaining = Math.ceil(currentTime / 1000) * 1000;
 
     if (isNaN(blackTimeRemaining))
@@ -217,7 +238,7 @@ function startClock(color, currentMove, previousMove) {
     $('.white-to-move').show();
   } else {
     whiteTimeRemaining = Math.ceil(currentTime / 1000) * 1000;
-    blackTimeRemaining = Math.ceil(previousTime / 1000) * 1000 + 2000;
+    blackTimeRemaining = Math.ceil(previousTime / 1000) * 1000 + 1000;
 
     if (isNaN(blackTimeRemaining))
     {
@@ -263,7 +284,7 @@ function updateClock(color) {
     var ms = moment.duration(diff);
 
     whiteTimeUsed = ms;
-    tempTimeRemaning = whiteTimeRemaining - whiteTimeUsed;
+    tempTimeRemaning = whiteTimeRemaining - whiteTimeUsed + 3000;
 
     setTimeUsed(color, whiteTimeUsed);
     setTimeRemaining(color, tempTimeRemaning);
@@ -272,7 +293,7 @@ function updateClock(color) {
     var ms = moment.duration(diff);
 
     blackTimeUsed = ms;
-    tempTimeRemaning = blackTimeRemaining - blackTimeUsed;
+    tempTimeRemaning = blackTimeRemaining - blackTimeUsed + 3000;
 
     setTimeUsed(color, blackTimeUsed);
     setTimeRemaining(color, tempTimeRemaning);
@@ -326,6 +347,12 @@ var userCount = 0;
 function setUsers(data) 
 {
    userCount = data.count;
+   setUsersMain(userCount);
+}
+
+function setUsersMain(count)
+{
+   userCount = count;
    try 
    {
       $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: userCount});
@@ -335,6 +362,7 @@ function setUsers(data)
       plog ("Unable to update usercount", 0);
    }
 }
+
 
 var newMovesCount = 0;
 
@@ -445,6 +473,7 @@ function setPgn(pgn)
     }
   }
 
+  plog ("XXX: loadedPlies: " + loadedPlies + " ,currentPlyCount:" + currentPlyCount + " ,currentGameActive:" + currentGameActive + " ,gameActive:" + gameActive, 0);
   if (loadedPlies == currentPlyCount && (currentGameActive == gameActive)) {
     return;
   }
@@ -560,6 +589,7 @@ function setPgn(pgn)
   }
 
   if (typeof pgn.Headers == 'undefined') {
+    plog ("XXX: Returning here because headers not defined", 0);
     return;
   }
 
@@ -720,7 +750,7 @@ function setPgn(pgn)
   $("#engine-history").scrollTop($("#engine-history")[0].scrollHeight);
   if (pgn.gameChanged)
   {
-     plog ("Came to setpgn need to reread dataa at end", 1);
+     plog ("Came to setpgn need to reread dataa at end", 0);
   }
 }
 
