@@ -1,5 +1,12 @@
 [
    {
+      "name": "14",
+      "winner": "Stockfish 190203",
+      "runner": " LCZero v20.2-32930",
+      "date": "Feb 23, 2019",
+      "link": "http://legacy-tcec.chessdom.com/archive.php?se=14&sf&ga=1"
+   },
+   {
       "name": "Cup2",
       "winner": "LCZero v20.1-32742",
       "runner": "Houdini 6.03",

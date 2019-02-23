@@ -103,6 +103,7 @@ var twitchSRCIframe = 'https://player.twitch.tv/?channel=' + twitchAccount;
 
 var eventNameHeader = 0;
 var lastRefreshTime = 0;
+var userCount = 0;
 
 var onMoveEnd = function() {
   boardEl.find('.square-' + squareToHighlight)
@@ -121,33 +122,20 @@ function getUserS()
 
 function updateRefresh()
 {
-   if (lastRefreshTime)
-   {
-      var ms = moment().diff(lastRefreshTime);
-      ms = parseInt (ms/1000);
-      if (ms >= 60)
-      {
-         socket.emit('refreshdata', 'data is emitted');
-         lastRefreshTime = 0;
-      }
-      else
-      {
-         ms = 60 - ms;
-         alert ("Please wait for " + ms + " seconds before trying to resync"); 
-         //showBanner({'message': "Please wait " + ms + " seconds before trying to resync", 'timeout': 300});
-      }
-   }
-   else
+   var reSyncInterval = 30;
+   if (!lastRefreshTime)
    {
       socket.emit('refreshdata', 'data is emitted');
       lastRefreshTime = moment();
       $('#board-to-sync').find('i').removeClass('fa-retweet');
-      $('#board-to-sync').find('i').addClass('fa-times');
+      $('#board-to-sync').find('i').addClass('fa-ban');
+      $('#board-to-sync').addClass('disabled');
       setTimeout(function() {
-         $('#board-to-sync').find('i').removeClass('fa-times');
+         $('#board-to-sync').find('i').removeClass('fa-ban');
+         $('#board-to-sync').removeClass('disabled');
          $('#board-to-sync').find('i').addClass('fa-retweet');
          lastRefreshTime = 0;
-         }, 60000);
+         }, reSyncInterval * 1000);
    }
 }
 
@@ -355,16 +343,23 @@ function setTimeUsed(color, time) {
   }
 }
 
-var userCount = 0;
 function setUsers(data) 
 {
    userCount = data.count;
+   if (data.count != undefined)
+   {
+      userCount = data.count;
+   }
    setUsersMain(userCount);
 }
 
 function setUsersMain(count)
 {
-   userCount = count;
+   if (count != undefined)
+   {
+      userCount = count;
+   }
+
    try 
    {
       $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: userCount});
@@ -419,8 +414,14 @@ function setPgn(pgn)
       updateScoreHeadersData();
    }
 
+   if (pgn.gameChanged)
+   {
+      prevPgnData = pgn;
+   }
+
    if (prevPgnData)
    {
+      plog ("prevPgnData.Moves.length:" + prevPgnData.Moves.length + " ,pgn.lastMoveLoaded:" + pgn.lastMoveLoaded, 0);
       if (prevPgnData.Moves.length < pgn.lastMoveLoaded)
       {
          setTimeout(function() { updateAll(); }, 100);
@@ -638,6 +639,10 @@ function setPgn(pgn)
           eventNameHeader = pgn.Headers.Event;
        }
     }
+    else
+    {
+       pgn.Headers.Event = eventNameHeader;
+    }
     if (termination == 'unterminated' && typeof adjudication != 'undefined') {
       termination = '-';
       var movesToDraw = 50;
@@ -724,7 +729,7 @@ function setPgn(pgn)
   }
 
   $('#event-overview').bootstrapTable('load', [pgn.Headers]);
-  $('#event-overview').bootstrapTable('updateCell', {index: 0, field: 'Viewers', value: pgn.Users});
+  setUsersMain(pgn.Users); 
   $('#event-name').html(pgn.Headers.Event);
 
   if (viewingActiveMove) {
@@ -2487,7 +2492,6 @@ function fixOrder()
 async function updateCrosstableData(data) 
 {
    crosstableData = data;
-   eventNameHeader = 0;
    plog ("Updating crosstable:", 0);
    var abbreviations = [];
    var standings = [];
