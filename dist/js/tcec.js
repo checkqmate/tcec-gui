@@ -141,6 +141,13 @@ function updateRefresh()
    {
       socket.emit('refreshdata', 'data is emitted');
       lastRefreshTime = moment();
+      $('#board-to-sync').find('i').removeClass('fa-retweet');
+      $('#board-to-sync').find('i').addClass('fa-times');
+      setTimeout(function() {
+         $('#board-to-sync').find('i').removeClass('fa-times');
+         $('#board-to-sync').find('i').addClass('fa-retweet');
+         lastRefreshTime = 0;
+         }, 60000);
    }
 }
 
