@@ -1,13 +1,13 @@
 {
    "ratings" : [
-         {"name":"Stockfish", "elo": 3451},
-         {"name":"Komodo", "elo": 3565},
-         {"name":"Houdini", "elo": 3527},
+         {"name":"Stockfish", "elo": 3437},
+         {"name":"Komodo", "elo": 3399},
+         {"name":"Houdini", "elo": 3413},
          {"name":"Fire", "elo": 3452},
          {"name":"Ethereal", "elo": 3373},
          {"name":"Andscacs", "elo": 3391},
          {"name":"Ginkgo", "elo": 3365},
-         {"name":"LCZero", "elo": 3411},
+         {"name":"LCZero", "elo": 3418},
          {"name":"KomodoMCTS", "elo": 3200},
          {"name":"Chiron", "elo": 3379},
          {"name":"Hannibal", "elo": 3033},

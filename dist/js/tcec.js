@@ -4798,6 +4798,11 @@ function initTables()
            sortable: true
        }, 
        {
+           field: 'score',
+           title: 'Score',
+           sortable: true
+       }, 
+       {
          field: 'date',
          title: 'Date',
          sortable: false

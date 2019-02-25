@@ -159,9 +159,9 @@ io.sockets.on ('connection', function(socket){
    if (socketArray.indexOf(clientIp) === -1)
    {
       socketArray.push(clientIp);
-      console.log ("count connected:" + userCount() + " , from serverXXXX:" + clientIp);
       if (socketArray.length % 100 == 0)
       {
+         console.log ("count connected:" + userCount() + " , from serverXXXX:" + clientIp);
          //io.local.emit('users', {'count': userCount()});
       }
       else
